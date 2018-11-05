@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "NODE_ENV=test mocha --timeout 25000 --require babel-register src/test/**/*.spec.js --exit",
 		"start": "node --exec babel-node src/server.js",
 		"server": "nodemon --exec babel-node src/server.js",
 		"fix-code": "prettier-eslint --write './*/**{js,jsx}' "
@@ -27,9 +27,12 @@
 		"babel-eslint": "^10.0.1",
 		"babel-plugin-transform-object-rest-spread": "^6.26.0",
 		"babel-preset-env": "^1.7.0",
+		"chai": "^4.2.0",
+		"chai-http": "^4.2.0",
 		"eslint": "^5.8.0",
 		"eslint-config-airbnb-base": "^13.1.0",
 		"eslint-plugin-import": "^2.14.0",
+		"mocha": "^5.2.0",
 		"nodemon": "^1.18.6",
 		"prettier-eslint": "^8.8.2",
 		"prettier-eslint-cli": "^4.7.1"
