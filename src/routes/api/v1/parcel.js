@@ -4,8 +4,8 @@ import Parcel from '../../../data/parcels';
 
 const router = express.Router();
 
-router.get('/parcel', (req, res) => {
-  res.json({ msg: 'all parcel', parcels: [...Parcel] });
+router.get('/parcels', (req, res) => {
+  res.json({ msg: 'all parcels', parcels: [...Parcel] });
 });
 
 export default router;
