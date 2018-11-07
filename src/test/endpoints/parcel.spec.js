@@ -13,8 +13,7 @@ chai.use(chaiHTTP);
 
 // new parcel instance to be used in testing
 const newParcel = new Parcel({
-  pickUp: 'Kigali',
-  pickUpAddress: 'KG 19 Av 15',
+  pickupAddress: 'KG 19 Av 15',
   destination: 'Kigali',
   destinationAddress: 'KG 19 Av 15',
   quantity: 2,
@@ -54,11 +53,26 @@ describe('Test Parcel End Point', () => {
     @POST {object} one parcel
    */
   describe('/POST Parcel', () => {
-    it('it should create new parcel order', (done) => {
+    it('it should not create new parcel order', (done) => {
       chai
         .request(server)
         .post('/api/v1/parcels')
         .send(newParcel)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have.property('msg').eql('parcel create failed');
+          res.body.should.have.property('errors');
+          res.body.errors.should.be.a('object');
+          done();
+        });
+    });
+  });
+  describe('/POST Parcel', () => {
+    it('it should create new parcel order', (done) => {
+      chai
+        .request(server)
+        .post('/api/v1/parcels')
+        .send({ ...newParcel, pickupLocation: 'Kigali' })
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.have.property('msg');

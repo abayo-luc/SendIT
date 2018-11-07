@@ -20,7 +20,8 @@
 		],
 		"consistent-return": 0,
 		"comma-dangle": 0,
-		"no-fallthrough": 0
+		"no-fallthrough": 0,
+		"import/prefer-default-export": "off"
 	},
 	"globals": {
 		"io": true
