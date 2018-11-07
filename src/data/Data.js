@@ -29,7 +29,9 @@ class Database {
   }
 
   find(id) {
-    const parcel = data[this.key].find(item => item.id === parseInt(id, 10));
+    const parcel = /^\+?(0|[1-9]\d*)$/.test(id)
+      ? data[this.key].find(item => item.id === parseInt(id, 10))
+      : null;
     return new Promise((resolve, reject) => {
       if (parcel) {
         resolve(parcel);
