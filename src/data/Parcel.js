@@ -3,8 +3,8 @@ import { STATUS_INTRANSIT } from '../utils/types';
 
 export default class Parcel extends Database {
   constructor({
-    pickUp,
-    pickUpAddress,
+    pickupLocation,
+    pickupAddress,
     destination,
     destinationAddress,
     quantity,
@@ -13,9 +13,9 @@ export default class Parcel extends Database {
     width,
     length
   } = {}) {
-    super('pacerls');
-    this.pickUp = pickUp;
-    this.pickAddress = pickUpAddress;
+    super('parcels');
+    this.pickupLocation = pickupLocation;
+    this.pickAddress = pickupAddress;
     this.destination = destination;
     this.destinationAddress = destinationAddress;
     this.quantity = quantity;

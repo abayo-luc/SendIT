@@ -1,5 +1,7 @@
 import { STATUS_CANCELED } from '../utils/types';
 import Parcel from '../data/Parcel';
+// bring in validator
+import { createParcelValidator } from '../validations/parcelsValidations';
 
 export const findAll = (req, res) => {
   const parcels = new Parcel().findAll();
@@ -14,13 +16,20 @@ export const findById = (req, res) => {
 };
 
 export const createParcel = (req, res) => {
+  const { isValid, errors } = createParcelValidator(req.body);
+  if (!isValid) {
+    return res.status(400).send({ msg: 'parcel create failed', errors });
+  }
   const newParcel = new Parcel({
     ...req.body
   });
   newParcel
     .save()
     .then(parcel => res.json({ msg: 'Parcel created', parcel }))
-    .catch(err => res.status(400).send(err));
+    .catch((err) => {
+      errors.parcel = 'creating parcel failed';
+      return res.status(400).send({ msg: 'parcel create failed', errors });
+    });
   // res.json({ msg: 'Purcel created', parcel });
 };
 

@@ -1,7 +1,7 @@
 import { findIndex } from '../utils/queryHelper';
 
 const data = {
-  pacerls: [],
+  parcels: [],
   users: []
 };
 

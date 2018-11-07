@@ -6,5 +6,3 @@ export const findIndex = (parcels, id) => {
   }
   return null;
 };
-
-export const otherFunc = () => null;
