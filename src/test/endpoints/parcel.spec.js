@@ -109,6 +109,22 @@ describe('Test Parcel End Point', () => {
     });
   });
   /*
+ *@GET Parcel by Id
+ */
+  describe('/GET Parcel by ID', () => {
+    it('It should not return a parcel object', (done) => {
+      chai
+        .request(server)
+        .get('/api/v1/parcels/198')
+        .end((req, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a('object');
+          res.body.should.have.property('msg').eql('parcel not found');
+          done();
+        });
+    });
+  });
+  /*
     @PUT {object} one parcel
    */
   describe('/PUT Parcel', () => {
@@ -148,6 +164,24 @@ describe('Test Parcel End Point', () => {
           res.body.should.have.property('parcel');
           res.body.parcel.should.be.a('object');
           res.body.parcel.should.have.property('status').eql(STATUS_CANCELED);
+          done();
+        });
+    });
+  });
+
+  // @PUT { object } one parcel
+
+  describe('/PUT Parcel', () => {
+    it('It should not found a parcel order', (done) => {
+      chai
+        .request(server)
+        .put('/api/v1/parcels/1909b/cancel')
+        .send()
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property('msg')
+            .eql('cancel parcel order failed');
           done();
         });
     });

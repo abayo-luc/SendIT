@@ -12,7 +12,7 @@ export const findById = (req, res) => {
   new Parcel()
     .find(req.params.id)
     .then(parcel => res.json({ msg: 'parcel found', parcel }))
-    .catch(err => res.status(404).send(err));
+    .catch(err => res.status(404).send({ msg: 'parcel not found' }));
 };
 
 export const createParcel = (req, res) => {
@@ -27,13 +27,13 @@ export const createParcel = (req, res) => {
     .save()
     .then(parcel => res.json({ msg: 'Parcel created', parcel }))
     .catch((err) => {
-      errors.parcel = 'creating parcel failed';
-      return res.status(400).send({ msg: 'parcel create failed', errors });
+      errors.server = 'There was an internal server error';
+      return res.status(500).send({ msg: 'parcel create failed', errors });
     });
-  // res.json({ msg: 'Purcel created', parcel });
 };
 
 export const updateParcel = (req, res) => {
+  const errors = {};
   const newParcel = new Parcel();
   const parcelAttr = {
     ...req.body
@@ -42,13 +42,20 @@ export const updateParcel = (req, res) => {
   newParcel
     .update(req.params.id, parcelAttr)
     .then(parcel => res.json({ msg: 'Purcel updated', parcel }))
-    .catch(err => res.status(400).send(err));
+    .catch((err) => {
+      errors.server = 'Parcel not found';
+      res.status(404).send({ msg: 'parcel update failed', errors });
+    });
 };
 
 export const cancelParcel = (req, res) => {
+  const errors = {};
   const canceledParcel = new Parcel();
   canceledParcel
     .update(req.params.id, { status: STATUS_CANCELED })
     .then(parcel => res.json({ msg: 'Parcel order canceled', parcel }))
-    .catch(err => res.status(400).send(err));
+    .catch((err) => {
+      errors.parcel = 'Parcel not found';
+      res.status(404).send({ msg: 'cancel parcel order failed', errors });
+    });
 };
