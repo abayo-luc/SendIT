@@ -7,3 +7,6 @@ npm-debug.log
 
 # nyc
 .nyc_output
+
+#coverage
+coverage
