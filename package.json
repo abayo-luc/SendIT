@@ -8,7 +8,7 @@
 		"start": "node --exec babel-node src/server.js",
 		"server": "nodemon --exec babel-node src/server.js",
 		"fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
-		"coveralls": "nyc report --reporter=text-lcov | coveralls"
+		"coveralls": "nyc report --reporter=text-lcov > coverage.lcov && codecov"
 	},
 	"repository": {
 		"type": "git",
