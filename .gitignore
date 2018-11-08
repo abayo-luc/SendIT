@@ -1,5 +1,9 @@
+#node module
 /node_modules
-
+#error logs
 yarn-error.log
 npm-debug.log
 .env
+
+# nyc
+.nyc_output
