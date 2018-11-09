@@ -4,3 +4,5 @@ export const isEmpty = value => value === undefined
 	|| (typeof value === 'string' && value.trim().length === 0);
 
 export const isInteger = value => Number.isInteger(value) && /^\+?(0|[1-9]\d*)$/.test(value);
+
+export const isStringInteger = value => /^\+?(0|[1-9]\d*)$/.test(value);

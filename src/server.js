@@ -6,6 +6,9 @@ const app = express();
 // body-parser middleware
 app.use(express.json());
 // use all routers
+app.get('/api/v1', (req, res) => {
+  res.json({ msg: 'Welcome to sendIT API' });
+});
 app.use('/api/v1/', routers);
 
 const port = process.env.PORT || 3000;

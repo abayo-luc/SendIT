@@ -1,15 +1,17 @@
-import { STATUS_CANCELED } from '../utils/types';
+import { STATUS_CANCELED, STATUS_INTRANSIT } from '../utils/types';
 import Parcel from '../data/Parcel';
 // bring in validator
 import { createParcelValidator } from '../validations/parcelsValidations';
 
+// new parce instance
+const parcelInstance = new Parcel();
 export const findAll = (req, res) => {
-  const parcels = new Parcel().findAll();
+  const parcels = parcelInstance.findAll();
   res.json({ msg: 'all parcels', parcels });
 };
 
 export const findById = (req, res) => {
-  new Parcel()
+  parcelInstance
     .find(req.params.id)
     .then(parcel => res.json({ msg: 'parcel found', parcel }))
     .catch(err => res.status(404).send({ msg: 'parcel not found' }));
@@ -20,11 +22,13 @@ export const createParcel = (req, res) => {
   if (!isValid) {
     return res.status(400).send({ msg: 'parcel create failed', errors });
   }
-  const newParcel = new Parcel({
-    ...req.body
-  });
-  newParcel
-    .save()
+  const newParcel = {
+    ...req.body,
+    userId: req.body.userId || 1,
+    status: STATUS_INTRANSIT
+  };
+  parcelInstance
+    .save(newParcel)
     .then(parcel => res.json({ msg: 'Parcel created', parcel }))
     .catch((err) => {
       errors.server = 'There was an internal server error';
@@ -34,12 +38,11 @@ export const createParcel = (req, res) => {
 
 export const updateParcel = (req, res) => {
   const errors = {};
-  const newParcel = new Parcel();
   const parcelAttr = {
     ...req.body
   };
 
-  newParcel
+  parcelInstance
     .update(req.params.id, parcelAttr)
     .then(parcel => res.json({ msg: 'Purcel updated', parcel }))
     .catch((err) => {
@@ -50,8 +53,7 @@ export const updateParcel = (req, res) => {
 
 export const cancelParcel = (req, res) => {
   const errors = {};
-  const canceledParcel = new Parcel();
-  canceledParcel
+  parcelInstance
     .update(req.params.id, { status: STATUS_CANCELED })
     .then(parcel => res.json({ msg: 'Parcel order canceled', parcel }))
     .catch((err) => {
