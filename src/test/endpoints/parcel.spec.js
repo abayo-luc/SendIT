@@ -5,14 +5,14 @@ import chaiHTTP from 'chai-http';
 import server from '../../server';
 // bring in temporary db
 import Parcel from '../../data/Parcel';
-import { STATUS_CANCELED } from '../../utils/types';
+import { STATUS_CANCELED, STATUS_INTRANSIT } from '../../utils/types';
 // bring in parcel model
 
 const should = chai.should();
 chai.use(chaiHTTP);
 
 // new parcel instance to be used in testing
-const newParcel = new Parcel({
+const newParcel = {
   pickupAddress: 'KG 19 Av 15',
   destination: 'Kigali',
   destinationAddress: 'KG 19 Av 15',
@@ -20,12 +20,13 @@ const newParcel = new Parcel({
   weight: 4,
   height: 5,
   width: 4,
-  length: 5
-});
+  length: 5,
+  status: STATUS_INTRANSIT
+};
 describe('Test Parcel End Point', () => {
   // clearn data before any testing
   beforeEach(() => {
-    newParcel.save();
+    new Parcel().save(newParcel);
   });
   afterEach(() => {
     new Parcel().clearn();
@@ -82,6 +83,7 @@ describe('Test Parcel End Point', () => {
           res.body.parcel.should.have.property('createdAt');
           res.body.parcel.should.have.property('id');
           res.body.parcel.should.have.property('status');
+          res.body.parcel.should.have.property('userId');
           done();
         });
     });

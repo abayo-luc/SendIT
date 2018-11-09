@@ -4,19 +4,22 @@ const data = {
   parcels: [],
   users: []
 };
-
 class Database {
   constructor(key) {
     this.key = key;
-    this.createdAt = new Date();
+    this.data = data;
   }
 
   findAll() {
     return data[this.key];
   }
 
-  save() {
-    const newItem = { id: data[this.key].length + 1, ...this };
+  save(params) {
+    const newItem = {
+      id: data[this.key].length + 1,
+      ...params,
+      createdAt: new Date()
+    };
     delete newItem.key;
     const index = data[this.key].unshift(newItem);
     return new Promise((resolve, reject) => {
