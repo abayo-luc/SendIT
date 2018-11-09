@@ -4,9 +4,11 @@
 # SendIT-API
 A [Social platform](https://send-it-api.herokuapp.com/api/v1/) for sending Parcels in any location
 ## Get Started
-Installing dependencies `npm install`
-Starting development server `npm start`
-Runnig test `npm run test`
+Installing dependencies => `npm install`
+
+Starting development server => `npm start`
+
+Run the tests => `npm run test`
 
 ## API -Endpoints
  JSON object is expected to returned by each API end point, and their structure is below:
