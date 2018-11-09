@@ -13,7 +13,8 @@ Runnig test `npm run test`
 
 ##Parcels
 `GET /parcels`
-```{
+```source-json
+{
     "msg": "all parcels",
     "parcels": [
         {
@@ -27,10 +28,12 @@ Runnig test `npm run test`
             "createdAt": "2018-11-09T15:44:41.918Z"
         }
     ]
-}```
+}
+```
 
 `GET /parcels/<parcelId>`
-```{
+```source-json
+{
     "msg": "parcel found",
     "parcel": {
         "id": 1,
@@ -42,12 +45,14 @@ Runnig test `npm run test`
         "status": "canceled",
         "createdAt": "2018-11-09T15:44:41.918Z"
     }
-}```
+}
+```
 
 
 `GET /users/<userId>/parcels`
 `NB: Currently, to test this end point user 1 as userId`
-```{
+```source-json
+{
     "msg": "user pracles",
     "parcels": [
         {
@@ -61,11 +66,13 @@ Runnig test `npm run test`
             "createdAt": "2018-11-09T15:44:41.918Z"
         }
     ]
-}```
+}
+```
 
 
 `PUT /parcels/<parcelId>/cancel`
-```{
+```source-json
+{
     "msg": "Parcel order canceled",
     "parcel": {
         "id": 1,
@@ -77,7 +84,8 @@ Runnig test `npm run test`
         "status": "canceled",
         "createdAt": "2018-11-09T15:44:41.918Z"
     }
-}```
+}
+```
 
 
 `POST /parcels`
@@ -94,5 +102,6 @@ Runnig test `npm run test`
         "status": "in_transity",
         "createdAt": "2018-11-09T15:44:41.918Z"
     }
-}```
+}
+```
 
