@@ -91,7 +91,9 @@ Runnig test `npm run test`
 
 
 `POST /parcels`
-`required params are: pickupLocation, destination, weight, quantity.`
+
+required params are: pickupLocation, destination, weight, quantity.
+
 ```{
     "msg": "Parcel created",
     "parcel": {
