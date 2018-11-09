@@ -51,7 +51,8 @@ Runnig test `npm run test`
 
 `GET /users/<userId>/parcels`
 
-`NB: Currently, to test this endpoint user 1 as userId`
+`NB:` Currently, to test this endpoint user 1 as userId
+
 ```source-json
 {
     "msg": "user pracles",
