@@ -56,9 +56,11 @@ describe('Testing User End Point', () => {
         .request(server)
         .get('/api/v1/users/6000/parcels')
         .end((req, res) => {
-          res.should.have.status(404);
+          res.should.have.status(200);
           res.body.should.be.a('object');
-          res.body.should.have.property('msg').eql('user not found');
+          res.body.should.have.property('parcels');
+          res.body.parcels.should.be.a('array');
+          res.body.parcels.length.should.be.eql(0);
           done();
         });
     });
