@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px" viewBox="0 0 480 480" style="enable-background:new 0 0 480 480;" xml:space="preserve" width="512px" height="512px" class=""><g><g>
+	<g>
+		<path d="M472,112h-72V56c0-4.418-3.582-8-8-8h-8V24c0-4.418-3.582-8-8-8H88c-4.418,0-8,3.582-8,8v88H8c-4.418,0-8,3.582-8,8v96    c0,4.418,3.582,8,8,8h24v232c0,4.418,3.582,8,8,8h400c4.418,0,8-3.582,8-8V224h24c4.418,0,8-3.582,8-8v-96    C480,115.582,476.418,112,472,112z M176,32h192v16H176V32z M96,32h64v24c0,4.418,3.582,8,8,8h216v48H96V32z M432,448H48V224h384    V448z M464,208H16v-80h448V208z" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<path d="M320,280H160c-4.418,0-8,3.582-8,8v96c0,4.418,3.582,8,8,8h160c4.418,0,8-3.582,8-8v-96C328,283.582,324.418,280,320,280z     M312,376H168v-80h144V376z" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<rect x="184" y="312" width="16" height="16" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<rect x="216" y="312" width="80" height="16" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<rect x="184" y="344" width="16" height="16" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<rect x="216" y="344" width="80" height="16" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g><g>
+	<g>
+		<path d="M280,144h-80c-13.255,0-24,10.745-24,24s10.745,24,24,24h80c13.255,0,24-10.745,24-24S293.255,144,280,144z M280,176h-80    c-4.418,0-8-3.582-8-8s3.582-8,8-8h80c4.418,0,8,3.582,8,8S284.418,176,280,176z" data-original="#000000" class="active-path" data-old_color="#332e73" fill="#332e73"/>
+	</g>
+</g></g> </svg>

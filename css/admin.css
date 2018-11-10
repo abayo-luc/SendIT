@@ -1,0 +1,11 @@
+table tr:hover td:last-child.editable .icon-edit {
+	display: unset;
+}
+
+.item-counter h5 {
+	font-size: 26px;
+	font-family: "Gotham-Bold";
+	padding: 0%;
+	margin: 0%;
+	float: right;
+}

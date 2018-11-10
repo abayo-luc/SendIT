@@ -1,0 +1,87 @@
+.auth {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	background: radial-gradient(
+			circle,
+			rgba(255, 255, 255, 0.45) 15%,
+			rgba(51, 46, 115, 0.45) 94%,
+			rgba(51, 46, 115, 0.45) 100%
+		),
+		url("../assets/images/1.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	position: relative;
+}
+
+.auth .logo {
+	margin-bottom: 5em;
+}
+.auth .logo img {
+	width: 4em;
+	float: left;
+}
+
+.auth .logo h1 {
+	font-size: 4em;
+	color: var(--royal-primary-purple);
+	font-family: "Gotham-Large";
+	float: right;
+	letter-spacing: 0px;
+}
+#sign-up.auth .logo {
+	margin-bottom: 2em;
+}
+.form .links {
+	align-self: center;
+	text-align: center;
+}
+
+/*media queries*/
+/* for mobile extra small screen */
+@media only screen and (max-width: 767px) {
+	.auth .logo img {
+		width: 3em;
+		float: left;
+	}
+
+	.auth .logo h1 {
+		font-size: 3.5em;
+		color: var(--royal-primary-purple);
+		font-family: "Gotham-Large";
+		float: right;
+	}
+	#sign-up.auth .logo img {
+		margin-bottom: 0em;
+		width: 2.5em;
+		padding-top: 0.5em;
+	}
+	#sign-up.auth .logo {
+		margin-bottom: 1em;
+	}
+	#sign-up.auth .form {
+		margin-bottom: 1em;
+	}
+	.container.auth {
+		padding: 0px 15px 0px 15px;
+		width: auto;
+	}
+}
+/* for small screen */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+	.auth .logo img {
+		width: 4em;
+		float: left;
+	}
+
+	.auth .logo h1 {
+		font-size: 5em;
+		color: var(--royal-primary-purple);
+		font-family: "Gotham-Large";
+		float: right;
+	}
+}

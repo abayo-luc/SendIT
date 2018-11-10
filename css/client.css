@@ -1,0 +1,16 @@
+.card .card-content .item-counter {
+	align-self: flex-end;
+}
+.item-counter h5 {
+	font-size: 26px;
+	font-family: "Gotham-Bold";
+	padding: 0%;
+	margin: 0%;
+}
+/*media queries*/
+/* for mobile extra small screen */
+@media only screen and (max-width: 767px) {
+}
+/* for small screen */
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+}
