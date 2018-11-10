@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SendIT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/client.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/main.css" />
+    <link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <section class="left side-nav">
+        <div class="top">
+            <div class="logo-container">
+                <img src="../assets/icons/send.svg" alt="lg" srcset="">
+                <h3>SendIT</h3>
+            </div>
+            <div class="sidebar-links">
+                <a href="#" class="nav-link active">
+                    <img src="../assets/icons/home-light.svg" alt="" srcset="" class="xlg-icon">
+                    <span>Home</span>
+                </a>
+                <a href="./NewOrder.html" class="nav-link ">
+                    <img src="../assets/icons/plus-light.svg" alt="" srcset="" class="xlg-icon">
+                    <span>Add Order</span>
+                </a>
+                <a href="./InTransit.html" class="nav-link">
+                    <img src="../assets/icons/moving-truck-light.svg" alt="" srcset="" class="xlg-icon">
+                    <span>Transit</span>
+                </a>
+                <a href="#" class="nav-link logout">
+                    <img src="../assets/icons/logout.svg" alt="" srcset="" class="xlg-icon">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        <div class="down-link">
+            <img src="../assets/icons/logout.svg" alt="lg" srcset="">
+            <a href="./Login.html" class="nav-link">Logout</a>
+        </div>
+    </section>
+    <section class="right top-nav">
+        <div class="logo-container">
+            <img src="../assets/icons/send.svg" alt="lg" srcset="">
+            <h3>SendIT</h3>
+        </div>
+        <div class="right">
+            <div class="topbar-content">
+                <img src="../assets//images/1.jpg" alt="profile" srcset="" class="sm-circle profile">
+                <div class="names">
+                    <p>FirstName</p>
+                    <p>Last Name</p>
+                </div>
+                <img src="../assets/icons/notification-bell.svg" alt="" srcset="" class="notification">
+            </div>
+            <div class="mob-dropdown">
+                <div class="dropdown-icon" onclick="showMenu(this)">
+                    <img src="../assets/icons/down-arrow.svg" alt=">>" srcset="" class="md-icon">
+                </div>
+                <div class="dropdown-content" id="drp-conent">
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="./NewOrder.html">New</a></li>
+                        <li><a href="./InTransit.html">Transit</a></li>
+                        <li><a href="./Login.html">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-title">
+                            <img src="../assets/icons/storage-box.svg" alt=">>" srcset="" class="lg-icon">
+                            <h4>All</h4>
+                        </div>
+                        <hr />
+                        <div class="item-counter">
+                            <h5>50</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-title">
+                            <img src="../assets/icons/delivered.svg" alt=">>" srcset="" class="lg-icon">
+                            <h4>Delivered</h4>
+                        </div>
+                        <hr />
+                        <div class="item-counter">
+                            <h5>43</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-title">
+                            <img src="../assets/icons/shipped.svg" alt=">>" srcset="" class="lg-icon">
+                            <h4>In Transit</h4>
+                        </div>
+                        <hr />
+                        <div class="item-counter">
+                            <h5>7</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="title centered-text">All Parcel Deliveries</h3>
+        <div class="lg-card">
+            <div class="lg-card-content">
+                <div class="data-table">
+                    <table>
+                        <tr>
+                            <th>Pickup</th>
+                            <th>Address</th>
+                            <th>Destination</th>
+                            <th>Address</th>
+                            <th>Description</th>
+                            <th>Sent At</th>
+                            <th>Delivered At</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                        <tr>
+                            <td>Kicukiro</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>3 Feb, 18</td>
+                            <td>Rwf 1000</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>3 Feb, 18</td>
+                            <td>Rwf 1000</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>3 Feb, 18</td>
+                            <td>Rwf 1000</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>3 Feb, 18</td>
+                            <td>Rwf 1000</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>--</td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>3 Feb, 18</td>
+                            <td>Rwf 1000</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>Kicukiroon</td>
+                            <td>KK 11 AV</td>
+                            <td>Gasabo</td>
+                            <td>KK 19 Av</td>
+                            <td>
+                                <span> Q:2</span>
+                                <span> W:5</span>
+                                <span> L:4</span>
+                                <span> H:3</span>
+                            </td>
+                            <td>2 Feb, 18</td>
+                            <td>-- </td>
+                            <td>Rwf 1000</td>
+                            <td>False</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="../js/main.js"></script>
+</body>
+
+</html>
