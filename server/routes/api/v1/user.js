@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { findUserParcles } from '../../../controllers/user';
+import { findUserParcels } from '../../../controllers/user';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ router.post('/users', (req, res) => {
 });
 
 // user parcles
-router.get('/users/:id/parcels', findUserParcles);
+router.get('/users/:id/parcels', findUserParcels);
 // user login
 router.post('/login', (req, res) => {
   res.json({ msg: 'user login' });

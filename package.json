@@ -4,8 +4,8 @@
 	"description": "",
 	"main": "server.js",
 	"scripts": {
-		"test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 25000 --require babel-register src/test/**/*.spec.js --exit",
-		"start": "nodemon --exec babel-node src/server.js",
+		"test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 25000 --require babel-register server/test/**/*.spec.js --exit",
+		"start": "nodemon --exec babel-node server/server.js",
 		"fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
 		"coveralls": "nyc report --reporter=text-lcov | coveralls"
 	},

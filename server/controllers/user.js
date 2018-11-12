@@ -3,7 +3,7 @@ import User from '../data/User';
 
 const userInstance = new User();
 
-export const findUserParcles = (req, res) => {
+export const findUserParcels = (req, res) => {
   userInstance
     .parcels(req.params.id)
     .then(parcels => res.json({ msg: 'user pracles', parcels }))
