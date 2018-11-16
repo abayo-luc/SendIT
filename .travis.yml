@@ -4,6 +4,8 @@ node_js:
 cache:
   directories:
     - "node_modules"
+before_install:
+  - npm i -g npm@6.4.1
 script: npm test
 after_success:
   - npm run coveralls
