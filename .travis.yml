@@ -6,6 +6,16 @@ cache:
     - "node_modules"
 before_install:
   - npm i -g npm@6.4.1
+addons:
+  code_climate:
+    repo_token:
+      secure: "34ef284b9cc72ef9a3c54af7b5ea2f3c41c361b3ce82266d795d623ed4956136"
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 script: npm test
 after_success:
   - npm run coveralls
