@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/abayo-luc/SendIT.svg?branch=develop)](https://travis-ci.com/abayo-luc/SendIT)
-[![Coverage Status](https://coveralls.io/repos/github/abayo-luc/SendIT-API/badge.svg?branch=CI-Branch%231)](https://coveralls.io/github/abayo-luc/SendIT-API?branch=CI-Branch%231)
+[![Coverage Status](https://coveralls.io/repos/github/abayo-luc/SendIT/badge.svg?branch=develop)](https://coveralls.io/github/abayo-luc/SendIT?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/724d6b53101222bc4b7a/maintainability)](https://codeclimate.com/github/abayo-luc/SendIT-API/maintainability)
 # SendIT-API
 A [Social platform](https://send-it-api.herokuapp.com/api/v1/) for sending Parcels in any location
