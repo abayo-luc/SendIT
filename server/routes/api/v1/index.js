@@ -1,9 +1,9 @@
-import { Router } from 'express';
-import user from './user';
-import parcel from './parcel';
+import { Router } from "express";
+import userRouters from "./user";
+import parcelRouters from "./parcel";
 
 const routers = Router();
 
-routers.use(user, parcel);
+routers.use(userRouters, parcelRouters);
 
 export default routers;

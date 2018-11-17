@@ -45,10 +45,9 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(1);
-          res.body.should.have.property("msg");
-          res.body.msg.should.be.eql("all parcels");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(1);
+          res.body.should.have.property("status").eql(200);
           done();
         });
     });
@@ -66,7 +65,7 @@ describe("Test Parcel End Point", () => {
           res.should.have.status(400);
           res.body.should.have
             .property("msg")
-            .eql("parcel create failed");
+            .eql("failed");
           res.body.should.have.property("errors");
           res.body.errors.should.be.a("object");
           done();
@@ -81,14 +80,17 @@ describe("Test Parcel End Point", () => {
         .send({ ...newParcel, pickupLocation: "Kigali" })
         .end((err, res) => {
           res.should.have.status(201);
-          res.body.should.have.property("msg");
+          res.body.should.have.property("status").eql(201);
+          res.body.should.have
+            .property("msg")
+            .eql("success");
           res.body.msg.should.be.a("string");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have.property("createdAt");
-          res.body.parcel.should.have.property("id");
-          res.body.parcel.should.have.property("status");
-          res.body.parcel.should.have.property("userId");
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have.property("createdAt");
+          res.body.data.should.have.property("id");
+          res.body.data.should.have.property("status");
+          res.body.data.should.have.property("userId");
           done();
         });
     });
@@ -104,13 +106,12 @@ describe("Test Parcel End Point", () => {
         .end((req, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.should.have.property("msg");
-          res.body.msg.should.be.eql("parcel found");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have.property("createdAt");
-          res.body.parcel.should.have.property("id");
-          res.body.parcel.should.have.property("status");
+          res.body.should.have.property("status").eql(200);
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have.property("createdAt");
+          res.body.data.should.have.property("id");
+          res.body.data.should.have.property("status");
           done();
         });
     });
@@ -128,7 +129,7 @@ describe("Test Parcel End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have
             .property("msg")
-            .eql("parcel not found");
+            .eql("Parcel not found");
           done();
         });
     });
@@ -136,7 +137,7 @@ describe("Test Parcel End Point", () => {
   /*
     @PUT {object} one parcel
    */
-  describe("/PUT Parcel", () => {
+  describe("/PUT Parcel update", () => {
     it("it should update first parcel order", done => {
       chai
         .request(server)
@@ -146,17 +147,16 @@ describe("Test Parcel End Point", () => {
           pickUpAddress: "KM 19"
         })
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(201);
           res.body.should.have
             .property("msg")
-            .eql("Purcel updated");
-          res.body.msg.should.be.a("string");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have
+            .eql("success");
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have
             .property("pickUp")
             .eql("Kigeme");
-          res.body.parcel.should.have
+          res.body.data.should.have
             .property("pickUpAddress")
             .eql("KM 19");
           done();
@@ -166,21 +166,20 @@ describe("Test Parcel End Point", () => {
 
   // @PUT { object } one parcel
 
-  describe("/PUT Parcel", () => {
+  describe("/PUT cancel parcel", () => {
     it("It should cancle parcel delivery order", done => {
       chai
         .request(server)
         .put("/api/v1/parcels/1/cancel")
         .send()
         .end((err, res) => {
-          res.should.have.status(200);
+          res.should.have.status(201);
           res.body.should.have
             .property("msg")
-            .eql("Parcel order canceled");
-          res.body.msg.should.be.a("string");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have
+            .eql("success");
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have
             .property("status")
             .eql(STATUS_CANCELED);
           done();
@@ -200,7 +199,7 @@ describe("Test Parcel End Point", () => {
           res.should.have.status(404);
           res.body.should.have
             .property("msg")
-            .eql("cancel parcel order failed");
+            .eql("Parcel not found");
           done();
         });
     });

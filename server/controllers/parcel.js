@@ -5,22 +5,28 @@ import {
 import Parcel from "../data/Parcel";
 // bring in validator
 import { createParcelValidator } from "../validations/parcelsValidations";
-
+import {
+  okResponse,
+  badResponse
+} from "../utils/httpResponses";
 // new parce instance
 const parcelInstance = new Parcel();
 export const findAll = (req, res) => {
   const parcels = parcelInstance.findAll();
-  res.json({ msg: "all parcels", parcels });
+  okResponse(res, 200, parcels);
 };
 
 export const findById = (req, res) => {
   parcelInstance
     .find(req.params.id)
-    .then(parcel =>
-      res.json({ msg: "parcel found", parcel })
-    )
+    .then(parcel => {
+      if (!parcel) {
+        return badResponse(res, 404, "Parcel not found");
+      }
+      return okResponse(res, 200, parcel);
+    })
     .catch(err =>
-      res.status(404).send({ msg: "parcel not found" })
+      badResponse(res, 500, "Unknown internal server error")
     );
 };
 
@@ -29,9 +35,7 @@ export const createParcel = (req, res) => {
     req.body
   );
   if (!isValid) {
-    return res
-      .status(400)
-      .send({ msg: "parcel create failed", errors });
+    return badResponse(res, 400, "failed", errors);
   }
   const newParcel = {
     ...req.body,
@@ -40,50 +44,34 @@ export const createParcel = (req, res) => {
   };
   parcelInstance
     .save(newParcel)
-    .then(parcel =>
-      res
-        .status(201)
-        .json({ msg: "Parcel created", parcel })
-    )
-    .catch(err => {
-      errors.server = "There was an internal server error";
-      return res
-        .status(500)
-        .send({ msg: "parcel create failed", errors });
-    });
+    .then(parcel => okResponse(res, 201, parcel, "success"))
+    .catch(err =>
+      badResponse(res, 500, "Internal server error", err)
+    );
 };
-
+//update parcel
 export const updateParcel = (req, res) => {
-  const errors = {};
-  const parcelAttr = {
-    ...req.body
-  };
-
-  parcelInstance
-    .update(req.params.id, parcelAttr)
-    .then(parcel =>
-      res.json({ msg: "Purcel updated", parcel })
-    )
-    .catch(err => {
-      errors.server = "Parcel not found";
-      res
-        .status(404)
-        .send({ msg: "parcel update failed", errors });
-    });
+  return parcelUpdater(res, req.params.id, req.body);
 };
 
+//cancel parcel by updating its status
 export const cancelParcel = (req, res) => {
-  const errors = {};
+  return parcelUpdater(res, req.params.id, {
+    status: STATUS_CANCELED
+  });
+};
+
+// function to update any attribute of parcel
+const parcelUpdater = (res, id, attrs = {}) => {
   parcelInstance
-    .update(req.params.id, { status: STATUS_CANCELED })
-    .then(parcel =>
-      res.json({ msg: "Parcel order canceled", parcel })
-    )
-    .catch(err => {
-      errors.parcel = "Parcel not found";
-      res.status(404).send({
-        msg: "cancel parcel order failed",
-        errors
-      });
-    });
+    .update(id, attrs)
+    .then(parcel => {
+      if (!parcel) {
+        return badResponse(res, 404, "Parcel not found");
+      }
+      okResponse(res, 201, parcel, "success");
+    })
+    .catch(err =>
+      badResponse(res, 500, "Intern server error", err)
+    );
 };

@@ -1,7 +1,7 @@
 import { findIndex } from "../utils/queryHelper";
 import data from "./data.json";
 
-class Database {
+class DataModel {
   constructor(key) {
     this.key = key;
     this.data = data;
@@ -29,32 +29,36 @@ class Database {
   }
 
   find(id) {
-    const parcel = /^\+?(0|[1-9]\d*)$/.test(id)
-      ? data[this.key].find(
-          item => item.id === parseInt(id, 10)
-        )
-      : null;
     return new Promise((resolve, reject) => {
-      if (parcel) {
+      try {
+        const parcel = /^\+?(0|[1-9]\d*)$/.test(id)
+          ? data[this.key].find(
+              item => item.id === parseInt(id, 10)
+            )
+          : null;
         resolve(parcel);
-      } else {
-        reject(new Error("parcel not found"));
+      } catch (err) {
+        reject(new Error("Server error"));
       }
     });
   }
 
   update(id, newAttributes) {
-    const index = findIndex(data[this.key], id);
-    const item = data[this.key][index];
     return new Promise((resolve, reject) => {
-      if (index >= 0 && item) {
-        resolve(
-          (data[this.key][index] = {
-            ...item,
-            ...newAttributes
-          })
-        );
-      } else {
+      try {
+        const index = findIndex(data[this.key], id);
+        const item = data[this.key][index];
+        if (index >= 0 && item) {
+          resolve(
+            (data[this.key][index] = {
+              ...item,
+              ...newAttributes
+            })
+          );
+        } else {
+          resolve(null);
+        }
+      } catch (err) {
         reject(new Error("Update failed"));
       }
     });
@@ -77,4 +81,4 @@ class Database {
   }
 }
 
-export default Database;
+export default DataModel;

@@ -1,18 +1,19 @@
-import express from 'express';
+import { Router } from "express";
 // bring parcel model
 import {
   findAll,
   findById,
   createParcel,
   updateParcel,
-  cancelParcel,
-} from '../../../controllers/parcel';
+  cancelParcel
+} from "../../../controllers/parcel";
 
-const router = express.Router();
+const parcelRouters = Router();
 
-router.get('/parcels', findAll);
-router.get('/parcels/:id', findById);
-router.post('/parcels', createParcel);
-router.put('/parcels/:id', updateParcel);
-router.put('/parcels/:id/cancel', cancelParcel);
-export default router;
+parcelRouters
+  .get("/parcels", findAll)
+  .get("/parcels/:id", findById)
+  .post("/parcels", createParcel)
+  .put("/parcels/:id", updateParcel)
+  .put("/parcels/:id/cancel", cancelParcel);
+export default parcelRouters;

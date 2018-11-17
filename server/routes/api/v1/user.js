@@ -1,12 +1,15 @@
-import { Router } from 'express';
-import { findUserParcels, createUser, authenticateUser } from '../../../controllers/user';
+import { Router } from "express";
+import {
+  findUserParcels,
+  createUser,
+  authenticateUser
+} from "../../../controllers/user";
 
-const router = Router();
+const userRouters = Router();
 
 // post new user
-router.post('/users', createUser);
-// user parcles
-router.get('/users/:id/parcels', findUserParcels);
-// user login
-router.post('/login', authenticateUser);
-export default router;
+userRouters
+  .post("/users", createUser)
+  .get("/users/:id/parcels", findUserParcels)
+  .post("/login", authenticateUser);
+export default userRouters;

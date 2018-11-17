@@ -54,9 +54,9 @@ describe("Testing User End Point", () => {
         .end((req, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.should.have.property("parcels");
-          res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(1);
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(1);
           done();
         });
     });
@@ -70,9 +70,9 @@ describe("Testing User End Point", () => {
         .end((req, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.should.have.property("parcels");
-          res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(0);
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("array");
+          res.body.data.length.should.be.eql(0);
           done();
         });
     });
@@ -104,14 +104,14 @@ describe("Testing User End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have
             .property("msg")
-            .eql("new user created");
-          res.body.should.have.property("user");
-          res.body.user.should.be.a("object");
-          res.body.user.should.have.property("firstName");
-          res.body.user.should.have.property("lastName");
-          res.body.user.should.have.property("email");
-          res.body.user.should.have.property("id");
-          res.body.user.should.have.property("password");
+            .eql("success");
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have.property("firstName");
+          res.body.data.should.have.property("lastName");
+          res.body.data.should.have.property("email");
+          res.body.data.should.have.property("id");
+          res.body.data.should.have.property("password");
           done();
         });
     });
@@ -129,7 +129,7 @@ describe("Testing User End Point", () => {
           done();
         });
     });
-    it("/it should not create new user", done => {
+    it("/it should not create user with missing attributes", done => {
       chai
         .request(server)
         .post("/api/v1/users")
@@ -140,7 +140,7 @@ describe("Testing User End Point", () => {
           res.body.should.have.property("errors");
           res.body.should.have
             .property("msg")
-            .eql("new user failed");
+            .eql("failed");
           res.body.errors.should.be.a("object");
           res.body.errors.should.have.property("firstName");
           res.body.errors.should.have.property("lastName");
@@ -167,13 +167,13 @@ describe("Testing User End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have
             .property("msg")
-            .eql("login sucess");
-          res.body.should.have.property("user");
-          res.body.user.should.be.a("object");
-          res.body.user.should.have.property("id");
-          res.body.user.should.have.property("email");
-          res.body.user.should.have.property("firstName");
-          res.body.user.should.have.property("lastName");
+            .eql("success");
+          res.body.should.have.property("data");
+          res.body.data.should.be.a("object");
+          res.body.data.should.have.property("id");
+          res.body.data.should.have.property("email");
+          res.body.data.should.have.property("firstName");
+          res.body.data.should.have.property("lastName");
           done();
         });
     });

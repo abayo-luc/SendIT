@@ -1,8 +1,6 @@
-import Database from './Data';
-import { STATUS_INTRANSIT } from '../utils/types';
-
-export default class Parcel extends Database {
+import DataModel from "./Data";
+export default class Parcel extends DataModel {
   constructor() {
-    super('parcels');
+    super("parcels");
   }
 }
