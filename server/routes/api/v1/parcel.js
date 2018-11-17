@@ -5,7 +5,7 @@ import {
   findById,
   createParcel,
   updateParcel,
-  cancelParcel
+  cancelParcel,
 } from '../../../controllers/parcel';
 
 const router = express.Router();
