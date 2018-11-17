@@ -1,9 +1,6 @@
-import { findIndex } from '../utils/queryHelper';
+import { findIndex } from "../utils/queryHelper";
+import data from "./data.json";
 
-const data = {
-  parcels: [],
-  users: []
-};
 class Database {
   constructor(key) {
     this.key = key;
@@ -26,20 +23,22 @@ class Database {
       if (index >= 0) {
         resolve(data[this.key][0]);
       } else {
-        reject(new Error('create failed'));
+        reject(new Error("create failed"));
       }
     });
   }
 
   find(id) {
     const parcel = /^\+?(0|[1-9]\d*)$/.test(id)
-      ? data[this.key].find(item => item.id === parseInt(id, 10))
+      ? data[this.key].find(
+          item => item.id === parseInt(id, 10)
+        )
       : null;
     return new Promise((resolve, reject) => {
       if (parcel) {
         resolve(parcel);
       } else {
-        reject(new Error('parcel not found'));
+        reject(new Error("parcel not found"));
       }
     });
   }
@@ -56,7 +55,7 @@ class Database {
           })
         );
       } else {
-        reject(new Error('Update failed'));
+        reject(new Error("Update failed"));
       }
     });
   }
@@ -68,12 +67,12 @@ class Database {
       if (index && item) {
         resolve(data[this.key].splice(index, 1));
       } else {
-        reject(new Error('delete failed'));
+        reject(new Error("delete failed"));
       }
     });
   }
 
-  clearn() {
+  clean() {
     data[this.key].length = 0;
   }
 }

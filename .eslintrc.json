@@ -1,0 +1,15 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb-base",
+  "env": {
+    "node": true,
+    "es6": true,
+    "nyc": true,
+    "mocha": true
+  },
+  "rules": {
+    "consistent-return": "off",
+    "no-fallthrough": "off",
+    "import/prefer-default-export": "off"
+  }
+}
