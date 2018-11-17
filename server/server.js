@@ -1,18 +1,17 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
 // load all routes
-import routers from './routes/api/v1';
+import routers from "./routes/api/v1";
 
 const app = express();
 // configuration middlewares
-app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// use all routers
-app.get('/api/v1', (req, res) => {
-  res.json({ msg: 'Welcome to sendIT API' });
+// root route, welcome
+app.get("/api/v1", (req, res) => {
+  res.json({ msg: "Welcome to sendIT API" });
 });
-app.use('/api/v1/', routers);
+// use all other routes
+app.use("/api/v1/", routers);
 
 const port = process.env.PORT || 3000;
 
