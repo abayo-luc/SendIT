@@ -2,26 +2,30 @@ import bcrypt from "bcrypt";
 // bring in user model
 import User from "../data/User";
 import { signUpValidation } from "../validations/userValidations";
-
+import {
+  okResponse,
+  badResponse
+} from "../utils/httpResponses";
 const userInstance = new User();
 
 export const findUserParcels = (req, res) => {
   userInstance
     .parcels(req.params.id)
-    .then(parcels =>
-      res.json({ msg: "user pracles", parcels })
-    )
+    .then(parcels => {
+      if (!parcels) {
+        return badResponse(res, 404, "user not found");
+      }
+      okResponse(res, 200, parcels);
+    })
     .catch(err =>
-      res.status(404).json({ msg: "user not found" })
+      badResponse(res, 500, "Internal error", err)
     );
 };
 
 export const createUser = (req, res) => {
   const { isValid, errors } = signUpValidation(req.body);
   if (!isValid) {
-    return res
-      .status(400)
-      .send({ msg: "new user failed", errors });
+    return badResponse(res, 400, "failed", errors);
   }
   const newUser = {
     ...req.body
@@ -30,9 +34,7 @@ export const createUser = (req, res) => {
     .findAll()
     .find(user => user.email === newUser.email);
   if (existingUser) {
-    return res
-      .status(400)
-      .json({ msg: "user already exist" });
+    return badResponse(res, 400, "user already exist");
   }
   // refered to https://www.npmjs.com/package/bcryptjs hashing the password
   bcrypt.genSalt(10, (err, salt) => {
@@ -46,18 +48,15 @@ export const createUser = (req, res) => {
       newUser.password = hash;
       return userInstance
         .save(newUser)
-        .then(user =>
-          res
-            .status(201)
-            .json({ msg: "new user created", user })
-        )
-        .catch(err => {
-          errors.server =
-            "There was an internal server error";
-          res
-            .status(500)
-            .send({ msg: "new user failed", errors });
-        });
+        .then(user => okResponse(res, 201, user, "success"))
+        .catch(err =>
+          badResponse(
+            res,
+            500,
+            "Internal server error",
+            err
+          )
+        );
     });
   });
 };
@@ -72,13 +71,15 @@ export const authenticateUser = (req, res) => {
     .compare(req.body.password, currentUser.password)
     .then(pwdMatch => {
       if (!pwdMatch) {
-        return res
-          .status(400)
-          .json({ msg: "invalid email or password" });
+        return badResponse(
+          res,
+          400,
+          "invalid email or password"
+        );
       }
-      res.json({
-        msg: "login sucess",
-        user: { ...currentUser }
-      });
-    });
+      return okResponse(res, 200, currentUser, "success");
+    })
+    .catch(err =>
+      badResponse(res, 500, "internal server error", err)
+    );
 };

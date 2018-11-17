@@ -1,7 +1,7 @@
 import { findIndex } from "../utils/queryHelper";
 import data from "./data.json";
 
-class Database {
+class DataModel {
   constructor(key) {
     this.key = key;
     this.data = data;
@@ -81,4 +81,4 @@ class Database {
   }
 }
 
-export default Database;
+export default DataModel;
