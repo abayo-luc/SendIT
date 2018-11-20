@@ -111,7 +111,6 @@ describe("Testing User End Point", () => {
           res.body.user.should.have.property("lastName");
           res.body.user.should.have.property("email");
           res.body.user.should.have.property("id");
-          res.body.user.should.have.property("password");
           done();
         });
     });
