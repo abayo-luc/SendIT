@@ -11,10 +11,11 @@ import {
 } from "../utils/httpResponses";
 // new parce instance from parcel model
 const parcelInstance = new parcel();
+
 export default class Parcel {
   static findAll(req, res) {
     const parcels = parcelInstance.findAll();
-    okResponse(res, 200, "parcels", parcels);
+    okResponse(res, 200, "success", "parcels", parcels);
   }
 
   static findById(req, res) {
@@ -22,14 +23,26 @@ export default class Parcel {
       .find(req.params.id)
       .then(parcel => {
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
-        return okResponse(res, 200, "parcel", parcel);
+        return okResponse(
+          res,
+          200,
+          "success",
+          "parcel",
+          parcel
+        );
       })
       .catch(err =>
         badResponse(
           res,
           500,
+          "failed",
           "Unknown internal server error"
         )
       );
@@ -40,7 +53,13 @@ export default class Parcel {
       req.body
     );
     if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
+      return badResponse(
+        res,
+        400,
+        "failed",
+        "some filed missing",
+        errors
+      );
     }
     const newParcel = {
       ...req.body,
@@ -50,10 +69,16 @@ export default class Parcel {
     parcelInstance
       .save(newParcel)
       .then(parcel =>
-        okResponse(res, 201, "parcel", parcel, "success")
+        okResponse(res, 201, "success", "parcel", parcel)
       )
       .catch(err =>
-        badResponse(res, 500, "Internal server error", err)
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Internal server error",
+          err
+        )
       );
   }
   //update parcel
@@ -75,11 +100,29 @@ const parcelUpdater = (res, id, attrs = {}) => {
     .update(id, attrs)
     .then(parcel => {
       if (!parcel) {
-        return badResponse(res, 404, "Parcel not found");
+        return badResponse(
+          res,
+          404,
+          "failed",
+          "Parcel not found"
+        );
       }
-      okResponse(res, 201, "parcel", parcel, "success");
+      okResponse(
+        res,
+        201,
+        "success",
+        "parcel",
+        parcel,
+        "success"
+      );
     })
     .catch(err =>
-      badResponse(res, 500, "Intern server error", err)
+      badResponse(
+        res,
+        500,
+        "failed",
+        "Intern server error",
+        err
+      )
     );
 };

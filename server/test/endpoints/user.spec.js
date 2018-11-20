@@ -103,7 +103,7 @@ describe("Testing User End Point", () => {
           res.should.have.status(201);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("message")
+            .property("status")
             .eql("success");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
@@ -123,6 +123,9 @@ describe("Testing User End Point", () => {
           res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
             .property("message")
             .eql("user already exist");
           done();
@@ -138,7 +141,7 @@ describe("Testing User End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.should.have
-            .property("message")
+            .property("status")
             .eql("failed");
           res.body.errors.should.be.a("object");
           res.body.errors.should.have.property("firstName");
@@ -165,7 +168,7 @@ describe("Testing User End Point", () => {
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("message")
+            .property("status")
             .eql("success");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
@@ -183,6 +186,9 @@ describe("Testing User End Point", () => {
         .send({ email: "me@example.com", password: "112" })
         .end((err, res) => {
           res.should.have.status(400);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
           res.body.should
             .property("message")
             .eql("invalid email or password");

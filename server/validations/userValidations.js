@@ -20,3 +20,18 @@ export const signUpValidation = data => {
     errors
   };
 };
+
+export const signInValidation = data => {
+  const errors = {};
+  if (isEmpty(data.email)) {
+    errors.email = "Email is required";
+  }
+  if (isEmpty(data.password)) {
+    errors.password = "Password is required";
+  }
+
+  return {
+    isValid: isEmpty(errors),
+    errors
+  };
+};

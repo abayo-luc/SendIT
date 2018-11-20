@@ -7,5 +7,5 @@ const userRouters = Router();
 userRouters
   .post("/users", user.signUp)
   .get("/users/:id/parcels", user.parcels)
-  .post("/login", user.signIn);
+  .post("/login", user.login);
 export default userRouters;

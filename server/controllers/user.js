@@ -1,7 +1,10 @@
 import bcrypt from "bcrypt";
 // bring in user model
 import userModel from "../data/User";
-import { signUpValidation } from "../validations/userValidations";
+import {
+  signUpValidation,
+  signInValidation
+} from "../validations/userValidations";
 import {
   okResponse,
   badResponse
@@ -13,35 +16,63 @@ export default class User {
       .parcels(req.params.id)
       .then(parcels => {
         if (!parcels) {
-          return badResponse(res, 404, "user not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "user not found"
+          );
         }
-        okResponse(res, 200, "parcels", parcels);
+        okResponse(res, 200, "success", "parcels", parcels);
       })
       .catch(err =>
-        badResponse(res, 500, "Internal error", err)
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Internal error",
+          err
+        )
       );
   }
 
   static signUp(req, res) {
     const { isValid, errors } = signUpValidation(req.body);
     if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
+      return badResponse(
+        res,
+        400,
+        "failed",
+        "some fileds missing",
+        errors
+      );
     }
     const newUser = {
-      ...req.body
+      ...req.body,
+      password: req.body.password.trim()
     };
     const existingUser = userInstance
       .findAll()
       .find(user => user.email === newUser.email);
     if (existingUser) {
-      return badResponse(res, 400, "user already exist");
+      return badResponse(
+        res,
+        400,
+        "failed",
+        "user already exist"
+      );
     }
     // refered to https://www.npmjs.com/package/bcryptjs hashing the password++++++
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (error, hash) => {
         if (error) {
           console.log(error);
-          badResponse(res, 500, "bcrypt hash error");
+          badResponse(
+            res,
+            500,
+            "failed",
+            "bcrypt hash error"
+          );
         }
         newUser.password = hash;
         return userInstance
@@ -56,15 +87,16 @@ export default class User {
             return okResponse(
               res,
               201,
+              "success",
               "user",
-              userRes,
-              "success"
+              userRes
             );
           })
           .catch(err =>
             badResponse(
               res,
               500,
+              "failed",
               "Internal server error",
               err
             )
@@ -74,28 +106,44 @@ export default class User {
   }
 
   // user authentication
-  static signIn(req, res) {
+  static login(req, res) {
+    const { email, password } = req.body;
+    const { isValid, errors } = signInValidation({
+      email,
+      password
+    });
+    if (!isValid) {
+      return badResponse(res, 400, errors);
+    }
     const currentUser = userInstance
       .findAll()
-      .find(user => user.email === req.body.email);
+      .find(user => user.email === email);
+    if (!currentUser) {
+      return badResponse(
+        res,
+        404,
+        "failed",
+        "user not found"
+      );
+    }
     // check the encrypted password
     bcrypt
-      .compare(req.body.password, currentUser.password)
+      .compare(password, currentUser.password)
       .then(pwdMatch => {
         if (!pwdMatch) {
           return badResponse(
             res,
             400,
+            "failed",
             "invalid email or password"
           );
         }
-        return okResponse(
-          res,
-          200,
-          "user",
-          currentUser,
-          "success"
-        );
+        return okResponse(res, 200, "success", "user", {
+          id: currentUser.id,
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          email: currentUser.email
+        });
       })
       .catch(err =>
         badResponse(res, 500, "internal server error", err)
