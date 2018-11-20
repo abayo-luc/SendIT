@@ -45,8 +45,8 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.data.should.be.a("array");
-          res.body.data.length.should.be.eql(1);
+          res.body.parcels.should.be.a("array");
+          res.body.parcels.length.should.be.eql(1);
           res.body.should.have.property("status").eql(200);
           done();
         });
@@ -64,7 +64,7 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("failed");
           res.body.should.have.property("errors");
           res.body.errors.should.be.a("object");
@@ -82,15 +82,15 @@ describe("Test Parcel End Point", () => {
           res.should.have.status(201);
           res.body.should.have.property("status").eql(201);
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("success");
-          res.body.msg.should.be.a("string");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have.property("createdAt");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("status");
-          res.body.data.should.have.property("userId");
+          res.body.message.should.be.a("string");
+          res.body.should.have.property("parcel");
+          res.body.parcel.should.be.a("object");
+          res.body.parcel.should.have.property("createdAt");
+          res.body.parcel.should.have.property("id");
+          res.body.parcel.should.have.property("status");
+          res.body.parcel.should.have.property("userId");
           done();
         });
     });
@@ -107,11 +107,11 @@ describe("Test Parcel End Point", () => {
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have.property("status").eql(200);
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have.property("createdAt");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("status");
+          res.body.should.have.property("parcel");
+          res.body.parcel.should.be.a("object");
+          res.body.parcel.should.have.property("createdAt");
+          res.body.parcel.should.have.property("id");
+          res.body.parcel.should.have.property("status");
           done();
         });
     });
@@ -128,7 +128,7 @@ describe("Test Parcel End Point", () => {
           res.should.have.status(404);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("Parcel not found");
           done();
         });
@@ -149,14 +149,14 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("success");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have
+          res.body.should.have.property("parcel");
+          res.body.parcel.should.be.a("object");
+          res.body.parcel.should.have
             .property("pickUp")
             .eql("Kigeme");
-          res.body.data.should.have
+          res.body.parcel.should.have
             .property("pickUpAddress")
             .eql("KM 19");
           done();
@@ -175,11 +175,11 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("success");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have
+          res.body.should.have.property("parcel");
+          res.body.parcel.should.be.a("object");
+          res.body.parcel.should.have
             .property("status")
             .eql(STATUS_CANCELED);
           done();
@@ -198,7 +198,7 @@ describe("Test Parcel End Point", () => {
         .end((err, res) => {
           res.should.have.status(404);
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("Parcel not found");
           done();
         });
