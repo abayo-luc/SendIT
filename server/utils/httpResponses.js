@@ -1,8 +1,8 @@
-export const okResponse = (res, status, data, msg) => {
+export const okResponse = (res, status, key, data, msg) => {
   const resPayload = {
     status,
-    data,
-    msg
+    message: msg,
+    [key]: data
   };
   return res.status(status).json(resPayload);
 };
@@ -12,6 +12,6 @@ export const badResponse = (res, status, msg, errors) => {
     status
   };
   if (errors) resPayload.errors = errors;
-  if (msg) resPayload.msg = msg;
+  if (msg) resPayload.message = msg;
   res.status(status).json(resPayload);
 };

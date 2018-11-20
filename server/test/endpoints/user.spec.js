@@ -54,9 +54,9 @@ describe("Testing User End Point", () => {
         .end((req, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("array");
-          res.body.data.length.should.be.eql(1);
+          res.body.should.have.property("parcels");
+          res.body.parcels.should.be.a("array");
+          res.body.parcels.length.should.be.eql(1);
           done();
         });
     });
@@ -70,9 +70,9 @@ describe("Testing User End Point", () => {
         .end((req, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("array");
-          res.body.data.length.should.be.eql(0);
+          res.body.should.have.property("parcels");
+          res.body.parcels.should.be.a("array");
+          res.body.parcels.length.should.be.eql(0);
           done();
         });
     });
@@ -86,7 +86,7 @@ describe("Testing User End Point", () => {
           res.should.have.status(404);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("user not found");
           done();
         });
@@ -103,15 +103,15 @@ describe("Testing User End Point", () => {
           res.should.have.status(201);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("success");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have.property("firstName");
-          res.body.data.should.have.property("lastName");
-          res.body.data.should.have.property("email");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("password");
+          res.body.should.have.property("user");
+          res.body.user.should.be.a("object");
+          res.body.user.should.have.property("firstName");
+          res.body.user.should.have.property("lastName");
+          res.body.user.should.have.property("email");
+          res.body.user.should.have.property("id");
+          res.body.user.should.have.property("password");
           done();
         });
     });
@@ -124,7 +124,7 @@ describe("Testing User End Point", () => {
           res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("user already exist");
           done();
         });
@@ -139,7 +139,7 @@ describe("Testing User End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("failed");
           res.body.errors.should.be.a("object");
           res.body.errors.should.have.property("firstName");
@@ -166,14 +166,14 @@ describe("Testing User End Point", () => {
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("msg")
+            .property("message")
             .eql("success");
-          res.body.should.have.property("data");
-          res.body.data.should.be.a("object");
-          res.body.data.should.have.property("id");
-          res.body.data.should.have.property("email");
-          res.body.data.should.have.property("firstName");
-          res.body.data.should.have.property("lastName");
+          res.body.should.have.property("user");
+          res.body.user.should.be.a("object");
+          res.body.user.should.have.property("id");
+          res.body.user.should.have.property("email");
+          res.body.user.should.have.property("firstName");
+          res.body.user.should.have.property("lastName");
           done();
         });
     });
@@ -185,7 +185,7 @@ describe("Testing User End Point", () => {
         .end((err, res) => {
           res.should.have.status(400);
           res.body.should
-            .property("msg")
+            .property("message")
             .eql("invalid email or password");
           done();
         });
