@@ -28,6 +28,7 @@ const query = (text, params) => {
   });
 };
 const findById = (table, id) => {
+  console.log(table, id);
   const queryText = `
       SELECT *  FROM ${table} WHERE id = $1 LIMIT 1
     `;
@@ -37,7 +38,10 @@ const findById = (table, id) => {
       .then(response => {
         resolve(response);
       })
-      .catch(err => reject(err));
+      .catch(err => {
+        console.log(err);
+        reject(err);
+      });
   });
 };
 

@@ -95,8 +95,7 @@ export default class User {
           );
         }
         let payload = { ...response[0] };
-        console.log(config.secretOrKey);
-        delete user.password;
+        delete payload.password;
         jwt.sign(
           payload,
           config.secretOrKey,
@@ -113,6 +112,7 @@ export default class User {
         );
       })
       .catch(err => {
+        console.log(err);
         badResponse(res, 500, "internal server error", err);
       });
   }
