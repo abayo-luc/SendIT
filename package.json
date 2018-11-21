@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 25000 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
+    "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 1000 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
     "start": "nodemon --exec babel-node server/server.js",
     "fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
@@ -24,18 +24,15 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "bcrypt": "^3.0.2",
-    "cors": "^2.8.5",
     "express": "^4.16.4",
     "nodemon": "^1.18.6",
-    "passport": "^0.4.0",
-    "validatorjs": "^3.15.1"
+    "passport": "^0.4.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-polyfill": "^6.26.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
-    "codecov": "^3.1.0",
     "coveralls": "^3.0.2",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
