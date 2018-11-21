@@ -1,7 +1,8 @@
+import dotenv from "dotenv";
 import express from "express";
 // load all routes
 import routers from "./routes/api/v1";
-
+dotenv.config();
 const app = express();
 // configuration middlewares
 app.use(express.json());
