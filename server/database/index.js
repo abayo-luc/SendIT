@@ -23,20 +23,22 @@ const query = (text, params) => {
         resolve(rows);
       })
       .catch(err => {
+        console.log(err);
         reject(err);
       });
   });
 };
 const findById = (table, id) => {
-  console.log(table, id);
   const queryText = `
       SELECT *  FROM ${table} WHERE id = $1 LIMIT 1
     `;
   const values = [id];
   return new Promise((resolve, reject) => {
-    query(queryText, values)
+    pool
+      .query(queryText, values)
       .then(response => {
-        resolve(response);
+        const { rows } = response;
+        resolve(rows[0]);
       })
       .catch(err => {
         console.log(err);

@@ -67,12 +67,10 @@ export default class User {
               );
             })
             .catch(err => {
-              badResponse(
-                res,
-                500,
-                "Internal server error",
-                err
-              );
+              let message = "Internal server error";
+              if (err.routine === "_bt_check_unique")
+                message = "User already exist";
+              badResponse(res, 500, message, err);
             });
         }
       );
