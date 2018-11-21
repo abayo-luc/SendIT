@@ -1,6 +1,9 @@
 import bcrypt from "bcrypt";
 import uuid from "uuid";
 import momemt from "moment";
+import jwt from "jsonwebtoken";
+//bring in the configuration
+import config from "../config/config.json";
 // bring in user model
 import db from "../database";
 import userModel from "../data/User";
@@ -91,9 +94,23 @@ export default class User {
             "invalid email or password"
           );
         }
-        let user = { ...response[0] };
+        let payload = { ...response[0] };
+        console.log(config.secretOrKey);
         delete user.password;
-        okResponse(res, 200, "user", user, "success");
+        jwt.sign(
+          payload,
+          config.secretOrKey,
+          { expiresIn: 3600 },
+          (err, token) => {
+            okResponse(
+              res,
+              200,
+              "token",
+              `Bearer ${token}`,
+              "success"
+            );
+          }
+        );
       })
       .catch(err => {
         badResponse(res, 500, "internal server error", err);

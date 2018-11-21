@@ -27,6 +27,20 @@ const query = (text, params) => {
       });
   });
 };
+const findById = (table, id) => {
+  const queryText = `
+      SELECT *  FROM ${table} WHERE id = $1 LIMIT 1
+    `;
+  const values = [id];
+  return new Promise((resolve, reject) => {
+    query(queryText, values)
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => reject(err));
+  });
+};
+
 const createTable = migrationText => {
   return new Promise((resolve, reject) => {
     pool
@@ -40,4 +54,4 @@ const createTable = migrationText => {
   });
 };
 
-export default { query, createTable };
+export default { query, createTable, findById };
