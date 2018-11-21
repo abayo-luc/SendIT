@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt";
+import uuid from "uuid";
+import momemt from "moment";
 // bring in user model
+import db from "../database";
 import userModel from "../data/User";
 import { signUpValidation } from "../validations/userValidations";
 import {
@@ -27,78 +30,73 @@ export default class User {
     if (!isValid) {
       return badResponse(res, 400, "failed", errors);
     }
-    const newUser = {
-      ...req.body
-    };
-    const existingUser = userInstance
-      .findAll()
-      .find(user => user.email === newUser.email);
-    if (existingUser) {
-      return badResponse(res, 400, "user already exist");
-    }
+    const queryText = `
+    INSERT INTO users(id, first_name, last_name, email, password, created_at)
+    VALUES($1, $2, $3, $4, $5, $6)
+    returning *
+    `;
     // refered to https://www.npmjs.com/package/bcryptjs hashing the password++++++
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(newUser.password, salt, (error, hash) => {
-        if (error) {
-          console.log(error);
-          badResponse(res, 500, "bcrypt hash error");
+      bcrypt.hash(
+        req.body.password,
+        salt,
+        (error, hash) => {
+          if (error) {
+            console.log(error);
+            badResponse(res, 500, "bcrypt hash error");
+          }
+          const newUser = [
+            uuid(),
+            req.body.firstName,
+            req.body.lastName,
+            req.body.email,
+            hash,
+            momemt(new Date())
+          ];
+          db.query(queryText, newUser)
+            .then(userRes => {
+              okResponse(
+                res,
+                201,
+                "user",
+                userRes,
+                "sucess"
+              );
+            })
+            .catch(err => {
+              badResponse(
+                res,
+                500,
+                "Internal server error",
+                err
+              );
+            });
         }
-        newUser.password = hash;
-        return userInstance
-          .save(newUser)
-          .then(user => {
-            const userRes = {
-              id: user.id,
-              lastName: user.lastName,
-              firstName: user.firstName,
-              email: user.email
-            };
-            return okResponse(
-              res,
-              201,
-              "user",
-              userRes,
-              "success"
-            );
-          })
-          .catch(err =>
-            badResponse(
-              res,
-              500,
-              "Internal server error",
-              err
-            )
-          );
-      });
+      );
     });
   }
 
   // user authentication
   static signIn(req, res) {
-    const currentUser = userInstance
-      .findAll()
-      .find(user => user.email === req.body.email);
-    // check the encrypted password
-    bcrypt
-      .compare(req.body.password, currentUser.password)
-      .then(pwdMatch => {
-        if (!pwdMatch) {
+    const queryText = `
+      SELECT *  FROM users WHERE email = $1 LIMIT 1
+    `;
+    const value = [req.body.email];
+    db.query(queryText, value)
+      .then(response => {
+        if (!response[0]) {
           return badResponse(
             res,
             400,
             "invalid email or password"
           );
         }
-        return okResponse(
-          res,
-          200,
-          "user",
-          currentUser,
-          "success"
-        );
+        let user = { ...response[0] };
+        delete user.password;
+        okResponse(res, 200, "user", user, "success");
       })
-      .catch(err =>
-        badResponse(res, 500, "internal server error", err)
-      );
+      .catch(err => {
+        badResponse(res, 500, "internal server error", err);
+      });
   }
 }

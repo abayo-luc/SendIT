@@ -19,6 +19,19 @@ const query = (text, params) => {
     pool
       .query(text, params)
       .then(response => {
+        const { rows } = response;
+        resolve(rows);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+const createTable = migrationText => {
+  return new Promise((resolve, reject) => {
+    pool
+      .query(migrationText)
+      .then(response => {
         resolve(response);
       })
       .catch(err => {
@@ -27,4 +40,4 @@ const query = (text, params) => {
   });
 };
 
-export default { query };
+export default { query, createTable };
