@@ -7,6 +7,7 @@
     "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 1000 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
     "start": "nodemon --exec babel-node server/server.js",
     "db:migrate": "node --require babel-register server/migrations/index.js --exit",
+    "test:db:migrate": "NODE_ENV=test node --require babel-register server/migrations/index.js --exit",
     "fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },

@@ -1,16 +1,15 @@
 import dotenv from "dotenv";
 import { Pool } from "pg";
-
+import dbConfig from "../config/database";
 //load env variables
 dotenv.config();
+//configurate the environment
+const env = process.env.NODE_ENV || "development";
 
+console.log(env);
 //connect via pool
 const pool = new Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-  password: process.env.DB_PASSWORD
+  ...dbConfig[env]
 });
 
 //insipired by olawalejarvis from https://github.com/olawalejarvis/reflection_app_server/blob/develop/src/usingDB/db/index.js
