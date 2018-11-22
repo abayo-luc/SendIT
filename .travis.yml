@@ -6,12 +6,6 @@ cache:
     - "node_modules"
 services:
   - postgresql
-addons:
-  postgresql: "10"
-  apt:
-    packages:
-      - postgresql-10
-      - postgresql-client-10
 before_install:
   - npm i -g npm@6.4.1
   - psql -c 'create database send_it_test;' -U postgres
