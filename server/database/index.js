@@ -6,7 +6,6 @@ dotenv.config();
 //configurate the environment
 const env = process.env.NODE_ENV || "development";
 
-console.log(env);
 //connect via pool
 const pool = new Pool({
   ...dbConfig[env]
@@ -22,7 +21,7 @@ const query = (text, params) => {
         resolve(rows);
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
         reject(err);
       });
   });
@@ -40,7 +39,7 @@ const findById = (table, id) => {
         resolve(rows[0]);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         reject(err);
       });
   });

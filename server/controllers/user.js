@@ -22,7 +22,7 @@ export default class User {
         okResponse(res, 200, "parcels", response);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         badResponse(res, 500, "Internal error", err);
       });
   }
@@ -44,7 +44,7 @@ export default class User {
         salt,
         (error, hash) => {
           if (error) {
-            console.log(error);
+            //console.log(error);
             badResponse(res, 500, "bcrypt hash error");
           }
           const newUser = [
@@ -90,7 +90,6 @@ export default class User {
         bcrypt
           .compare(password, response[0].password)
           .then(isMatch => {
-            console.log(isMatch);
             if (isMatch) {
               // User Matched
               let payload = { ...response[0] };
@@ -119,7 +118,7 @@ export default class User {
           });
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         badResponse(res, 500, "internal server error", err);
       });
   }

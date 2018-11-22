@@ -21,7 +21,7 @@ export default class Parcel {
         okResponse(res, 200, "parcels", parcels);
       })
       .catch(err => {
-        console.log(err);
+        //console.log(err);
         badResponse(req, 500, "Internal error", err);
       });
   }
