@@ -11,8 +11,12 @@ const migrationText = `CREATE TABLE IF NOT EXISTS
     )`;
 (() => {
   db.createTable(migrationText)
-    .then(response => console.log(response))
+    .then(response => {
+      console.log("User table created");
+      return;
+    })
     .catch(err => {
       console.log(err);
+      return;
     });
 })();

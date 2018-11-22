@@ -11,10 +11,14 @@ const migrationText = `CREATE TABLE IF NOT EXISTS
         user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
         created_at TIMESTAMP
     )`;
-(() => {
+setTimeout(() => {
   db.createTable(migrationText)
-    .then(response => console.log(response))
+    .then(response => {
+      console.log("parcel table created");
+      return;
+    })
     .catch(err => {
       console.log(err);
+      return;
     });
-})();
+}, 5000);
