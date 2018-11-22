@@ -13,7 +13,7 @@ export default {
   test: {
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
-    database: process.env.TEST_DB_NAME,
+    database: process.env.TEST_DB_NAME || "send_it_test",
     port: process.env.DB_PORT,
     password: process.env.USER_PASSWORD
   }
