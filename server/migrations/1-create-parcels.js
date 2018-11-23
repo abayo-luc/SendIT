@@ -14,7 +14,7 @@ const migrationText = `CREATE TABLE IF NOT EXISTS
 setTimeout(() => {
   db.createTable(migrationText)
     .then(response => {
-      console.log("parcel table created");
+      console.log("parcels table created");
       return;
     })
     .catch(err => {
