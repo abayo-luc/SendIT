@@ -9,7 +9,7 @@ const env = process.env.NODE_ENV || "development";
 //insipired by olawalejarvis from https://github.com/olawalejarvis/reflection_app_server/blob/develop/src/usingDB/db/index.js
 const query = (text, params) => {
   const pool = new Pool({
-    ...dbConfig[env]
+    connectionString: dbConfig[env]
   });
   return new Promise((resolve, reject) => {
     pool
@@ -28,7 +28,7 @@ const query = (text, params) => {
 };
 const findById = (table, id) => {
   const pool = new Pool({
-    ...dbConfig[env]
+    connectionString: dbConfig[env]
   });
   const queryText = `
       SELECT *  FROM ${table} WHERE id = $1 LIMIT 1
@@ -52,7 +52,7 @@ const findById = (table, id) => {
 
 const createTable = migrationText => {
   const pool = new Pool({
-    ...dbConfig[env]
+    connectionString: dbConfig[env]
   });
   return new Promise((resolve, reject) => {
     pool
