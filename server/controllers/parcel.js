@@ -18,11 +18,17 @@ export default class Parcel {
     const queryText = `SELECT * FROM parcels`;
     db.query(queryText)
       .then(parcels => {
-        okResponse(res, 200, "parcels", parcels);
+        okResponse(res, 200, "parcels", parcels, "success");
       })
       .catch(err => {
         //console.log(err);
-        badResponse(req, 500, "Internal error", err);
+        badResponse(
+          req,
+          500,
+          "failed",
+          "Internal error",
+          err
+        );
       });
   }
 
@@ -30,12 +36,29 @@ export default class Parcel {
     db.findById("parcels", parseInt(req.params.id, 10))
       .then(parcel => {
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
-        return okResponse(res, 200, "parcel", parcel);
+        return okResponse(
+          res,
+          200,
+          "parcel",
+          parcel,
+          "success"
+        );
       })
       .catch(err => {
-        badResponse(res, 500, "Internal server error", err);
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Internal server error",
+          err
+        );
       });
   }
 
@@ -44,7 +67,7 @@ export default class Parcel {
       req.body
     );
     if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
+      return badResponse(res, 400, "failed", null, errors);
     }
     const queryText = `
     INSERT INTO parcels(  
@@ -105,6 +128,7 @@ export default class Parcel {
         badResponse(
           res,
           500,
+          "failed",
           "Internal server errror",
           err
         );
@@ -121,7 +145,12 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
 
         const updateQuery = `UPDATE parcels SET 
@@ -156,13 +185,20 @@ export default class Parcel {
             badResponse(
               res,
               500,
+              "failed",
               "Intern server error",
               err
             );
           });
       })
       .catch(err => {
-        badResponse(res, 500, "Intern server error", err);
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Intern server error",
+          err
+        );
       });
   }
 
@@ -180,7 +216,12 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
 
         const updateQuery = `UPDATE parcels SET 
@@ -214,7 +255,13 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        badResponse(res, 500, "Intern server error", err);
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Intern server error",
+          err
+        );
       });
   }
 }

@@ -16,7 +16,7 @@ import {
 export default class User {
   static parcels(req, res) {
     if (!Number(req.params.id)) {
-      return badResponse(res, 400, "Invalid id");
+      return badResponse(res, 400, "failed", "Invalid id");
     }
     const queryString = `SELECT * FROM parcels WHERE user_id = $1`;
     const values = [Number(req.params.id)];
@@ -26,14 +26,20 @@ export default class User {
       })
       .catch(err => {
         //console.log(err);
-        badResponse(res, 500, "Internal error", err);
+        badResponse(
+          res,
+          500,
+          "failed",
+          "Internal error",
+          err
+        );
       });
   }
 
   static signUp(req, res) {
     const { isValid, errors } = signUpValidation(req.body);
     if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
+      return badResponse(res, 400, "failed", null, errors);
     }
     const queryText = `
     INSERT INTO users(first_name, last_name, email, password, created_at)
@@ -48,7 +54,12 @@ export default class User {
         (error, hash) => {
           if (error) {
             //console.log(error);
-            badResponse(res, 500, "bcrypt hash error");
+            badResponse(
+              res,
+              500,
+              "failed",
+              "bcrypt hash error"
+            );
           }
           const newUser = [
             req.body.firstName,
@@ -71,7 +82,7 @@ export default class User {
               let message = "Internal server error";
               if (err.routine === "_bt_check_unique")
                 message = "User already exist";
-              badResponse(res, 400, message, err);
+              badResponse(res, 400, "failed", message, err);
             });
         }
       );
@@ -89,6 +100,7 @@ export default class User {
       return badResponse(
         res,
         400,
+        "failed",
         "validation error",
         errors
       );
@@ -100,7 +112,12 @@ export default class User {
     db.query(queryText, value)
       .then(response => {
         if (!response[0]) {
-          return badResponse(res, 404, "User not found");
+          return badResponse(
+            res,
+            404,
+            "failed",
+            "User not found"
+          );
         }
         bcrypt
           .compare(password, response[0].password)
@@ -127,6 +144,7 @@ export default class User {
               badResponse(
                 res,
                 400,
+                "failed",
                 "Invalid email or password"
               );
             }
@@ -134,7 +152,13 @@ export default class User {
       })
       .catch(err => {
         //console.log(err);
-        badResponse(res, 500, "internal server error", err);
+        badResponse(
+          res,
+          500,
+          "failed",
+          "internal server error",
+          err
+        );
       });
   }
 }

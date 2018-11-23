@@ -1,17 +1,30 @@
-export const okResponse = (res, status, key, data, msg) => {
+export const okResponse = (
+  res,
+  code,
+  key,
+  data,
+  status = "success",
+  msg
+) => {
   const resPayload = {
     status,
     message: msg,
     [key]: data
   };
-  return res.status(status).json(resPayload);
+  return res.status(code).json(resPayload);
 };
 
-export const badResponse = (res, status, msg, errors) => {
+export const badResponse = (
+  res,
+  code,
+  status,
+  msg,
+  errors
+) => {
   const resPayload = {
     status
   };
   if (errors) resPayload.errors = errors;
   if (msg) resPayload.message = msg;
-  res.status(status).json(resPayload);
+  res.status(code).json(resPayload);
 };

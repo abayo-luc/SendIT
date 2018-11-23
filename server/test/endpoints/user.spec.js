@@ -144,7 +144,7 @@ describe("Testing User End Point", () => {
           res.should.have.status(201);
           res.body.should.be.a("object");
           res.body.should.have
-            .property("message")
+            .property("status")
             .eql("success");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
@@ -189,7 +189,7 @@ describe("Testing User End Point", () => {
           res.body.should.be.a("object");
           res.body.should.have.property("errors");
           res.body.should.have
-            .property("message")
+            .property("status")
             .eql("failed");
           res.body.errors.should.be.a("object");
           res.body.errors.should.have.property("firstName");
@@ -217,7 +217,7 @@ describe("Testing User End Point", () => {
               res.should.have.status(200);
               res.body.should.be.a("object");
               res.body.should.have
-                .property("message")
+                .property("status")
                 .eql("success");
               res.body.should.have.property("token");
               done();
