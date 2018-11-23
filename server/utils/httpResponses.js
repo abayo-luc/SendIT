@@ -1,4 +1,4 @@
-export const okResponse = (
+const okResponse = (
   res,
   code,
   key,
@@ -14,17 +14,16 @@ export const okResponse = (
   return res.status(code).json(resPayload);
 };
 
-export const badResponse = (
-  res,
-  code,
-  status,
-  msg,
-  errors
-) => {
+const badResponse = (res, code, status, msg, errors) => {
   const resPayload = {
     status
   };
   if (errors) resPayload.errors = errors;
   if (msg) resPayload.message = msg;
   res.status(code).json(resPayload);
+};
+
+export default {
+  okResponse,
+  badResponse
 };

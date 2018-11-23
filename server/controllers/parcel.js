@@ -7,22 +7,33 @@ import moment from "moment";
 import db from "../database";
 // bring in validator
 import { createParcelValidator } from "../validations/parcelsValidations";
-import {
-  okResponse,
-  badResponse
-} from "../utils/httpResponses";
+import httpResponses from "../utils/httpResponses";
 import { isEmpty } from "../utils/validatorHelpers";
 // new parce instance from parcel model
 export default class Parcel {
   static findAll(req, res) {
+    if (!req.user["is_admin"]) {
+      return httpResponses.badResponse(
+        res,
+        401,
+        "failed",
+        "Untorized"
+      );
+    }
     const queryText = `SELECT * FROM parcels`;
     db.query(queryText)
       .then(parcels => {
-        okResponse(res, 200, "parcels", parcels, "success");
+        httpResponses.okResponse(
+          res,
+          200,
+          "parcels",
+          parcels,
+          "success"
+        );
       })
       .catch(err => {
         //console.log(err);
-        badResponse(
+        httpResponses.badResponse(
           req,
           500,
           "failed",
@@ -36,14 +47,14 @@ export default class Parcel {
     db.findById("parcels", parseInt(req.params.id, 10))
       .then(parcel => {
         if (!parcel) {
-          return badResponse(
+          return httpResponses.badResponse(
             res,
             404,
             "failed",
             "Parcel not found"
           );
         }
-        return okResponse(
+        return httpResponses.okResponse(
           res,
           200,
           "parcel",
@@ -52,7 +63,7 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        badResponse(
+        httpResponses.badResponse(
           res,
           500,
           "failed",
@@ -67,7 +78,13 @@ export default class Parcel {
       req.body
     );
     if (!isValid) {
-      return badResponse(res, 400, "failed", null, errors);
+      return httpResponses.badResponse(
+        res,
+        400,
+        "failed",
+        null,
+        errors
+      );
     }
     const queryText = `
     INSERT INTO parcels(  
@@ -116,7 +133,7 @@ export default class Parcel {
     ];
     db.query(queryText, newParcel)
       .then(parcelRes => {
-        okResponse(
+        httpResponses.okResponse(
           res,
           201,
           "parcel",
@@ -125,7 +142,7 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        badResponse(
+        httpResponses.badResponse(
           res,
           500,
           "failed",
@@ -145,7 +162,7 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(
+          return httpResponses.badResponse(
             res,
             404,
             "failed",
@@ -173,7 +190,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            okResponse(
+            httpResponses.okResponse(
               res,
               201,
               "parcel",
@@ -182,7 +199,7 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            badResponse(
+            httpResponses.badResponse(
               res,
               500,
               "failed",
@@ -192,7 +209,7 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        badResponse(
+        httpResponses.badResponse(
           res,
           500,
           "failed",
@@ -216,7 +233,7 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(
+          return httpResponses.badResponse(
             res,
             404,
             "failed",
@@ -237,7 +254,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            okResponse(
+            httpResponses.okResponse(
               res,
               201,
               "parcel",
@@ -246,7 +263,7 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            badResponse(
+            httpResponses.badResponse(
               res,
               500,
               "Intern server error",
@@ -255,7 +272,7 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        badResponse(
+        httpResponses.badResponse(
           res,
           500,
           "failed",
