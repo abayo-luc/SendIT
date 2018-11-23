@@ -5,7 +5,10 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.json";
 // bring in user model
 import db from "../database";
-import { signUpValidation } from "../validations/userValidations";
+import {
+  signUpValidation,
+  loginValidator
+} from "../validations/userValidations";
 import {
   okResponse,
   badResponse
@@ -78,6 +81,18 @@ export default class User {
   // user authentication
   static signIn(req, res) {
     const { email, password } = req.body;
+    const { isValid, errors } = loginValidator({
+      email,
+      password
+    });
+    if (!isValid) {
+      return badResponse(
+        res,
+        400,
+        "validation error",
+        errors
+      );
+    }
     const queryText = `
       SELECT *  FROM users WHERE email = $1 LIMIT 1
     `;

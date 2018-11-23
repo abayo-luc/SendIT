@@ -164,7 +164,7 @@ describe("Testing User End Point", () => {
           chai
             .request(server)
             .post("/api/v1/users")
-            .send(newUser)
+            .send({ ...newUser, password: "12345kfjjf" })
             .end((req, res) => {
               res.should.have.status(400);
               res.body.should.be.a("object");

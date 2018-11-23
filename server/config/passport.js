@@ -5,7 +5,7 @@ import {
 } from "passport-jwt";
 // db things
 import db from "../database";
-
+//passport-jwt config code refactored from https://www.npmjs.com/package/passport-jwt
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 opts.secretOrKey = config.secretOrKey;

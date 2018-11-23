@@ -1,15 +1,18 @@
 import dotenv from "dotenv";
 import express from "express";
 import passport from "passport";
+
 //bring passport configuraiton
 import passportConfig from "./config/passport";
 // load all routes
 import routers from "./routes/api/v1";
 dotenv.config();
 const app = express();
+
 //passport configuration
 app.use(passport.initialize());
 passportConfig(passport);
+
 // configuration middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
