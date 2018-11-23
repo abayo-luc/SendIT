@@ -17,11 +17,5 @@ export default {
     port: process.env.DB_PORT,
     password: process.env.USER_PASSWORD
   },
-  production: {
-    user: process.env.User,
-    host: process.env.Host,
-    database: process.env.Database,
-    port: process.env.Port,
-    password: process.env.Password
-  }
+  production: process.env.DATABASE_URL
 };
