@@ -4,6 +4,7 @@ import passport from "passport";
 import parcel from "../../../controllers/parcel";
 //validation and authorization
 import authorization from "../../../middlewares/authorization";
+import validation from "../../../middlewares/validations";
 const parcelRouters = Router();
 parcelRouters.use(
   passport.authenticate("jwt", { session: false })
@@ -14,20 +15,12 @@ parcelRouters
     authorization.authorizeAdmin,
     parcel.findAll
   )
-  .get(
-    "/parcels/:id",
-    authorization.authorizeUser,
-    parcel.findById
-  )
-  .post("/parcels", parcel.create)
-  .put(
-    "/parcels/:id",
-    authorization.authorizeUser,
-    parcel.update
-  )
+  .get("/parcels/:id", validation.checkId, parcel.findById)
+  .post("/parcels", validation.parcel, parcel.create)
+  .put("/parcels/:id", validation.checkId, parcel.update)
   .put(
     "/parcels/:id/cancel",
-    authorization.authorizeUser,
+    validation.checkId,
     parcel.cancel
   );
 export default parcelRouters;

@@ -10,18 +10,22 @@ export default class User {
   static parcels(req, res) {
     const queryString = `SELECT * FROM parcels WHERE user_id = $1`;
     const values = [Number(req.params.id)];
-    db.query(queryString, values)
-      .then(response => {
-        httpResponses.okResponse(
-          res,
-          200,
-          "parcels",
-          response
-        );
+    db.findById("users", req.params.id)
+      .then(user => {
+        if (!user) {
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "user not found"
+          );
+        }
+        db.query(queryString, values).then(response => {
+          httpResponses.ok(res, 200, "parcels", response);
+        });
       })
       .catch(err => {
-        console.log(err);
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",
@@ -45,7 +49,7 @@ export default class User {
         (error, hash) => {
           if (error) {
             //console.log(error);
-            httpResponses.badResponse(
+            httpResponses.bad(
               res,
               500,
               "failed",
@@ -61,7 +65,7 @@ export default class User {
           ];
           db.query(queryText, newUser)
             .then(userRes => {
-              httpResponses.okResponse(
+              httpResponses.ok(
                 res,
                 201,
                 "user",
@@ -73,7 +77,7 @@ export default class User {
               let message = "Internal server error";
               if (err.routine === "_bt_check_unique")
                 message = "User already exist";
-              httpResponses.badResponse(
+              httpResponses.bad(
                 res,
                 400,
                 "failed",
@@ -96,7 +100,7 @@ export default class User {
     db.query(queryText, value)
       .then(response => {
         if (!response[0]) {
-          return httpResponses.badResponse(
+          return httpResponses.bad(
             res,
             404,
             "failed",
@@ -115,7 +119,7 @@ export default class User {
                 config.secretOrKey,
                 { expiresIn: 3600 },
                 (err, token) => {
-                  httpResponses.okResponse(
+                  httpResponses.ok(
                     res,
                     200,
                     "token",
@@ -125,7 +129,7 @@ export default class User {
                 }
               );
             } else {
-              httpResponses.badResponse(
+              httpResponses.bad(
                 res,
                 400,
                 "failed",
@@ -135,8 +139,7 @@ export default class User {
           });
       })
       .catch(err => {
-        //console.log(err);
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",
@@ -151,16 +154,10 @@ export default class User {
       .then(response => {
         const user = { ...response, password: null };
         delete user.password;
-        httpResponses.okResponse(
-          res,
-          200,
-          "user",
-          user,
-          "success"
-        );
+        httpResponses.ok(res, 200, "user", user, "success");
       })
       .catch(err => {
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",

@@ -21,8 +21,7 @@ export default class {
         "Invalid id"
       );
     }
-    const { id, is_admin } = req.user;
-    id == req.params.id || is_admin
+    req.user.id == req.params.id || req.user.is_admin
       ? next()
       : httpResponses.badResponse(
           res,

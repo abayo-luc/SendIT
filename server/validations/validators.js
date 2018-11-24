@@ -5,11 +5,15 @@ export default class {
     let errors = {};
     for (let key of keys) {
       params[key] = isEmpty(params[key]) ? "" : params[key];
-      key === "email" && !validator.isEmail(params[key])
-        ? (errors[key] = "Invalid email")
-        : null;
-      if (validator.isEmpty(params[key]))
-        errors[key] = `${key} is required`;
+      try {
+        key === "email" && !validator.isEmail(params[key])
+          ? (errors[key] = "Invalid email")
+          : null;
+        if (validator.isEmpty(params[key]))
+          errors[key] = `${key} is required`;
+      } catch (err) {
+        //console.log(key);
+      }
     }
     return {
       isValid: isEmpty(errors),

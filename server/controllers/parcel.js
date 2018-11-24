@@ -5,25 +5,15 @@ import {
 import moment from "moment";
 //bring the db
 import db from "../database";
-// bring in validator
-import { createParcelValidator } from "../validations/parcelsValidations";
 import httpResponses from "../utils/httpResponses";
 import { isEmpty } from "../utils/validatorHelpers";
 // new parce instance from parcel model
 export default class Parcel {
   static findAll(req, res) {
-    if (!req.user["is_admin"]) {
-      return httpResponses.badResponse(
-        res,
-        401,
-        "failed",
-        "Untorized"
-      );
-    }
     const queryText = `SELECT * FROM parcels`;
     db.query(queryText)
       .then(parcels => {
-        httpResponses.okResponse(
+        httpResponses.ok(
           res,
           200,
           "parcels",
@@ -32,8 +22,7 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        //console.log(err);
-        httpResponses.badResponse(
+        httpResponses.bad(
           req,
           500,
           "failed",
@@ -47,14 +36,19 @@ export default class Parcel {
     db.findById("parcels", parseInt(req.params.id, 10))
       .then(parcel => {
         if (!parcel) {
-          return httpResponses.badResponse(
+          return httpResponses.bad(
             res,
             404,
             "failed",
             "Parcel not found"
           );
+        } else if (
+          parcel.user_id != req.user.id ||
+          !req.user.is_admin
+        ) {
+          return httpResponses.unauthorized(res);
         }
-        return httpResponses.okResponse(
+        return httpResponses.ok(
           res,
           200,
           "parcel",
@@ -63,7 +57,7 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",
@@ -74,18 +68,6 @@ export default class Parcel {
   }
 
   static create(req, res) {
-    const { isValid, errors } = createParcelValidator(
-      req.body
-    );
-    if (!isValid) {
-      return httpResponses.badResponse(
-        res,
-        400,
-        "failed",
-        null,
-        errors
-      );
-    }
     const queryText = `
     INSERT INTO parcels(  
         pickup_location, 
@@ -133,7 +115,7 @@ export default class Parcel {
     ];
     db.query(queryText, newParcel)
       .then(parcelRes => {
-        httpResponses.okResponse(
+        httpResponses.ok(
           res,
           201,
           "parcel",
@@ -142,7 +124,7 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",
@@ -162,7 +144,7 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return httpResponses.badResponse(
+          return httpResponses.bad(
             res,
             404,
             "failed",
@@ -190,7 +172,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            httpResponses.okResponse(
+            httpResponses.ok(
               res,
               201,
               "parcel",
@@ -199,7 +181,7 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            httpResponses.badResponse(
+            httpResponses.bad(
               res,
               500,
               "failed",
@@ -209,7 +191,7 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",
@@ -221,9 +203,6 @@ export default class Parcel {
 
   //cancel parcel by updating its status
   static cancel(req, res) {
-    const attributes = {
-      status: STATUS_CANCELED
-    };
     const parcelQuery =
       "SELECT * FROM parcels WHERE id = $1 AND user_id = $2";
     db.query(parcelQuery, [
@@ -233,7 +212,7 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return httpResponses.badResponse(
+          return httpResponses.bad(
             res,
             404,
             "failed",
@@ -254,7 +233,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            httpResponses.okResponse(
+            httpResponses.ok(
               res,
               201,
               "parcel",
@@ -263,7 +242,7 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            httpResponses.badResponse(
+            httpResponses.bad(
               res,
               500,
               "Intern server error",
@@ -272,7 +251,7 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        httpResponses.badResponse(
+        httpResponses.bad(
           res,
           500,
           "failed",

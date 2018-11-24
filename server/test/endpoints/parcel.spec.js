@@ -31,7 +31,8 @@ const newUser = {
   password:
     "$2b$10$ta8r9yOT8UpGuiauYFIiwecWWSx5jTl.hUFNLd8PUX8u/PPcLQSGe",
   firstName: "John",
-  lastName: "Doe"
+  lastName: "Doe",
+  isAdmin: true
 };
 
 const parcelCreateQuery = `
@@ -59,8 +60,8 @@ const parcelValues = [
   moment(new Date())
 ];
 const userCreateQuery = `
-    INSERT INTO users(first_name, last_name, email, password, created_at)
-    VALUES($1, $2, $3, $4, $5)
+    INSERT INTO users(first_name, last_name, email, password,is_admin, created_at)
+    VALUES($1, $2, $3, $4, $5, $6)
     returning *
     `;
 const userValues = [
@@ -68,6 +69,7 @@ const userValues = [
   newUser.lastName,
   newUser.email,
   newUser.password,
+  true,
   moment(new Date())
 ];
 describe("Test Parcel End Point", () => {
@@ -206,9 +208,7 @@ describe("Test Parcel End Point", () => {
             });
         }
       );
-    });
 
-    describe("/GET Parcel by ID", () => {
       it("It should not return a parcel object", done => {
         chai
           .request(server)
@@ -225,9 +225,6 @@ describe("Test Parcel End Point", () => {
       });
     });
   });
-  //   /*
-  //    *@GET Parcel by Id
-  //    */
 
   //   /*
   //     @PUT {object} one parcel
@@ -237,7 +234,7 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
-    it("it should update first parcel order", done => {
+    it("it should update first parcel", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
           chai
@@ -300,21 +297,19 @@ describe("Test Parcel End Point", () => {
         }
       );
     });
-    describe("/PUT Parcel", () => {
-      it("It should not found a parcel order", done => {
-        chai
-          .request(server)
-          .put("/api/v1/parcels/1909b/cancel")
-          .send()
-          .set("Authorization", `Bearer ${token}`)
-          .end((err, res) => {
-            res.should.have.status(404);
-            res.body.should.have
-              .property("message")
-              .eql("Parcel not found");
-            done();
-          });
-      });
+    it("It should not found a parcel order", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1909b/cancel")
+        .send()
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have
+            .property("message")
+            .eql("Invalid id");
+          done();
+        });
     });
   });
 });

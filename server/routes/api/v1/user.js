@@ -11,6 +11,7 @@ userRouters
   .get(
     "/users/:id/parcels",
     passport.authenticate("jwt", { session: false }),
+    validations.checkId,
     authorization.authorizeUser,
     user.parcels
   )

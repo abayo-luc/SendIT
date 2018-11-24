@@ -14,7 +14,7 @@ export default class {
     ]);
     isValid
       ? next()
-      : httpResponses.badResponse(
+      : httpResponses.bad(
           res,
           400,
           "failed",
@@ -34,12 +34,28 @@ export default class {
 
     isValid
       ? next()
-      : httpResponses.badResponse(
-          res,
-          400,
-          "failed",
-          null,
-          errors
-        );
+      : httpResponses.bad(res, 400, "failed", null, errors);
+  }
+  static parcel(req, res, next) {
+    const {
+      isValid,
+      errors
+    } = validatorHelpers.checkPresence(req.body, [
+      "pickupLocation",
+      "destination",
+      "weight",
+      "quantity"
+    ]);
+
+    isValid
+      ? next()
+      : httpResponses.bad(res, 400, "failed", null, errors);
+  }
+
+  static checkId(req, res, next) {
+    const { id } = req.params;
+    Number(id)
+      ? next()
+      : httpResponses.bad(res, 400, "failed", "Invalid id");
   }
 }

@@ -1,9 +1,11 @@
 import chai from "chai";
 import chaiHTTP from "chai-http";
 import moment from "moment";
+import jwt from "jsonwebtoken";
 // bring in server for testing
 import server from "../../server";
 import { STATUS_INTRANSIT } from "../../utils/types";
+import config from "../../config/config.json";
 //bring in the db
 import db from "../../database";
 chai.use(chaiHTTP);
@@ -14,13 +16,15 @@ const newUser = {
   password:
     "$2b$10$ta8r9yOT8UpGuiauYFIiwecWWSx5jTl.hUFNLd8PUX8u/PPcLQSGe",
   firstName: "John",
-  lastName: "Doe"
+  lastName: "Doe",
+  isAdmin: true
 };
 const nonexistingUser = {
   email: "you@example.com",
   password: "password",
   firstName: "John",
-  lastName: "Doe"
+  lastName: "Doe",
+  isAdmin: true
 };
 const newParcel = {
   pickupLocation: "Kampala",
@@ -45,8 +49,8 @@ const parcelCreateQuery = `
     returning *
     `;
 const userCreateQuery = `
-    INSERT INTO users(first_name, last_name, email, password, created_at)
-    VALUES($1, $2, $3, $4, $5)
+    INSERT INTO users(first_name, last_name, email, password,is_admin, created_at)
+    VALUES($1, $2, $3, $4, $5, $6)
     returning *
     `;
 const userValues = [
@@ -54,10 +58,27 @@ const userValues = [
   newUser.lastName,
   newUser.email,
   newUser.password,
+  newUser.isAdmin,
+  moment(new Date())
+];
+const parcelValues = [
+  newParcel.pickupLocation,
+  newParcel.destination,
+  newParcel.details,
+  newParcel.pickupLocation,
+  STATUS_INTRANSIT,
+  1,
   moment(new Date())
 ];
 describe("Testing User End Point", () => {
   // create new parcel instance for testing
+  beforeEach(async () => {
+    await db
+      .query(userCreateQuery, userValues)
+      .then(response => {
+        return;
+      });
+  });
   // clearn data before any testing
   afterEach(async () => {
     const truncateQuery = `TRUNCATE users, parcels RESTART IDENTITY CASCADE;`;
@@ -66,63 +87,55 @@ describe("Testing User End Point", () => {
     });
   });
   describe("/GET users/<existing id>/parcels", () => {
-    it("it should return an array with one element", done => {
-      db.query(userCreateQuery, userValues).then(
-        userRes => {
-          const parcelValues = [
-            newParcel.pickupLocation,
-            newParcel.destination,
-            newParcel.details,
-            newParcel.pickupLocation,
-            STATUS_INTRANSIT,
-            userRes[0].id,
-            moment(new Date())
-          ];
-          db.query(parcelCreateQuery, parcelValues)
-            .then(response => {
-              chai
-                .request(server)
-                .get(
-                  `/api/v1/users/${userRes[0].id}/parcels`
-                )
-                .end((req, res) => {
-                  res.should.have.status(200);
-                  res.body.should.be.a("object");
-                  res.body.should.have.property("parcels");
-                  res.body.parcels.should.be.a("array");
-                  res.body.parcels.length.should.be.eql(1);
-                  done();
-                });
-            })
-            .catch(err => {
-              console.log(err);
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("For existing user, it should return array of parcels", done => {
+      db.query(parcelCreateQuery, parcelValues)
+        .then(response => {
+          chai
+            .request(server)
+            .get(`/api/v1/users/1/parcels`)
+            .set("Authorization", `Bearer ${token}`)
+            .end((req, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a("object");
+              res.body.should.have.property("parcels");
+              res.body.parcels.should.be.a("array");
+              res.body.parcels.length.should.be.eql(1);
               done();
             });
-        }
-      );
-    });
-  });
-
-  describe("/GET users/<non existing id>/parcels", () => {
-    it("it should return an empty array", done => {
-      chai
-        .request(server)
-        .get("/api/v1/users/6000/parcels")
-        .end((req, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("parcels");
-          res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(0);
+        })
+        .catch(err => {
+          //console.log(err);
           done();
         });
     });
-  });
-  describe("/GET users/<non integer id>/parcels", () => {
-    it("it should not find a user", done => {
+
+    it("For non existing user, it should return user not found", done => {
+      chai
+        .request(server)
+        .get("/api/v1/users/6000/parcels")
+        .set("Authorization", `Bearer ${token}`)
+        .end((req, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a("object");
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("user not found");
+          done();
+        });
+    });
+
+    it("For string id, it should be invalid id", done => {
       chai
         .request(server)
         .get("/api/v1/users/1jf/parcels")
+        .set("Authorization", `Bearer ${token}`)
         .end((req, res) => {
           res.should.have.status(400);
           res.body.should.be.a("object");
@@ -133,6 +146,7 @@ describe("Testing User End Point", () => {
         });
     });
   });
+
   // test new signUp
   describe("/POST users", () => {
     it("/it should create new user", done => {
@@ -159,26 +173,20 @@ describe("Testing User End Point", () => {
         });
     });
     it("/it should not create new user as user already exist", done => {
-      db.query(userCreateQuery, userValues)
-        .then(response => {
-          chai
-            .request(server)
-            .post("/api/v1/users")
-            .send({ ...newUser, password: "12345kfjjf" })
-            .end((req, res) => {
-              res.should.have.status(400);
-              res.body.should.be.a("object");
-              res.body.should.have
-                .property("message")
-                .eql("User already exist");
-              done();
-            });
-        })
-        .catch(err => {
-          console.log("errors");
+      chai
+        .request(server)
+        .post("/api/v1/users")
+        .send(newUser)
+        .end((req, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.should.have
+            .property("message")
+            .eql("User already exist");
           done();
         });
     });
+
     it("/it should not create user with missing attributes", done => {
       chai
         .request(server)
@@ -204,63 +212,50 @@ describe("Testing User End Point", () => {
   // test user authentication end point
   describe("/POST login", () => {
     it("it should login user sucessfully", done => {
-      db.query(userCreateQuery, userValues)
-        .then(userRes => {
-          chai
-            .request(server)
-            .post("/api/v1/login")
-            .send({
-              email: "me@example.com",
-              password: "password"
-            })
-            .end((err, res) => {
-              res.should.have.status(200);
-              res.body.should.be.a("object");
-              res.body.should.have
-                .property("status")
-                .eql("success");
-              res.body.should.have.property("token");
-              done();
-            });
+      chai
+        .request(server)
+        .post("/api/v1/login")
+        .send({
+          email: "me@example.com",
+          password: "password"
         })
-        .catch(err => {
-          console.log(err);
+        .end((err, res) => {
+          res.should.have.status(200);
+          res.body.should.be.a("object");
+          res.body.should.have
+            .property("status")
+            .eql("success");
+          res.body.should.have.property("token");
           done();
         });
     });
     //existing user with invalid password
-    describe("/POST login", () => {
-      it("Invalid password should fail", done => {
-        db.query(userCreateQuery, userValues)
-          .then(userRes => {
-            chai
-              .request(server)
-              .post("/api/v1/login")
-              .send({
-                email: "me@example.com",
-                password: "lkdjfljlkj"
-              })
-              .end((err, res) => {
-                res.should.have.status(400);
-                res.body.should.be.a("object");
-                res.body.should.have
-                  .property("message")
-                  .eql("Invalid email or password");
-                done();
-              });
-          })
-          .catch(err => {
-            console.log(err);
-            done();
-          });
-      });
+    it("Invalid password should fail", done => {
+      chai
+        .request(server)
+        .post("/api/v1/login")
+        .send({
+          email: "me@example.com",
+          password: "lkdjfljlkj"
+        })
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.be.a("object");
+          res.body.should.have
+            .property("message")
+            .eql("Invalid email or password");
+          done();
+        });
     });
     // un existing user case
     it("Un-existing user should be not found", done => {
       chai
         .request(server)
         .post("/api/v1/login")
-        .send({ email: "me@example.com", password: "112" })
+        .send({
+          email: nonexistingUser.email,
+          password: nonexistingUser.password
+        })
         .end((err, res) => {
           res.should.have.status(404);
           res.body.should

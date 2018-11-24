@@ -1,4 +1,4 @@
-const okResponse = (
+const ok = (
   res,
   code,
   key,
@@ -14,7 +14,7 @@ const okResponse = (
   return res.status(code).json(resPayload);
 };
 
-const badResponse = (res, code, status, msg, errors) => {
+const bad = (res, code, status, msg, errors) => {
   const resPayload = {
     status
   };
@@ -22,8 +22,16 @@ const badResponse = (res, code, status, msg, errors) => {
   if (msg) resPayload.message = msg;
   res.status(code).json(resPayload);
 };
+export const unauthorized = res => {
+  const resPayload = {
+    status: "failed",
+    message: "unauthorized"
+  };
+  res.status(401).json(resPayload);
+};
 
 export default {
-  okResponse,
-  badResponse
+  ok,
+  bad,
+  unauthorized
 };
