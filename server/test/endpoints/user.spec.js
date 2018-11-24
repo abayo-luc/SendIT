@@ -1,13 +1,14 @@
 import chai from "chai";
 import chaiHTTP from "chai-http";
+import moment from "moment";
 // bring in server for testing
 import server from "../../server";
 import { STATUS_INTRANSIT } from "../../utils/types";
-// bring in model
-import Parcel from "../../data/Parcel";
-import User from "../../data/User";
-
+//bring in the db
+import db from "../../database";
 chai.use(chaiHTTP);
+
+//constant to be used in test
 const newUser = {
   email: "me@example.com",
   password:
@@ -22,43 +23,83 @@ const nonexistingUser = {
   lastName: "Doe"
 };
 const newParcel = {
-  pickupAddress: "KG 19 Av 15",
+  pickupLocation: "Kampala",
   destination: "Kigali",
   destinationAddress: "KG 19 Av 15",
-  quantity: 2,
-  weight: 4,
-  height: 5,
-  width: 4,
-  length: 5,
+  details: {
+    quantity: 8,
+    weight: 89
+  },
   status: STATUS_INTRANSIT
 };
+const parcelCreateQuery = `
+    INSERT INTO parcels(  
+        pickup_location, 
+        destination, 
+        details, 
+        current_location, 
+        status,
+        user_id,
+        created_at)
+    VALUES($1, $2, $3, $4, $5, $6, $7)
+    returning *
+    `;
+const userCreateQuery = `
+    INSERT INTO users(first_name, last_name, email, password, created_at)
+    VALUES($1, $2, $3, $4, $5)
+    returning *
+    `;
+const userValues = [
+  newUser.firstName,
+  newUser.lastName,
+  newUser.email,
+  newUser.password,
+  moment(new Date())
+];
 describe("Testing User End Point", () => {
   // create new parcel instance for testing
-  beforeEach(async () => {
-    const user = await new User().save(newUser);
-    await new Parcel().save({
-      ...newParcel,
-      userId: user.id
-    });
-  });
   // clearn data before any testing
-  afterEach(() => {
-    new Parcel().clean();
-    new User().clean();
+  afterEach(async () => {
+    const truncateQuery = `TRUNCATE users, parcels RESTART IDENTITY CASCADE;`;
+    await db.query(truncateQuery).then(response => {
+      return;
+    });
   });
   describe("/GET users/<existing id>/parcels", () => {
     it("it should return an array with one element", done => {
-      chai
-        .request(server)
-        .get("/api/v1/users/1/parcels")
-        .end((req, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("parcels");
-          res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(1);
-          done();
-        });
+      db.query(userCreateQuery, userValues).then(
+        userRes => {
+          const parcelValues = [
+            newParcel.pickupLocation,
+            newParcel.destination,
+            newParcel.details,
+            newParcel.pickupLocation,
+            STATUS_INTRANSIT,
+            userRes[0].id,
+            moment(new Date())
+          ];
+          db.query(parcelCreateQuery, parcelValues)
+            .then(response => {
+              chai
+                .request(server)
+                .get(
+                  `/api/v1/users/${userRes[0].id}/parcels`
+                )
+                .end((req, res) => {
+                  res.should.have.status(200);
+                  res.body.should.be.a("object");
+                  res.body.should.have.property("parcels");
+                  res.body.parcels.should.be.a("array");
+                  res.body.parcels.length.should.be.eql(1);
+                  done();
+                });
+            })
+            .catch(err => {
+              console.log(err);
+              done();
+            });
+        }
+      );
     });
   });
 
@@ -83,11 +124,11 @@ describe("Testing User End Point", () => {
         .request(server)
         .get("/api/v1/users/1jf/parcels")
         .end((req, res) => {
-          res.should.have.status(404);
+          res.should.have.status(400);
           res.body.should.be.a("object");
           res.body.should.have
             .property("message")
-            .eql("user not found");
+            .eql("Invalid id");
           done();
         });
     });
@@ -107,24 +148,34 @@ describe("Testing User End Point", () => {
             .eql("success");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
-          res.body.user.should.have.property("firstName");
-          res.body.user.should.have.property("lastName");
+          res.body.user.should.have.property("first_name");
+          res.body.user.should.have.property("last_name");
           res.body.user.should.have.property("email");
           res.body.user.should.have.property("id");
+          res.body.user.should.have
+            .property("is_admin")
+            .eql(false);
           done();
         });
     });
     it("/it should not create new user as user already exist", done => {
-      chai
-        .request(server)
-        .post("/api/v1/users")
-        .send(newUser)
-        .end((req, res) => {
-          res.should.have.status(400);
-          res.body.should.be.a("object");
-          res.body.should.have
-            .property("message")
-            .eql("user already exist");
+      db.query(userCreateQuery, userValues)
+        .then(response => {
+          chai
+            .request(server)
+            .post("/api/v1/users")
+            .send({ ...newUser, password: "12345kfjjf" })
+            .end((req, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a("object");
+              res.body.should.have
+                .property("message")
+                .eql("User already exist");
+              done();
+            });
+        })
+        .catch(err => {
+          console.log("errors");
           done();
         });
     });
@@ -153,39 +204,68 @@ describe("Testing User End Point", () => {
   // test user authentication end point
   describe("/POST login", () => {
     it("it should login user sucessfully", done => {
-      let requester = chai.request(server).keepOpen();
-      chai
-        .request(server)
-        .post("/api/v1/login")
-        .send({
-          email: "me@example.com",
-          password: "password"
+      db.query(userCreateQuery, userValues)
+        .then(userRes => {
+          chai
+            .request(server)
+            .post("/api/v1/login")
+            .send({
+              email: "me@example.com",
+              password: "password"
+            })
+            .end((err, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a("object");
+              res.body.should.have
+                .property("message")
+                .eql("success");
+              res.body.should.have.property("token");
+              done();
+            });
         })
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have
-            .property("message")
-            .eql("success");
-          res.body.should.have.property("user");
-          res.body.user.should.be.a("object");
-          res.body.user.should.have.property("id");
-          res.body.user.should.have.property("email");
-          res.body.user.should.have.property("firstName");
-          res.body.user.should.have.property("lastName");
+        .catch(err => {
+          console.log(err);
           done();
         });
     });
-    it("User login should fail", done => {
+    //existing user with invalid password
+    describe("/POST login", () => {
+      it("Invalid password should fail", done => {
+        db.query(userCreateQuery, userValues)
+          .then(userRes => {
+            chai
+              .request(server)
+              .post("/api/v1/login")
+              .send({
+                email: "me@example.com",
+                password: "lkdjfljlkj"
+              })
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.should.be.a("object");
+                res.body.should.have
+                  .property("message")
+                  .eql("Invalid email or password");
+                done();
+              });
+          })
+          .catch(err => {
+            console.log(err);
+            done();
+          });
+      });
+    });
+    // un existing user case
+    it("Un-existing user should be not found", done => {
       chai
         .request(server)
         .post("/api/v1/login")
         .send({ email: "me@example.com", password: "112" })
         .end((err, res) => {
-          res.should.have.status(400);
+          res.should.have.status(404);
           res.body.should
             .property("message")
-            .eql("invalid email or password");
+            .eql("User not found");
           done();
         });
     });

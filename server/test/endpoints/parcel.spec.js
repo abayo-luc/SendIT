@@ -1,10 +1,12 @@
 import chai from "chai";
 import chaiHTTP from "chai-http";
-
+import jwt from "jsonwebtoken";
+import moment from "moment";
+import config from "../../config/config.json";
 // bring in the server
 import server from "../../server";
-// bring in temporary db
-import Parcel from "../../data/Parcel";
+//bring in the db
+import db from "../../database";
 import {
   STATUS_CANCELED,
   STATUS_INTRANSIT
@@ -14,52 +16,117 @@ import {
 const should = chai.should();
 chai.use(chaiHTTP);
 
-// new parcel instance to be used in testing
+// // new parcel instance to be used in testing
 const newParcel = {
   pickupAddress: "KG 19 Av 15",
   destination: "Kigali",
   destinationAddress: "KG 19 Av 15",
   quantity: 2,
   weight: 4,
-  height: 5,
-  width: 4,
-  length: 5,
   status: STATUS_INTRANSIT
 };
+//user
+const newUser = {
+  email: "parcel@example.com",
+  password:
+    "$2b$10$ta8r9yOT8UpGuiauYFIiwecWWSx5jTl.hUFNLd8PUX8u/PPcLQSGe",
+  firstName: "John",
+  lastName: "Doe"
+};
+
+const parcelCreateQuery = `
+    INSERT INTO parcels(  
+        pickup_location, 
+        destination, 
+        details, 
+        current_location, 
+        status,
+        user_id,
+        created_at)
+    VALUES($1, $2, $3, $4, $5, $6, $7)
+    returning *
+    `;
+const parcelValues = [
+  newParcel.pickupLocation || "Kigali",
+  newParcel.destination,
+  {
+    weight: newParcel.weight,
+    quantity: newParcel.quantity
+  },
+  newParcel.pickupLocation,
+  STATUS_INTRANSIT,
+  1,
+  moment(new Date())
+];
+const userCreateQuery = `
+    INSERT INTO users(first_name, last_name, email, password, created_at)
+    VALUES($1, $2, $3, $4, $5)
+    returning *
+    `;
+const userValues = [
+  newUser.firstName,
+  newUser.lastName,
+  newUser.email,
+  newUser.password,
+  moment(new Date())
+];
 describe("Test Parcel End Point", () => {
   // clearn data before any testing
-  beforeEach(() => {
-    new Parcel().save(newParcel);
+  beforeEach(async () => {
+    await db
+      .query(userCreateQuery, userValues)
+      .then(response => {
+        const payload = { ...response[0] };
+        payload.should.have.property("email");
+        payload.should.have.property("password");
+      });
   });
-  afterEach(() => {
-    new Parcel().clean();
+  afterEach(async () => {
+    const truncateQuery = `TRUNCATE users, parcels RESTART IDENTITY CASCADE;`;
+    await db.query(truncateQuery).then(response => {
+      return;
+    });
   });
-  /*
-    @GET {array} all parcles
-   */
+
+  //   afterEach(() => {
+  //     new Parcel().clean();
+  //   });
+  //   /*
+  //     @GET {array} all parcles
+  //    */
   describe("/GET all parcels", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
     it("it should return an empty array", done => {
       chai
         .request(server)
         .get("/api/v1/parcels")
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(200);
           res.body.should.be.a("object");
           res.body.parcels.should.be.a("array");
-          res.body.parcels.length.should.be.eql(1);
+          res.body.parcels.length.should.be.eql(0);
           res.body.should.have.property("status").eql(200);
           done();
         });
     });
   });
   /*
-    @POST {object} one parcel
-   */
+  //     @POST {object} one parcel
+  //    */
   describe("/POST Parcel", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
     it("it should not create new parcel order", done => {
       chai
         .request(server)
         .post("/api/v1/parcels")
+        .set("Authorization", `Bearer ${token}`)
         .send(newParcel)
         .end((err, res) => {
           res.should.have.status(400);
@@ -71,13 +138,13 @@ describe("Test Parcel End Point", () => {
           done();
         });
     });
-  });
-  describe("/POST Parcel", () => {
+    //create parcel successful
     it("it should create new parcel order", done => {
       chai
         .request(server)
         .post("/api/v1/parcels")
         .send({ ...newParcel, pickupLocation: "Kigali" })
+        .set("Authorization", `Bearer ${token}`)
         .end((err, res) => {
           res.should.have.status(201);
           res.body.should.have.property("status").eql(201);
@@ -87,121 +154,170 @@ describe("Test Parcel End Point", () => {
           res.body.message.should.be.a("string");
           res.body.should.have.property("parcel");
           res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have.property("createdAt");
+          res.body.parcel.should.have.property(
+            "created_at"
+          );
           res.body.parcel.should.have.property("id");
-          res.body.parcel.should.have.property("status");
-          res.body.parcel.should.have.property("userId");
-          done();
-        });
-    });
-  });
-  /*
-   *@GET Parcel by Id
-   */
-  describe("/GET Parcel by ID", () => {
-    it("It should return one parcel object", done => {
-      chai
-        .request(server)
-        .get("/api/v1/parcels/1")
-        .end((req, res) => {
-          res.should.have.status(200);
-          res.body.should.be.a("object");
-          res.body.should.have.property("status").eql(200);
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have.property("createdAt");
-          res.body.parcel.should.have.property("id");
-          res.body.parcel.should.have.property("status");
-          done();
-        });
-    });
-  });
-  /*
-   *@GET Parcel by Id
-   */
-  describe("/GET Parcel by ID", () => {
-    it("It should not return a parcel object", done => {
-      chai
-        .request(server)
-        .get("/api/v1/parcels/198")
-        .end((req, res) => {
-          res.should.have.status(404);
-          res.body.should.be.a("object");
-          res.body.should.have
-            .property("message")
-            .eql("Parcel not found");
-          done();
-        });
-    });
-  });
-  /*
-    @PUT {object} one parcel
-   */
-  describe("/PUT Parcel update", () => {
-    it("it should update first parcel order", done => {
-      chai
-        .request(server)
-        .put("/api/v1/parcels/1")
-        .send({
-          pickUp: "Kigeme",
-          pickUpAddress: "KM 19"
-        })
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.have
-            .property("message")
-            .eql("success");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
-          res.body.parcel.should.have
-            .property("pickUp")
-            .eql("Kigeme");
-          res.body.parcel.should.have
-            .property("pickUpAddress")
-            .eql("KM 19");
-          done();
-        });
-    });
-  });
-
-  // @PUT { object } one parcel
-
-  describe("/PUT cancel parcel", () => {
-    it("It should cancle parcel delivery order", done => {
-      chai
-        .request(server)
-        .put("/api/v1/parcels/1/cancel")
-        .send()
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.have
-            .property("message")
-            .eql("success");
-          res.body.should.have.property("parcel");
-          res.body.parcel.should.be.a("object");
           res.body.parcel.should.have
             .property("status")
-            .eql(STATUS_CANCELED);
+            .eql(STATUS_INTRANSIT);
+          res.body.parcel.should.have.property("user_id");
+          res.body.parcel.should.have.property(
+            "destination"
+          );
+          res.body.parcel.should.have.property(
+            "pickup_location"
+          );
+          res.body.parcel.should.have.property(
+            "current_location"
+          );
           done();
         });
     });
   });
+  //   /*
+  //    *@GET Parcel by Id
+  //    */
+  describe("/GET Parcel by ID", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("It should return one parcel object", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .get(`/api/v1/parcels/${response[0].id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .end((req, res) => {
+              res.should.have.status(200);
+              res.body.should.be.a("object");
+              res.body.should.have
+                .property("status")
+                .eql(200);
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.be.a("object");
+              res.body.parcel.should.have.property(
+                "created_at"
+              );
+              res.body.parcel.should.have.property("id");
+              res.body.parcel.should.have.property(
+                "status"
+              );
+              done();
+            });
+        }
+      );
+    });
 
-  // @PUT { object } one parcel
+    describe("/GET Parcel by ID", () => {
+      it("It should not return a parcel object", done => {
+        chai
+          .request(server)
+          .get("/api/v1/parcels/198")
+          .set("Authorization", `Bearer ${token}`)
+          .end((req, res) => {
+            res.should.have.status(404);
+            res.body.should.be.a("object");
+            res.body.should.have
+              .property("message")
+              .eql("Parcel not found");
+            done();
+          });
+      });
+    });
+  });
+  //   /*
+  //    *@GET Parcel by Id
+  //    */
 
-  describe("/PUT Parcel", () => {
-    it("It should not found a parcel order", done => {
-      chai
-        .request(server)
-        .put("/api/v1/parcels/1909b/cancel")
-        .send()
-        .end((err, res) => {
-          res.should.have.status(404);
-          res.body.should.have
-            .property("message")
-            .eql("Parcel not found");
-          done();
-        });
+  //   /*
+  //     @PUT {object} one parcel
+  //    */
+  describe("/PUT Parcel update", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("it should update first parcel order", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put(`/api/v1/parcels/${response[0].id}`)
+            .send({
+              destination: "New York",
+              destinationAddress: "KY 19 AV"
+            })
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.have
+                .property("message")
+                .eql("success");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.be.a("object");
+              res.body.parcel.should.have
+                .property("destination")
+                .eql("New York");
+              res.body.parcel.should.have.property(
+                "address"
+              );
+              res.body.parcel.address.should.be.a("object");
+              res.body.parcel.address.should.have
+                .property("destination_address")
+                .eql("KY 19 AV");
+              done();
+            });
+        }
+      );
+    });
+  });
+  //   // @PUT { object } one parcel
+  describe("/PUT cancel parcel", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("It should cancle parcel delivery order", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put(`/api/v1/parcels/${response[0].id}/cancel`)
+            .send()
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.have
+                .property("message")
+                .eql("success");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.be.a("object");
+              res.body.parcel.should.have
+                .property("status")
+                .eql(STATUS_CANCELED);
+              done();
+            });
+        }
+      );
+    });
+    describe("/PUT Parcel", () => {
+      it("It should not found a parcel order", done => {
+        chai
+          .request(server)
+          .put("/api/v1/parcels/1909b/cancel")
+          .send()
+          .set("Authorization", `Bearer ${token}`)
+          .end((err, res) => {
+            res.should.have.status(404);
+            res.body.should.have
+              .property("message")
+              .eql("Parcel not found");
+            done();
+          });
+      });
     });
   });
 });
