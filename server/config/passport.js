@@ -17,7 +17,7 @@ export default passport => {
           if (user) {
             return done(null, user);
           }
-          return done(null, false);
+          return done(null, false, "Unthorized");
         })
         .catch(err => console.log(err));
     })

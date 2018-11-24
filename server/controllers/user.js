@@ -5,36 +5,37 @@ import jwt from "jsonwebtoken";
 import config from "../config/config.json";
 // bring in user model
 import db from "../database";
-import {
-  signUpValidation,
-  loginValidator
-} from "../validations/userValidations";
-import {
-  okResponse,
-  badResponse
-} from "../utils/httpResponses";
+import httpResponses from "../utils/httpResponses";
 export default class User {
   static parcels(req, res) {
-    if (!Number(req.params.id)) {
-      return badResponse(res, 400, "Invalid id");
-    }
     const queryString = `SELECT * FROM parcels WHERE user_id = $1`;
     const values = [Number(req.params.id)];
-    db.query(queryString, values)
-      .then(response => {
-        okResponse(res, 200, "parcels", response);
+    db.findById("users", req.params.id)
+      .then(user => {
+        if (!user) {
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "user not found"
+          );
+        }
+        db.query(queryString, values).then(response => {
+          httpResponses.ok(res, 200, "parcels", response);
+        });
       })
       .catch(err => {
-        //console.log(err);
-        badResponse(res, 500, "Internal error", err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Internal error",
+          err
+        );
       });
   }
 
   static signUp(req, res) {
-    const { isValid, errors } = signUpValidation(req.body);
-    if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
-    }
     const queryText = `
     INSERT INTO users(first_name, last_name, email, password, created_at)
     VALUES($1, $2, $3, $4, $5)
@@ -48,7 +49,12 @@ export default class User {
         (error, hash) => {
           if (error) {
             //console.log(error);
-            badResponse(res, 500, "bcrypt hash error");
+            httpResponses.bad(
+              res,
+              500,
+              "failed",
+              "bcrypt hash error"
+            );
           }
           const newUser = [
             req.body.firstName,
@@ -59,7 +65,7 @@ export default class User {
           ];
           db.query(queryText, newUser)
             .then(userRes => {
-              okResponse(
+              httpResponses.ok(
                 res,
                 201,
                 "user",
@@ -71,7 +77,13 @@ export default class User {
               let message = "Internal server error";
               if (err.routine === "_bt_check_unique")
                 message = "User already exist";
-              badResponse(res, 400, message, err);
+              httpResponses.bad(
+                res,
+                400,
+                "failed",
+                message,
+                err
+              );
             });
         }
       );
@@ -81,18 +93,6 @@ export default class User {
   // user authentication
   static signIn(req, res) {
     const { email, password } = req.body;
-    const { isValid, errors } = loginValidator({
-      email,
-      password
-    });
-    if (!isValid) {
-      return badResponse(
-        res,
-        400,
-        "validation error",
-        errors
-      );
-    }
     const queryText = `
       SELECT *  FROM users WHERE email = $1 LIMIT 1
     `;
@@ -100,7 +100,12 @@ export default class User {
     db.query(queryText, value)
       .then(response => {
         if (!response[0]) {
-          return badResponse(res, 404, "User not found");
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "User not found"
+          );
         }
         bcrypt
           .compare(password, response[0].password)
@@ -114,27 +119,51 @@ export default class User {
                 config.secretOrKey,
                 { expiresIn: 3600 },
                 (err, token) => {
-                  okResponse(
+                  httpResponses.ok(
                     res,
                     200,
                     "token",
-                    `Bearer ${token}`,
+                    token,
                     "success"
                   );
                 }
               );
             } else {
-              badResponse(
+              httpResponses.bad(
                 res,
                 400,
+                "failed",
                 "Invalid email or password"
               );
             }
           });
       })
       .catch(err => {
-        //console.log(err);
-        badResponse(res, 500, "internal server error", err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "internal server error",
+          err
+        );
+      });
+  }
+  //get current user
+  static current(req, res) {
+    db.findById("users", req.user.id)
+      .then(response => {
+        const user = { ...response, password: null };
+        delete user.password;
+        httpResponses.ok(res, 200, "user", user, "success");
+      })
+      .catch(err => {
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Internal server error",
+          err
+        );
       });
   }
 }
