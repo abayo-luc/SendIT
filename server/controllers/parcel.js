@@ -5,12 +5,7 @@ import {
 import moment from "moment";
 //bring the db
 import db from "../database";
-// bring in validator
-import { createParcelValidator } from "../validations/parcelsValidations";
-import {
-  okResponse,
-  badResponse
-} from "../utils/httpResponses";
+import httpResponses from "../utils/httpResponses";
 import { isEmpty } from "../utils/validatorHelpers";
 // new parce instance from parcel model
 export default class Parcel {
@@ -18,11 +13,22 @@ export default class Parcel {
     const queryText = `SELECT * FROM parcels`;
     db.query(queryText)
       .then(parcels => {
-        okResponse(res, 200, "parcels", parcels);
+        httpResponses.ok(
+          res,
+          200,
+          "parcels",
+          parcels,
+          "success"
+        );
       })
       .catch(err => {
-        //console.log(err);
-        badResponse(req, 500, "Internal error", err);
+        httpResponses.bad(
+          req,
+          500,
+          "failed",
+          "Internal error",
+          err
+        );
       });
   }
 
@@ -30,22 +36,38 @@ export default class Parcel {
     db.findById("parcels", parseInt(req.params.id, 10))
       .then(parcel => {
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
+        } else if (
+          parcel.user_id != req.user.id ||
+          !req.user.is_admin
+        ) {
+          return httpResponses.unauthorized(res);
         }
-        return okResponse(res, 200, "parcel", parcel);
+        return httpResponses.ok(
+          res,
+          200,
+          "parcel",
+          parcel,
+          "success"
+        );
       })
       .catch(err => {
-        badResponse(res, 500, "Internal server error", err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Internal server error",
+          err
+        );
       });
   }
 
   static create(req, res) {
-    const { isValid, errors } = createParcelValidator(
-      req.body
-    );
-    if (!isValid) {
-      return badResponse(res, 400, "failed", errors);
-    }
     const queryText = `
     INSERT INTO parcels(  
         pickup_location, 
@@ -93,7 +115,7 @@ export default class Parcel {
     ];
     db.query(queryText, newParcel)
       .then(parcelRes => {
-        okResponse(
+        httpResponses.ok(
           res,
           201,
           "parcel",
@@ -102,9 +124,10 @@ export default class Parcel {
         );
       })
       .catch(err => {
-        badResponse(
+        httpResponses.bad(
           res,
           500,
+          "failed",
           "Internal server errror",
           err
         );
@@ -121,7 +144,12 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
 
         const updateQuery = `UPDATE parcels SET 
@@ -144,7 +172,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            okResponse(
+            httpResponses.ok(
               res,
               201,
               "parcel",
@@ -153,24 +181,28 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            badResponse(
+            httpResponses.bad(
               res,
               500,
+              "failed",
               "Intern server error",
               err
             );
           });
       })
       .catch(err => {
-        badResponse(res, 500, "Intern server error", err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Intern server error",
+          err
+        );
       });
   }
 
   //cancel parcel by updating its status
   static cancel(req, res) {
-    const attributes = {
-      status: STATUS_CANCELED
-    };
     const parcelQuery =
       "SELECT * FROM parcels WHERE id = $1 AND user_id = $2";
     db.query(parcelQuery, [
@@ -180,7 +212,12 @@ export default class Parcel {
       .then(response => {
         const parcel = response[0];
         if (!parcel) {
-          return badResponse(res, 404, "Parcel not found");
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "Parcel not found"
+          );
         }
 
         const updateQuery = `UPDATE parcels SET 
@@ -196,7 +233,7 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response[0];
-            okResponse(
+            httpResponses.ok(
               res,
               201,
               "parcel",
@@ -205,7 +242,7 @@ export default class Parcel {
             );
           })
           .catch(err => {
-            badResponse(
+            httpResponses.bad(
               res,
               500,
               "Intern server error",
@@ -214,7 +251,13 @@ export default class Parcel {
           });
       })
       .catch(err => {
-        badResponse(res, 500, "Intern server error", err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Intern server error",
+          err
+        );
       });
   }
 }

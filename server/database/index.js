@@ -20,7 +20,7 @@ const query = (text, params) => {
         pool.end();
       })
       .catch(err => {
-        // console.log(err);
+        //console.log(err);
         reject(err);
         pool.end();
       });
@@ -62,6 +62,7 @@ const createTable = migrationText => {
         pool.end();
       })
       .catch(err => {
+        //console.log(err);
         reject(err);
         pool.end();
       });
