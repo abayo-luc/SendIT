@@ -99,6 +99,21 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should return an empty array", done => {
       chai
         .request(server)
@@ -138,6 +153,22 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .post("/api/v1/parcels")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should not create new parcel order", done => {
       chai
         .request(server)
@@ -197,6 +228,21 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels/1")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("It should return one parcel object", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
@@ -285,6 +331,22 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should update first parcel", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
@@ -325,6 +387,21 @@ describe("Test Parcel End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels/1/cancel")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("It should cancle parcel delivery order", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {

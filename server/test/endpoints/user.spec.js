@@ -91,6 +91,22 @@ describe("Testing User End Point", () => {
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/users/1/parcels")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
+
     it("For existing user, it should return array of parcels", done => {
       db.query(parcelCreateQuery, parcelValues)
         .then(response => {
