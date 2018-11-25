@@ -5,16 +5,11 @@ export default class {
     const { is_admin } = req.user;
     is_admin
       ? next()
-      : httpResponses.badResponse(
-          res,
-          401,
-          "failed",
-          "Unthorized"
-        );
+      : httpResponses.bad(res, 401, "failed", "Unthorized");
   }
   static authorizeUser(req, res, next) {
     if (!Number(req.params.id)) {
-      return httpResponses.badResponse(
+      return httpResponses.bad(
         res,
         400,
         "failed",
@@ -23,11 +18,6 @@ export default class {
     }
     req.user.id == req.params.id || req.user.is_admin
       ? next()
-      : httpResponses.badResponse(
-          res,
-          401,
-          "failed",
-          "Unthorized"
-        );
+      : httpResponses.bad(res, 401, "failed", "Unthorized");
   }
 }

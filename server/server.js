@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/api/v1", (req, res) => {
   res.json({ message: "Welcome to sendIT API" });
 });
+
 // use all other routes
 app.use("/api/v1/", routers);
 

@@ -114,6 +114,23 @@ describe("Test Parcel End Point", () => {
           done();
         });
     });
+
+    it("Unauthorized user shouldn't access", done => {
+      const token = jwt.sign(
+        { id: 2, ...newUser },
+        config.secretOrKey
+      );
+      chai
+        .request(server)
+        .get("/api/v1/parcels")
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(401);
+          // res.body.should.be.a("object");
+          // res.body.should.have.property("message");
+          done();
+        });
+    });
   });
   /*
   //     @POST {object} one parcel
