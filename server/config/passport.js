@@ -15,6 +15,8 @@ export default passport => {
       db.findById("users", jwt_payload.id)
         .then(user => {
           if (user) {
+            let userPayload = { ...user };
+            delete userPayload.password;
             return done(null, user);
           }
           return done(null, false, "Unthorized");

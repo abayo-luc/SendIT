@@ -9,7 +9,7 @@ import config from "../../config/config.json";
 //bring in the db
 import db from "../../database";
 chai.use(chaiHTTP);
-
+const { should, expect } = chai;
 //constant to be used in test
 const newUser = {
   email: "me@example.com",
@@ -166,6 +166,9 @@ describe("Testing User End Point", () => {
           res.body.user.should.have.property("last_name");
           res.body.user.should.have.property("email");
           res.body.user.should.have.property("id");
+          expect(res.body.user).to.not.have.property(
+            "password"
+          );
           res.body.user.should.have
             .property("is_admin")
             .eql(false);
@@ -261,6 +264,34 @@ describe("Testing User End Point", () => {
           res.body.should
             .property("message")
             .eql("User not found");
+          done();
+        });
+    });
+    it("should show the current loggedin user", done => {
+      const token = jwt.sign(
+        { id: 1, ...newUser },
+        config.secretOrKey
+      );
+      chai
+        .request(server)
+        .get("/api/v1/current")
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a("object");
+          expect(res.body.user).to.have.property(
+            "first_name"
+          );
+          expect(res.body.user).to.have.property(
+            "last_name"
+          );
+          expect(res.body.user).to.have.property("email");
+          expect(res.body.user).to.have.property(
+            "is_admin"
+          );
+          expect(res.body.user).to.not.have.property(
+            "password"
+          );
           done();
         });
     });

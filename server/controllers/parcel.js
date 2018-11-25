@@ -42,19 +42,20 @@ export default class Parcel {
             "failed",
             "Parcel not found"
           );
-        } else if (
-          parcel.user_id != req.user.id ||
-          !req.user.is_admin
-        ) {
-          return httpResponses.unauthorized(res);
         }
-        return httpResponses.ok(
-          res,
-          200,
-          "parcel",
-          parcel,
-          "success"
-        );
+        if (
+          req.user["is_admin"] ||
+          req.user.id === parcel.user_id
+        ) {
+          return httpResponses.ok(
+            res,
+            200,
+            "parcel",
+            parcel,
+            "success"
+          );
+        }
+        return httpResponses.unauthorized(res);
       })
       .catch(err => {
         httpResponses.bad(
