@@ -72,6 +72,7 @@ const userValues = [
   true,
   moment(new Date())
 ];
+
 describe("Test Parcel End Point", () => {
   // clearn data before any testing
   beforeEach(async () => {
@@ -90,17 +91,29 @@ describe("Test Parcel End Point", () => {
     });
   });
 
-  //   afterEach(() => {
-  //     new Parcel().clean();
-  //   });
-  //   /*
-  //     @GET {array} all parcles
-  //    */
+  /*
+   @GET {array} all parcles
+   */
   describe("/GET all parcels", () => {
     const token = jwt.sign(
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should return an empty array", done => {
       chai
         .request(server)
@@ -133,13 +146,29 @@ describe("Test Parcel End Point", () => {
     });
   });
   /*
-  //     @POST {object} one parcel
-  //    */
+   @POST {object} one parcel
+   */
   describe("/POST Parcel", () => {
     const token = jwt.sign(
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .post("/api/v1/parcels")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should not create new parcel order", done => {
       chai
         .request(server)
@@ -191,14 +220,29 @@ describe("Test Parcel End Point", () => {
         });
     });
   });
-  //   /*
-  //    *@GET Parcel by Id
-  //    */
-  describe("/GET Parcel by ID", () => {
+  /*
+   *@GET Parcel by Id
+   */
+  describe('"/GET Parcel by ID"', () => {
     const token = jwt.sign(
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels/1")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("It should return one parcel object", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
@@ -225,32 +269,84 @@ describe("Test Parcel End Point", () => {
             });
         }
       );
-
-      it("It should not return a parcel object", done => {
-        chai
-          .request(server)
-          .get("/api/v1/parcels/198")
-          .set("Authorization", `Bearer ${token}`)
-          .end((req, res) => {
-            res.should.have.status(404);
-            res.body.should.be.a("object");
-            res.body.should.have
-              .property("message")
-              .eql("Parcel not found");
-            done();
-          });
-      });
+    });
+    it("should admin access parcel creted by other user", done => {
+      const userValues = [
+        "A",
+        "B",
+        "a@gmail.com",
+        "pwd",
+        false,
+        moment(new Date())
+      ];
+      db.query(userCreateQuery, userValues)
+        .then(user => {
+          //console.log(user);
+          const values = [...parcelValues];
+          values[5] = user[0].id;
+          db.query(parcelCreateQuery, values).then(
+            parcel => {
+              chai
+                .request(server)
+                .get(`/api/v1/parcels/${parcel[0].id}`)
+                .set("Authorization", `Bearer ${token}`)
+                .end((err, res) => {
+                  res.should.have.status(200);
+                  res.body.should.be.a("object");
+                  res.body.should.have
+                    .property("status")
+                    .eql("success");
+                  res.body.should.have.property("parcel");
+                  done();
+                });
+            }
+          );
+        })
+        .catch(err => {
+          console.log(err);
+          done();
+        });
+    });
+    it("It should not return a parcel object", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels/198")
+        .set("Authorization", `Bearer ${token}`)
+        .end((req, res) => {
+          res.should.have.status(404);
+          res.body.should.be.a("object");
+          res.body.should.have
+            .property("message")
+            .eql("Parcel not found");
+          done();
+        });
     });
   });
 
-  //   /*
-  //     @PUT {object} one parcel
-  //    */
+  /*
+    @PUT {object} one parcel
+  */
   describe("/PUT Parcel update", () => {
     const token = jwt.sign(
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1")
+        .send({})
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("it should update first parcel", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
@@ -285,12 +381,27 @@ describe("Test Parcel End Point", () => {
       );
     });
   });
-  //   // @PUT { object } one parcel
+  // @PUT { object } one parcel
   describe("/PUT cancel parcel", () => {
     const token = jwt.sign(
       { id: 1, ...newUser },
       config.secretOrKey
     );
+    it("should return unauthorized response", done => {
+      chai
+        .request(server)
+        .get("/api/v1/parcels/1/cancel")
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("status")
+            .eql("failed");
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
     it("It should cancle parcel delivery order", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {

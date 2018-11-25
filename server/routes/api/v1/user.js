@@ -10,7 +10,10 @@ userRouters
   .post("/users", validations.signup, user.signUp)
   .get(
     "/users/:id/parcels",
-    passport.authenticate("jwt", { session: false }),
+    passport.authenticate("jwt", {
+      session: false,
+      failureRedirect: "/api/v1/unthorized"
+    }),
     validations.checkId,
     authorization.authorizeUser,
     user.parcels

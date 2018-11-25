@@ -65,11 +65,13 @@ export default class User {
           ];
           db.query(queryText, newUser)
             .then(userRes => {
+              const user = { ...userRes[0] };
+              delete user.password;
               httpResponses.ok(
                 res,
                 201,
                 "user",
-                userRes[0],
+                user,
                 "success"
               );
             })

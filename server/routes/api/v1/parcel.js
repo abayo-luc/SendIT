@@ -7,7 +7,10 @@ import authorization from "../../../middlewares/authorization";
 import validation from "../../../middlewares/validations";
 const parcelRouters = Router();
 parcelRouters.use(
-  passport.authenticate("jwt", { session: false })
+  passport.authenticate("jwt", {
+    session: false,
+    failureRedirect: "/api/v1/unthorized"
+  })
 );
 parcelRouters
   .get(
