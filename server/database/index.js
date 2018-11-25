@@ -62,7 +62,6 @@ const createTable = migrationText => {
         pool.end();
       })
       .catch(err => {
-        //console.log(err);
         reject(err);
         pool.end();
       });

@@ -1,11 +1,14 @@
 import {
   STATUS_CANCELED,
-  STATUS_INTRANSIT
+  STATUS_WAITING,
+  STATUS_INTRANSIT,
+  STATUS_DELIVERED
 } from "../utils/types";
 import moment from "moment";
 //bring the db
 import db from "../database";
 import httpResponses from "../utils/httpResponses";
+import validations from "../validations/validators";
 import { isEmpty } from "../utils/validatorHelpers";
 // new parce instance from parcel model
 export default class Parcel {
@@ -110,7 +113,7 @@ export default class Parcel {
       address,
       details,
       currentLocation,
-      STATUS_INTRANSIT,
+      STATUS_WAITING,
       userId,
       moment(new Date())
     ];
@@ -205,58 +208,114 @@ export default class Parcel {
   //cancel parcel by updating its status
   static cancel(req, res) {
     const parcelQuery =
-      "SELECT * FROM parcels WHERE id = $1 AND user_id = $2";
-    db.query(parcelQuery, [
-      parseInt(req.params.id),
-      parseInt(req.user.id)
-    ])
-      .then(response => {
-        const parcel = response[0];
+      "DELETE FROM parcels WHERE id = $1 AND user_id = $2";
+    db.findById("parcels", req.params.id)
+      .then(parcel => {
         if (!parcel) {
-          return httpResponses.bad(
+          httpResponses.bad(
             res,
             404,
             "failed",
-            "Parcel not found"
+            "parcel not found"
           );
         }
-
-        const updateQuery = `UPDATE parcels SET 
-        status=$1 
-        WHERE id=$2 AND user_id=$3
-        returning *`;
-
-        const values = [
-          STATUS_CANCELED,
-          parseFloat(req.params.id),
-          parseFloat(req.user.id)
-        ];
-        db.query(updateQuery, values)
-          .then(response => {
-            const updatedParcel = response[0];
-            httpResponses.ok(
-              res,
-              201,
-              "parcel",
-              updatedParcel,
-              "success"
-            );
-          })
-          .catch(err => {
-            httpResponses.bad(
-              res,
-              500,
-              "Intern server error",
-              err
-            );
-          });
+        db.query(parcelQuery, [
+          parseInt(req.params.id),
+          parseInt(req.user.id)
+        ]).then(response => {
+          return httpResponses.ok(
+            res,
+            202,
+            "parcel",
+            response[0],
+            "success"
+          );
+        });
       })
       .catch(err => {
+        // console.log(err);
         httpResponses.bad(
           res,
           500,
           "failed",
           "Intern server error",
+          err
+        );
+      });
+  }
+
+  static changeStatus(req, res) {
+    if (!validations.isStatusExist(req.body)) {
+      httpResponses.bad(
+        res,
+        400,
+        "failed",
+        `Status should one of ${STATUS_WAITING}, ${STATUS_INTRANSIT} or ${STATUS_DELIVERED}}`
+      );
+    }
+    const psqlQuery =
+      "UPDATE parcels SET status=$1 WHERE id=$2 RETURNING *";
+    const values = [req.body.status, req.params.id];
+    db.query(psqlQuery, values)
+      .then(parcel => {
+        if (!parcel[0]) {
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "parcel not found"
+          );
+        }
+        httpResponses.ok(
+          res,
+          201,
+          "parcel",
+          parcel[0],
+          "success"
+        );
+      })
+      .catch(err => {
+        // console.log(err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Internal server",
+          err
+        );
+      });
+  }
+  static presentLocation(req, res) {
+    const { presentLocation, currentLocation } = req.body;
+    const location = presentLocation || currentLocation;
+    const psqlQuery =
+      "UPDATE parcels SET current_location=$1 WHERE id=$2 RETURNING *";
+    const values = [location, req.params.id];
+    db.query(psqlQuery, values)
+      .then(parcel => {
+        if (!parcel[0]) {
+          return httpResponses.bad(
+            res,
+            404,
+            "failed",
+            "parcel not found"
+          );
+        }
+        httpResponses.ok(
+          res,
+          201,
+          "parcel",
+          parcel[0],
+          "success"
+        );
+      })
+      .catch(err => {
+        console.log(err);
+        httpResponses.bad(
+          res,
+          500,
+          "failed",
+          "Internal server",
           err
         );
       });

@@ -9,7 +9,8 @@ import server from "../../server";
 import db from "../../database";
 import {
   STATUS_CANCELED,
-  STATUS_INTRANSIT
+  STATUS_INTRANSIT,
+  STATUS_WAITING
 } from "../../utils/types";
 // bring in parcel model
 
@@ -82,6 +83,10 @@ describe("Test Parcel End Point", () => {
         const payload = { ...response[0] };
         payload.should.have.property("email");
         payload.should.have.property("password");
+      })
+      .catch(err => {
+        done();
+        console.log(err);
       });
   });
   afterEach(async () => {
@@ -205,7 +210,7 @@ describe("Test Parcel End Point", () => {
           res.body.parcel.should.have.property("id");
           res.body.parcel.should.have
             .property("status")
-            .eql(STATUS_INTRANSIT);
+            .eql(STATUS_WAITING);
           res.body.parcel.should.have.property("user_id");
           res.body.parcel.should.have.property(
             "destination"
@@ -334,7 +339,7 @@ describe("Test Parcel End Point", () => {
     it("should return unauthorized response", done => {
       chai
         .request(server)
-        .put("/api/v1/parcels/1")
+        .put("/api/v1/parcels/1/destination")
         .send({})
         .end((err, res) => {
           res.should.have.status(401);
@@ -352,7 +357,11 @@ describe("Test Parcel End Point", () => {
         response => {
           chai
             .request(server)
-            .put(`/api/v1/parcels/${response[0].id}`)
+            .put(
+              `/api/v1/parcels/${
+                response[0].id
+              }/destination`
+            )
             .send({
               destination: "New York",
               destinationAddress: "KY 19 AV"
@@ -411,15 +420,10 @@ describe("Test Parcel End Point", () => {
             .send()
             .set("Authorization", `Bearer ${token}`)
             .end((err, res) => {
-              res.should.have.status(201);
+              res.should.have.status(202);
               res.body.should.have
                 .property("status")
                 .eql("success");
-              res.body.should.have.property("parcel");
-              res.body.parcel.should.be.a("object");
-              res.body.parcel.should.have
-                .property("status")
-                .eql(STATUS_CANCELED);
               done();
             });
         }
@@ -438,6 +442,160 @@ describe("Test Parcel End Point", () => {
             .eql("Invalid id");
           done();
         });
+    });
+  });
+  describe("PUT change status", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1/status")
+        .send({ status: STATUS_INTRANSIT })
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1ljf/status")
+        .send({ status: STATUS_INTRANSIT })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have
+            .property("message")
+            .eql("Invalid id");
+          done();
+        });
+    });
+    it("should return not found", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/178/status")
+        .send({ status: STATUS_INTRANSIT })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property("message")
+            .eql("parcel not found");
+          done();
+        });
+    });
+    it("should return updated parcel", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/status")
+            .send({ status: STATUS_INTRANSIT })
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a("object");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.have
+                .property("status")
+                .eql(STATUS_INTRANSIT);
+              done();
+            });
+        }
+      );
+    });
+  });
+  describe("PUT change parcel presentLocation", () => {
+    const token = jwt.sign(
+      { id: 1, ...newUser },
+      config.secretOrKey
+    );
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
+    it("should invalid id", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1ljf/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have
+            .property("message")
+            .eql("Invalid id");
+          done();
+        });
+    });
+    it("should return not found", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/178/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property("message")
+            .eql("parcel not found");
+          done();
+        });
+    });
+    it("should return validation error", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/presentLocation")
+            .send({})
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a("object");
+              res.body.should.have.property("errors");
+              res.body.errors.should.have
+                .property("presentLocation")
+                .eql("presentLocation is required");
+              done();
+            });
+        }
+      );
+    });
+    it("should return updated parcel", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/presentLocation")
+            .send({ currentLocation: "Bagidade" })
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a("object");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.have
+                .property("current_location")
+                .eql("Bagidade");
+              done();
+            });
+        }
+      );
     });
   });
 });

@@ -1,5 +1,6 @@
 import validatorHelpers from "../validations/validators";
 import httpResponses from "../utils/httpResponses";
+import { isEmpty } from "../utils/validatorHelpers";
 export default class {
   static signup(req, res, next) {
     const {
@@ -57,5 +58,16 @@ export default class {
     Number(id)
       ? next()
       : httpResponses.bad(res, 400, "failed", "Invalid id");
+  }
+
+  static checkCurrentLocation(req, res, next) {
+    const isLocationPresent =
+      !isEmpty(req.body.currentLocation) ||
+      !isEmpty(req.body.presentLocation);
+    isLocationPresent
+      ? next()
+      : httpResponses.bad(res, 400, "failed", null, {
+          presentLocation: "presentLocation is required"
+        });
   }
 }

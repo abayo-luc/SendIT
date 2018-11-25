@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 1000 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
+    "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 1500 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
     "start": "nodemon --exec babel-node server/server.js",
     "db:migrate": "node --require babel-register server/migrations/index.js --exit",
     "test:db:migrate": "NODE_ENV=test node --require babel-register server/migrations/index.js --exit",
@@ -27,7 +27,6 @@
     "babel-preset-env": "^1.7.0",
     "bcrypt": "^3.0.2",
     "dotenv": "^6.1.0",
-    "email-validator": "^2.0.4",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.4.0",
     "moment": "^2.22.2",

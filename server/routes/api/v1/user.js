@@ -15,7 +15,7 @@ userRouters
       failureRedirect: "/api/v1/unthorized"
     }),
     validations.checkId,
-    authorization.authorizeUser,
+    authorization.user,
     user.parcels
   )
   .post("/login", validations.login, user.signIn)

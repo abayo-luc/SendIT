@@ -1,5 +1,10 @@
 import { isEmpty } from "../utils/validatorHelpers";
 import validator from "validator";
+import {
+  STATUS_DELIVERED,
+  STATUS_WAITING,
+  STATUS_INTRANSIT
+} from "../utils/types";
 export default class {
   static checkPresence(params, keys) {
     let errors = {};
@@ -19,5 +24,13 @@ export default class {
       isValid: isEmpty(errors),
       errors
     };
+  }
+
+  static isStatusExist(data) {
+    return [
+      STATUS_DELIVERED,
+      STATUS_WAITING,
+      STATUS_INTRANSIT
+    ].includes(data.status);
   }
 }
