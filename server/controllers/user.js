@@ -49,7 +49,7 @@ export default class User {
         (error, hash) => {
           if (error) {
             //console.log(error);
-            httpResponses.bad(
+            return httpResponses.bad(
               res,
               500,
               "failed",
@@ -121,7 +121,7 @@ export default class User {
                 config.secretOrKey,
                 { expiresIn: 3600 },
                 (err, token) => {
-                  httpResponses.ok(
+                  return httpResponses.ok(
                     res,
                     200,
                     "token",
@@ -131,7 +131,7 @@ export default class User {
                 }
               );
             } else {
-              httpResponses.bad(
+              return httpResponses.bad(
                 res,
                 400,
                 "failed",

@@ -212,7 +212,7 @@ export default class Parcel {
     db.findById("parcels", req.params.id)
       .then(parcel => {
         if (!parcel) {
-          httpResponses.bad(
+          return httpResponses.bad(
             res,
             404,
             "failed",
@@ -246,7 +246,7 @@ export default class Parcel {
 
   static changeStatus(req, res) {
     if (!validations.isStatusExist(req.body)) {
-      httpResponses.bad(
+      return httpResponses.bad(
         res,
         400,
         "failed",
