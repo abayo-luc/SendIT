@@ -42,6 +42,7 @@
             id="login-email"
             class="custom-input"
           />
+          <div class="errors"></div>
         </div>
         <div class="labeled-input">
           <label for="password">Password</label>
@@ -51,7 +52,9 @@
             id="login-password"
             class="custom-input"
           />
+          <div class="errors"></div>
         </div>
+        <div class="errors" id="auth-error"></div>
         <button
           class="btn btn-primary"
           type="button"
@@ -76,6 +79,5 @@
       </div>
     </section>
   </body>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="../front-end/login.js"></script>
 </html>
