@@ -23,7 +23,7 @@ const getUserParcels = async () => {
             $("#user-parcels").append(`
             <tr>
                 <td>${parcel.pickup_location || "..."}</td>
-                <td>${parcel.address.pickup_location ||
+                <td>${parcel.address.pickup_address ||
                   "..."}</td>
                 <td>${parcel.destination || "..."}</td>
                 <td>${parcel.address.destination_address ||

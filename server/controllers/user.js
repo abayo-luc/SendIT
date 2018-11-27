@@ -70,7 +70,7 @@ export default class User {
               jwt.sign(
                 payload,
                 config.secretOrKey,
-                { expiresIn: 3600 },
+                { expiresIn: "7d" },
                 (err, token) => {
                   const resPayload = {
                     status: "success",
@@ -125,7 +125,7 @@ export default class User {
               jwt.sign(
                 payload,
                 config.secretOrKey,
-                { expiresIn: 3600 },
+                { expiresIn: "7d" },
                 (err, token) => {
                   res.status(200).json({
                     status: "success",
