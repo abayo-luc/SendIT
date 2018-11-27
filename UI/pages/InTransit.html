@@ -9,6 +9,7 @@
     <link rel="shortcut icon" href="../assets/icons/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" media="screen" href="../css/main.css" />
     <link rel="stylesheet" href="../css/inTransit.css">
+    <link rel="stylesheet" href="../css/loading.css">
 </head>
 
 <body>
@@ -50,9 +51,7 @@
         <div class="right">
             <div class="topbar-content">
                 <img src="../assets//images/1.jpg" alt="profile" srcset="" class="sm-circle profile">
-                <div class="names">
-                    <p>FirstName</p>
-                    <p>Last Name</p>
+                <div class="names" id="user-names">
                 </div>
                 <img src="../assets/icons/notification-bell.svg" alt="" srcset="" class="notification">
             </div>
@@ -72,309 +71,312 @@
         </div>
     </section>
     <section class="content">
-        <h3 class="title centered-text">Parcel Deliveries in Transit</h3>
-        <div class="lg-card">
-            <div class="lg-card-content">
-                <div class="data-table">
-                    <table>
-                        <tr>
-                            <th>Pickup</th>
-                            <th>Address</th>
-                            <th>Destination</th>
-                            <th>Address</th>
-                            <th>Description</th>
-                            <th>Sent Time</th>
-                            <th>Status</th>
-                        </tr>
-                        <tr>
-                            <td>Kicukiro</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Kicukiroon</td>
-                            <td>KK 11 AV</td>
-                            <td class="editable">
-                                <span>Gasabo</span>
-                                <span class="icon-edit" onclick="openModel()">
-                                    <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                                </span>
-                            </td>
-                            <td>KK 19 Av</td>
-                            <td>
-                                <span> Q:2</span>
-                                <span> W:5</span>
-                                <span> L:4</span>
-                                <span> H:3</span>
-                            </td>
-                            <td>2 Feb, 18</td>
-                            <td class="status">
-                                <span>False</span>
-                                <span class="icon-cancel" onclick="cancelOrder(this)">
-                                    <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
+        <div id="loader">loading..</div>
+        <di id="loaded-data">
+            <h3 class="title centered-text">Parcel Deliveries in Transit</h3>
+            <div class="lg-card">
+                <div class="lg-card-content">
+                    <div class="data-table">
+                        <table id="in-transit-parcels">
+                            <tr>
+                                <th>Pickup</th>
+                                <th>Address</th>
+                                <th>Destination</th>
+                                <th>Address</th>
+                                <th>Description</th>
+                                <th>Sent Time</th>
+                                <th>Status</th>
+                            </tr>
+                            <tr>
+                                <td>Kicukiro</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kicukiroon</td>
+                                <td>KK 11 AV</td>
+                                <td class="editable">
+                                    <span>Gasabo</span>
+                                    <span class="icon-edit" onclick="openModel()">
+                                        <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
+                                    </span>
+                                </td>
+                                <td>KK 19 Av</td>
+                                <td>
+                                    <span> Q:2</span>
+                                    <span> W:5</span>
+                                    <span> L:4</span>
+                                    <span> H:3</span>
+                                </td>
+                                <td>2 Feb, 18</td>
+                                <td class="status">
+                                    <span>False</span>
+                                    <span class="icon-cancel" onclick="cancelOrder(this)">
+                                        <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -421,9 +423,11 @@
             </div>
         </div>
     </section>
+    <!-- jquery liblary -->
+    <script src="../front-end/jquery.min.js"></script>
     <!-- popup model javascript -->
     <script src="../js/model.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="../front-end/intransit.js"></script>
 </body>
 
 </html>

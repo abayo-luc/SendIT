@@ -20,9 +20,13 @@ const login = () => {
   })
     .then(response => {
       response.json().then(async result => {
-        const { token, message, errors } = result;
-        if (token) {
+        const { token, user, message, errors } = result;
+        if (token && user) {
           await localStorage.setItem("token", result.token);
+          await localStorage.setItem(
+            "user",
+            JSON.stringify(user)
+          );
           window.location = "../pages/ClientDashboard.html";
           return;
         } else if (message) {

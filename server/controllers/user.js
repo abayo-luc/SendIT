@@ -127,13 +127,11 @@ export default class User {
                 config.secretOrKey,
                 { expiresIn: 3600 },
                 (err, token) => {
-                  return httpResponses.ok(
-                    res,
-                    200,
-                    "token",
-                    token,
-                    "success"
-                  );
+                  res.status(200).json({
+                    status: "success",
+                    user: payload,
+                    token
+                  });
                 }
               );
             } else {

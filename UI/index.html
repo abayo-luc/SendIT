@@ -39,6 +39,7 @@
         <h1>SendIT</h1>
       </div>
       <div class="col-3 form">
+        <div class="errors" id="auth-error"></div>
         <div class="inline-input">
           <div class="labeled-input">
             <label for="fname">First name</label>
@@ -47,7 +48,9 @@
               name="firstname"
               class="custom-input"
               id="first_name"
+              required
             />
+            <div class="errors"></div>
           </div>
           <div class="labeled-input">
             <label for="lname">Last name</label>
@@ -56,7 +59,9 @@
               name="lastname"
               class="custom-input"
               id="last_name"
+              required
             />
+            <div class="errors"></div>
           </div>
         </div>
         <div class="labeled-input">
@@ -66,7 +71,9 @@
             name="email"
             class="custom-input"
             id="email"
+            required
           />
+          <div class="errors"></div>
         </div>
         <div class="labeled-input">
           <label for="pwd">Password</label>
@@ -75,7 +82,9 @@
             name="password"
             class="custom-input"
             id="password"
+            required
           />
+          <div class="errors"></div>
         </div>
         <div class="labeled-input">
           <label for="c-pwd">Confirm Passowrd</label>
@@ -84,11 +93,13 @@
             name="c-password"
             class="custom-input"
             id="passowrd_confirm"
+            required
           />
+          <div class="errors"></div>
         </div>
         <button
           class="btn btn-primary"
-          type="button"
+          type="submit"
           id="btn-signup"
         >
           Sign Up
@@ -99,9 +110,8 @@
             >Login</a
           >
         </div>
-      </div>
+      </form>
     </section>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="./front-end/signup.js"></script>
   </body>
 </html>
