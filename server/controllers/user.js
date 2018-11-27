@@ -65,14 +65,20 @@ export default class User {
           ];
           db.query(queryText, newUser)
             .then(userRes => {
-              const user = { ...userRes[0] };
-              delete user.password;
-              httpResponses.ok(
-                res,
-                201,
-                "user",
-                user,
-                "success"
+              const payload = { ...userRes[0] };
+              delete payload.password;
+              jwt.sign(
+                payload,
+                config.secretOrKey,
+                { expiresIn: 3600 },
+                (err, token) => {
+                  const resPayload = {
+                    status: "success",
+                    user: { ...payload },
+                    token
+                  };
+                  res.status(201).json({ ...resPayload });
+                }
               );
             })
             .catch(err => {

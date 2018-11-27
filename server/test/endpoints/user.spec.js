@@ -176,6 +176,7 @@ describe("Testing User End Point", () => {
           res.body.should.have
             .property("status")
             .eql("success");
+          res.body.should.have.property("token");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
           res.body.user.should.have.property("first_name");
