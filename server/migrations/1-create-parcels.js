@@ -9,7 +9,9 @@ const migrationText = `CREATE TABLE IF NOT EXISTS
         current_location TEXT,
         status TEXT NOT NULL DEFAULT 'in_transit',
         user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
-        created_at TIMESTAMP
+        created_at TIMESTAMP,
+        updated_at TIMESTAMP
+        arrived_at TIMESTAMP,
     )`;
 setTimeout(() => {
   db.createTable(migrationText)
