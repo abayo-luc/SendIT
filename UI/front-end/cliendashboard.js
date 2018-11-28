@@ -3,10 +3,6 @@ const getUserParcels = async () => {
   const user = await JSON.parse(
     localStorage.getItem("user")
   );
-  $("#user-names").append(
-    `<p>${user.first_name || ""}</p>`
-  );
-  $("#user-names").append(`<p>${user.last_name || ""}</p>`);
   fetch(`/api/v1/users/${user.id}/parcels`, {
     method: "GET",
     headers: {
@@ -62,7 +58,6 @@ const getUserParcels = async () => {
                 }</td>
             </tr>
             `);
-            console.log(parcel);
           });
         }
       });

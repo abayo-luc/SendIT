@@ -71,9 +71,5 @@ $(document).ready(async () => {
   const user = await JSON.parse(
     localStorage.getItem("user")
   );
-  $("#user-names").append(
-    `<p>${user.first_name || ""}</p>`
-  );
-  $("#user-names").append(`<p>${user.last_name || ""}</p>`);
   fetchData(token, user);
 });
