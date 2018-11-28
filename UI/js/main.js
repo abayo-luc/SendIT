@@ -37,22 +37,22 @@ $(async () => {
   })
     .then(response => {
       if (response.status === 401) {
-        window.location = "../pages/Login.html";
+        window.location = "/login";
       }
     })
     .catch(err => {
-      window.location = "../pages/Login.html";
+      window.location = "/login";
     });
 });
 const getParcel = async id => {
   const parcel_id = parseFloat(id);
   await localStorage.setItem("parcel_id", parcel_id);
-  window.location = await "../pages/SingleParcel.html";
+  window.location = await "/parcel";
 };
-// document
-//   .querySelector("#lg-logout")
-//   .addEventListener("click", async () => {
-//     await localStorage.setItem("token", null);
-//     await localStorage.setItem("user", null);
-//     window.location = "../pages/Login.html";
-//   });
+document
+  .querySelector("#lg-logout")
+  .addEventListener("click", async () => {
+    await localStorage.setItem("token", null);
+    await localStorage.setItem("user", null);
+    window.location = "/login";
+  });

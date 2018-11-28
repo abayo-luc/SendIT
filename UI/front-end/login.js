@@ -27,7 +27,9 @@ const login = () => {
             "user",
             JSON.stringify(user)
           );
-          window.location = "../pages/ClientDashboard.html";
+          user.is_admin
+            ? (window.location = "/admin")
+            : (window.location = "/client");
           return;
         } else if (message) {
           authError.innerHTML = `<p>${message}</p>`;

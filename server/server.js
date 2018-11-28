@@ -6,6 +6,8 @@ import path from "path";
 import passportConfig from "./middlewares/passport";
 // load all routes
 import routers from "./routes/api/v1";
+//bring in the pages
+import pages from "./routes/pages";
 dotenv.config();
 const app = express();
 
@@ -22,10 +24,8 @@ app.use(express.static(path.join(__dirname, "../UI")));
 app.get("/api/v1", (req, res) => {
   res.json({ message: "Welcome to sendIT API" });
 });
-
-app.get("/signup", (req, res) => {
-  res.sendFile(path.join(__dirname, "../UI/index.html"));
-});
+//app pages
+app.use("/", pages);
 // use all other routes
 app.use("/api/v1/", routers);
 

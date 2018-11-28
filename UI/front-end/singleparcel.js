@@ -2,7 +2,7 @@ const editCancelBtns = document.querySelector(
   "#action-btn"
 );
 
-editCancelBtns.styles.display = "none";
+// editCancelBtns.styles.display = "none";
 const parcelPickup = document.querySelector("#var-pickup");
 const parcelPickupAddress = document.querySelector(
   "#var-pickup-adr"
@@ -56,15 +56,4 @@ const parcelQuantity = document.querySelector(
     .catch(err => {
       console.log(err);
     });
-  console.log(parcel_id);
-  // parcelDestination.textContent = parcel.destination;
-  // parcelDestinationAddress.textContent =
-  //   parcel.address.destination_address || "";
-  // parcelPickup.textContent = parcel.pickup_location;
-  // parcelPickupAddress.textContent =
-  //   parcel.address.pickup_address || "";
-  // parcelWeight.textContent = parcel.details.parcelWeight;
-  // parcelHeight.textContent = parcel.details.height || "";
-  // parcelWidth.textContent = parcel.details.width || "";
-  // parcelQuantity.textContent = parcel.details.quantity;
 })();
