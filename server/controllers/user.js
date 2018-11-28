@@ -1,15 +1,19 @@
 import bcrypt from "bcrypt";
 import momemt from "moment";
 import jwt from "jsonwebtoken";
-//bring in the configuration
-import config from "../config/config.json";
 // bring in user model
 import db from "../database";
 import httpResponses from "../utils/httpResponses";
 export default class User {
   static parcels(req, res) {
-    const queryString = `SELECT * FROM parcels WHERE user_id = $1`;
-    const values = [Number(req.params.id)];
+    let queryString;
+    let values;
+    req.query.status
+      ? (queryString = `SELECT * FROM parcels WHERE user_id = $1 AND status=$2`)
+      : (queryString = `SELECT * FROM parcels WHERE user_id = $1`);
+    req.query.status
+      ? (values = [Number(req.params.id), req.query.status])
+      : (values = [Number(req.params.id)]);
     db.findById("users", req.params.id)
       .then(user => {
         if (!user) {
@@ -20,9 +24,11 @@ export default class User {
             "user not found"
           );
         }
-        db.query(queryString, values).then(response => {
-          httpResponses.ok(res, 200, "parcels", response);
-        });
+        db.query(queryString, values, true).then(
+          response => {
+            httpResponses.ok(res, 200, "parcels", response);
+          }
+        );
       })
       .catch(err => {
         httpResponses.bad(
@@ -65,16 +71,21 @@ export default class User {
           ];
           db.query(queryText, newUser)
             .then(userRes => {
-              const payload = { ...userRes[0] };
-              delete payload.password;
+              const payload = {
+                id: userRes.id,
+                email: userRes.email,
+                is_admin: userRes.is_admin
+              };
+              const user = { ...userRes };
+              delete user.password;
               jwt.sign(
                 payload,
-                config.secretOrKey,
+                process.env.secretOrKey,
                 { expiresIn: "7d" },
                 (err, token) => {
                   const resPayload = {
                     status: "success",
-                    user: { ...payload },
+                    user,
                     token
                   };
                   res.status(201).json({ ...resPayload });
@@ -98,7 +109,7 @@ export default class User {
     });
   }
 
-  // user authentication
+  // user signup
   static signIn(req, res) {
     const { email, password } = req.body;
     const queryText = `
@@ -107,7 +118,7 @@ export default class User {
     const value = [email];
     db.query(queryText, value)
       .then(response => {
-        if (!response[0]) {
+        if (!response) {
           return httpResponses.bad(
             res,
             404,
@@ -116,15 +127,19 @@ export default class User {
           );
         }
         bcrypt
-          .compare(password, response[0].password)
+          .compare(password, response.password)
           .then(isMatch => {
             if (isMatch) {
               // User Matched
-              let payload = { ...response[0] };
+              let payload = {
+                id: response.id,
+                email: response.email,
+                is_admin: response.is_admin
+              };
               delete payload.password;
               jwt.sign(
                 payload,
-                config.secretOrKey,
+                process.env.secretOrKey,
                 { expiresIn: "7d" },
                 (err, token) => {
                   res.status(200).json({
@@ -155,7 +170,7 @@ export default class User {
       });
   }
   //get current user
-  static current(req, res) {
+  static currentUser(req, res) {
     db.findById("users", req.user.id)
       .then(response => {
         const user = { ...response, password: null };

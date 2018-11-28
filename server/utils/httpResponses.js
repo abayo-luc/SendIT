@@ -22,7 +22,7 @@ const bad = (res, code, status, msg, errors) => {
   if (msg) resPayload.message = msg;
   res.status(code).json(resPayload);
 };
-export const unauthorized = res => {
+const unauthorized = res => {
   const resPayload = {
     status: "failed",
     message: "unauthorized"

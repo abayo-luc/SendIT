@@ -82,14 +82,10 @@
           </a>
         </div>
       </div>
-      <div class="down-link">
-        <img
-          src="../assets/icons/logout.svg"
-          alt="lg"
-          srcset=""
-        />
-        <a href="./Login.html" class="nav-link">Logout</a>
-      </div>
+    <div class="down-link" id="lg-logout">
+      <img src="../assets/icons/logout.svg" alt="lg" srcset="" />
+      <a class="nav-link">Logout</a>
+    </div>
     </section>
     <section class="right top-nav">
       <div class="logo-container">
@@ -145,20 +141,6 @@
       </div>
     </section>
     <section class="content" id="new-order">
-      <!--
-        <div class="row">
-            <h3 class="title padding">Your Parcel, <span class="send-it">SendIT</span> from your door !</h3>
-        </div>
-      -->
-      <!-- <div class="row">
-        <div class="steps">
-          <ul class="progress" id="progressbar">
-            <li class="active">New Order</li>
-            <li class="">Payment Info</li>
-            <li class="">Verfy Info</li>
-          </ul>
-        </div>
-      </div> -->
       <div class="order-form parcel-info active">
         <div class="row padding">
           <div class="col-4">
@@ -206,7 +188,7 @@
                 <select id="destination">
                   <option value="">choose location</option>
                   <option value="Gasabo">Gasabo</option>
-                  <option value="1">Musanze</option>
+                  <option value="Musanze">Musanze</option>
                   <option value="Nyamagabe">Nyama</option>
                   <option value="Nyarugenge"
                     >Nyarugenge</option
@@ -316,157 +298,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="order-form payment-info">
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-4 ">
-            <div class="labeled-input">
-              <label for="fcard-info"
-                >Credit/Visa Card Number</label
-              >
-              <input
-                type="number"
-                name="quanitty"
-                id="card-info"
-                class="custom-input"
-              />
-            </div>
-          </div>
-          <div class="col-2"></div>
-          <div class="col-3">
-            <div class="labeled-input">
-              <label for="fsecred">Secret</label>
-              <input
-                type="number"
-                name="secret"
-                id="card-secrete"
-                class="custom-input"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-3 ">
-            <button
-              class="btn btn-block btn-default"
-              onclick="nextOrPrev('prev')"
-            >
-              Back
-            </button>
-          </div>
-          <div class="col-3"></div>
-          <div class="col-3 " style="float:right">
-            <button
-              class="btn btn-block btn-primary"
-              id="#next-pay"
-              onclick="nextOrPrev('next')"
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div> -->
-      <!-- <div class="order-form payment-info">
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-6">
-            <h3 class="title">Location/Destination</h3>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-5 padding">
-            <div class="inline-content">
-              <label>Pickup City</label>
-              <p id="var-pickup">Kicukiro</p>
-            </div>
-            <div class="inline-content">
-              <label>Addres</label>
-              <p id="var-pickup-adr">KG 11 Av</p>
-            </div>
-          </div>
-          <div class="col-2">
-            <div class="inline-content">
-              <label>Delivery City</label>
-              <p id="var-dest">Gasabo</p>
-            </div>
-            <div class="inline-content">
-              <label>Addres</label>
-              <p id="var-destin-adr">KG 19 Av 15</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-6">
-            <h3 class="title">Parcel Size and Weight</h3>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-2 padding">
-            <div class="inline-content">
-              <label for="faddres">Quantity</label>
-              <p id="var-quantity">2</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-2 padding">
-            <div class="inline-content">
-              <label for="faddres">Weight</label>
-              <p id="var-weight">45Kg</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-2 padding">
-            <div class="inline-content">
-              <label for="faddres">Length</label>
-              <p id="var-length">45Cm</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-2 padding">
-            <div class="inline-content">
-              <label for="faddres">Width</label>
-              <p id="var-width">50Cm</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-2 padding">
-            <div class="inline-content">
-              <label for="faddres">Height</label>
-              <p id="var-height">50Cm</p>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-2"></div>
-          <div class="col-3 padding">
-            <button
-              class="btn btn-block btn-default"
-              onclick="nextOrPrev('prev')"
-            >
-              Back
-            </button>
-          </div>
-          <div class="col-1"></div>
-          <div class="col-3 padding" style="float:right">
-            <a
-              class="btn btn-block btn-primary"
-              id="send-parcel"
-              >Send</a
-            >
-          </div>
-        </div> -->
       </div>
     </section>
     <script src="../front-end/jquery.min.js"></script>

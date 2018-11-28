@@ -3,7 +3,7 @@ import express from "express";
 import passport from "passport";
 import path from "path";
 //bring passport configuraiton
-import passportConfig from "./config/passport";
+import passportConfig from "./middlewares/passport";
 // load all routes
 import routers from "./routes/api/v1";
 dotenv.config();

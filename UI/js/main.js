@@ -44,11 +44,15 @@ $(async () => {
       window.location = "../pages/Login.html";
     });
 });
-
-document
-  .querySelector("#lg-logout")
-  .addEventListener("click", async () => {
-    await localStorage.setItem("token", null);
-    await localStorage.setItem("user", null);
-    window.location = "../pages/Login.html";
-  });
+const getParcel = async id => {
+  const parcel_id = parseFloat(id);
+  await localStorage.setItem("parcel_id", parcel_id);
+  window.location = await "../pages/SingleParcel.html";
+};
+// document
+//   .querySelector("#lg-logout")
+//   .addEventListener("click", async () => {
+//     await localStorage.setItem("token", null);
+//     await localStorage.setItem("user", null);
+//     window.location = "../pages/Login.html";
+//   });

@@ -1,4 +1,3 @@
-import config from "../config/config.json";
 import {
   Strategy as JwtStrategy,
   ExtractJwt
@@ -8,14 +7,18 @@ import db from "../database";
 //passport-jwt config code refactored from https://www.npmjs.com/package/passport-jwt
 const opts = {};
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = config.secretOrKey;
+opts.secretOrKey = process.env.secretOrKey;
 export default passport => {
   passport.use(
     new JwtStrategy(opts, (jwt_payload, done) => {
       db.findById("users", jwt_payload.id)
         .then(user => {
           if (user) {
-            let userPayload = { ...user };
+            let userPayload = {
+              id: user.id,
+              email: user.email,
+              is_admin: user.is_admin
+            };
             delete userPayload.password;
             return done(null, user);
           }

@@ -1,23 +1,24 @@
-import { isEmpty } from "../utils/validatorHelpers";
+import { isEmpty } from "./helper.functions";
 import validator from "validator";
 import {
   STATUS_DELIVERED,
   STATUS_WAITING,
   STATUS_INTRANSIT
-} from "../utils/types";
+} from "./constants";
 export default class {
   static checkPresence(params, keys) {
     let errors = {};
     for (let key of keys) {
       params[key] = isEmpty(params[key]) ? "" : params[key];
       try {
-        key === "email" && !validator.isEmail(params[key])
-          ? (errors[key] = "Invalid email")
-          : null;
-        if (validator.isEmpty(params[key]))
+        key === "email" &&
+          !validator.isEmail(params[key]) &&
+          (errors[key] = "Invalid email");
+        if (validator.isEmpty(params[key].toString()))
           errors[key] = `${key} is required`;
       } catch (err) {
-        //console.log(key);
+        errors.server = "lkfjdlk";
+        console.log(err);
       }
     }
     return {

@@ -82,13 +82,13 @@
           </a>
         </div>
       </div>
-      <div class="down-link">
+      <div class="down-link" id="lg-logout">
         <img
           src="../assets/icons/logout.svg"
           alt="lg"
           srcset=""
         />
-        <a href="./Login.html" class="nav-link">Logout</a>
+        <a class="nav-link">Logout</a>
       </div>
     </section>
     <section class="right top-nav">
@@ -158,22 +158,22 @@
           <div class="col-2"></div>
           <div class="col-5 padding">
             <div class="inline-content">
-              <label>Pickup City</label>
-              <p id="var-pickup">Kicukiro</p>
+              <label>Pickup</label>
+              <p id="var-pickup">...</p>
             </div>
             <div class="inline-content">
-              <label>Addres</label>
-              <p id="var-pickup-adr">KG 11 Av</p>
+              <label>Addr</label>
+              <p id="var-pickup-adr">...</p>
             </div>
           </div>
           <div class="col-2">
             <div class="inline-content">
-              <label>Delivery City</label>
-              <p id="var-destination">Gasabo</p>
+              <label>Destination</label>
+              <p id="var-destination">...</p>
             </div>
             <div class="inline-content">
-              <label>Addres</label>
-              <p id="var-destination-adr">KG 19 Av 15</p>
+              <label>Addr</label>
+              <p id="var-destination-adr">...</p>
             </div>
           </div>
         </div>
@@ -188,7 +188,7 @@
           <div class="col-2 padding">
             <div class="inline-content">
               <label for="faddres">Quantity</label>
-              <p id="var-quantity">2</p>
+              <p id="var-quantity">..</p>
             </div>
           </div>
         </div>
@@ -197,7 +197,7 @@
           <div class="col-2 padding">
             <div class="inline-content">
               <label for="faddres">Weight</label>
-              <p id="var-weight">45Kg</p>
+              <p id="var-weight">..</p>
             </div>
           </div>
         </div>
@@ -206,7 +206,7 @@
           <div class="col-2 padding">
             <div class="inline-content">
               <label for="faddres">Length</label>
-              <p id="var-length">45Cm</p>
+              <p id="var-length">..</p>
             </div>
           </div>
         </div>
@@ -215,7 +215,7 @@
           <div class="col-2 padding">
             <div class="inline-content">
               <label for="faddres">Width</label>
-              <p id="var-width">50Cm</p>
+              <p id="var-width">..</p>
             </div>
           </div>
         </div>
@@ -224,31 +224,30 @@
           <div class="col-2 padding">
             <div class="inline-content">
               <label for="faddres">Height</label>
-              <p id="var-height">50Cm</p>
+              <p id="var-height">..</p>
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" id="action-btn">
           <div class="col-2"></div>
           <div class="col-3 padding">
-            <button
-              class="btn btn-block btn-default"
-              onclick="nextOrPrev('prev')"
-            >
+            <button class="btn btn-block btn-default">
               Edit
             </button>
           </div>
           <div class="col-1"></div>
           <div class="col-3 padding" style="float:right">
-            <a
+            <button
               class="btn btn-block btn-primary"
               id="send-parcel"
-              >Cancel</a
             >
+              Cancel
+            </button>
           </div>
         </div>
       </div>
     </section>
+    <script src="../front-end/jquery.min.js"></script>
     <script src="../js/main.js"></script>
     <script src="../front-end/singleparcel.js"></script>
   </body>

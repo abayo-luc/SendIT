@@ -17,7 +17,7 @@ const getUserParcels = async () => {
           dataReady();
           parcels.map(parcel => {
             $("#user-parcels").append(`
-            <tr>
+            <tr onClick=getParcel(${parcel.id})>
                 <td>${parcel.pickup_location || "..."}</td>
                 <td>${parcel.address.pickup_address ||
                   "..."}</td>

@@ -1,3 +1,8 @@
+const editCancelBtns = document.querySelector(
+  "#action-btn"
+);
+
+editCancelBtns.styles.display = "none";
 const parcelPickup = document.querySelector("#var-pickup");
 const parcelPickupAddress = document.querySelector(
   "#var-pickup-adr"
@@ -15,15 +20,51 @@ const parcelQuantity = document.querySelector(
   "#var-quantity"
 );
 
-const getCreatedParcel = ({ id, parcel }) => {
-  parcelDestination.textContent = parcel.destination;
-  parcelDestinationAddress.textContent =
-    parcel.address.destination_address || "";
-  parcelPickup.textContent = parcel.pickup_location;
-  parcelPickupAddress.textContent =
-    parcel.address.pickup_address || "";
-  parcelWeight.textContent = parcel.details.parcelWeight;
-  parcelHeight.textContent = parcel.details.height || "";
-  parcelWidth.textContent = parcel.details.width || "";
-  parcelQuantity.textContent = parcel.details.quantity;
-};
+(async () => {
+  const token = await localStorage.getItem("token");
+  const parcel_id = await localStorage.getItem("parcel_id");
+  fetch(`/api/v1/parcels/${parcel_id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "Application/JSON",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      response.json().then(results => {
+        const { parcel } = results;
+        if (parcel) {
+          parcelDestination.textContent =
+            parcel.destination;
+          parcelDestinationAddress.textContent =
+            parcel.address.destination_address || "--";
+          parcelPickup.textContent = parcel.pickup_location;
+          parcelPickupAddress.textContent =
+            parcel.address.pickup_address || "--";
+          parcelWeight.textContent = `${
+            parcel.details.weight
+          } g`;
+          parcelHeight.textContent = `${parcel.details
+            .height || "--"} Cm`;
+          parcelWidth.textContent = `${parcel.details
+            .width || "--"} Cm`;
+          parcelQuantity.textContent =
+            parcel.details.quantity;
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  console.log(parcel_id);
+  // parcelDestination.textContent = parcel.destination;
+  // parcelDestinationAddress.textContent =
+  //   parcel.address.destination_address || "";
+  // parcelPickup.textContent = parcel.pickup_location;
+  // parcelPickupAddress.textContent =
+  //   parcel.address.pickup_address || "";
+  // parcelWeight.textContent = parcel.details.parcelWeight;
+  // parcelHeight.textContent = parcel.details.height || "";
+  // parcelWidth.textContent = parcel.details.width || "";
+  // parcelQuantity.textContent = parcel.details.quantity;
+})();

@@ -1,11 +1,19 @@
+const STATUS_INTRANSIT = "in_transite";
+const STATUS_DELIVERED = "delivered";
+const STATUS_WAITING = "waiting_to_be_picked";
 const fetchData = async (token, user) => {
-  fetch(`/api/v1/users/${user.id}/parcels?inTransit=true`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "Application/JSON",
-      Authorization: `Bearer ${token}`
+  fetch(
+    `/api/v1/users/${
+      user.id
+    }/parcels?status=${STATUS_INTRANSIT}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "Application/JSON",
+        Authorization: `Bearer ${token}`
+      }
     }
-  })
+  )
     .then(response => {
       response.json().then(result => {
         const { parcels } = result;

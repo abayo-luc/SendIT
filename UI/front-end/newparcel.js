@@ -41,8 +41,11 @@ const saveParcel = async () => {
         const { errors, parcel } = results;
         console.log(errors, parcel);
         if (!errors && parcel) {
+          await localStorage.setItem(
+            "parcel_id",
+            parcel.id
+          );
           window.location = await "../pages/SingleParcel.html";
-          getCreatedParcel({ id: parcel.id, parcel });
           return;
         }
         if (errors.destination)

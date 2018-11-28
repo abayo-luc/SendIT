@@ -4,7 +4,7 @@ import chai from "chai";
 import {
   isEmpty,
   isInteger
-} from "../../utils/validatorHelpers";
+} from "../../utils/helper.functions";
 
 const should = chai.should();
 // bring ing testing frameworkg
