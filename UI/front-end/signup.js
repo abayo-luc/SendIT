@@ -40,7 +40,7 @@ const signup = () => {
             "user",
             JSON.stringify(user)
           );
-          window.location = "../pages/ClientDashboard.html";
+          window.location = "/client";
         }
         if (errors && !errors.routine) {
           if (errors.email)
