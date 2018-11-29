@@ -39,7 +39,6 @@ const saveParcel = async () => {
     .then(response => {
       response.json().then(async results => {
         const { errors, parcel } = results;
-        console.log(errors, parcel);
         if (!errors && parcel) {
           await localStorage.setItem(
             "parcel_id",
@@ -68,7 +67,8 @@ const saveParcel = async () => {
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
 document

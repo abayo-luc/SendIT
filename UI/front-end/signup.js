@@ -33,7 +33,6 @@ const signup = () => {
   })
     .then(response => {
       response.json().then(async results => {
-        console.log(results);
         const { errors, message, token, user } = results;
         if (user && token) {
           await localStorage.setItem("token", token);
@@ -71,7 +70,9 @@ const signup = () => {
       });
     })
     .catch(err => {
-      console.log("failed");
+      alert("Sorry, something went wrong!");
+      location.reload();
+      return;
     });
 };
 

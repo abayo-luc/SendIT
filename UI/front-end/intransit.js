@@ -65,7 +65,8 @@ const fetchData = async (token, user) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
 //display the table once data are ready

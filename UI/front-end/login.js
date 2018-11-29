@@ -51,7 +51,8 @@ const login = () => {
     .catch(err => {
       err.json().then(result => {
         const { message } = result;
-        console.log(message);
+        message && alert(message);
+        return;
       });
     });
 };

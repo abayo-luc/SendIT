@@ -51,14 +51,18 @@ const updateParcel = async () => {
   })
     .then(response => {
       response.json().then(results => {
-        const { parcel } = results;
+        const { parcel, message } = results;
         if (parcel) {
           location.reload();
+        } else if (message) {
+          alert(message);
+          return;
         }
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
 /* anywhere user clikc, should close the model */

@@ -85,7 +85,8 @@ const getUserParcels = async () => {
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
 const dataReady = () => {

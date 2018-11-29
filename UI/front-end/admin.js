@@ -32,7 +32,6 @@ let parcelId;
     .then(response => {
       response.json().then(results => {
         const { parcels } = results;
-        console.log(parcels);
         if (parcels) {
           parcelCounter(parcels);
           parcels.map(parcel => {
@@ -110,7 +109,8 @@ let parcelId;
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 })();
 
@@ -134,7 +134,6 @@ const changeStatus = async id => {
 };
 
 const updatePresentLocation = async () => {
-  console.log(parcelId);
   const givenlocation = `${currentLocation.value.trim()} ${currentAddress.value.trim()}`;
   if (givenlocation.trim().length < 5) {
     alert("Location not privided");
@@ -165,7 +164,8 @@ const updatePresentLocation = async () => {
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
 const closeModel = () => {

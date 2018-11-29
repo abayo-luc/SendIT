@@ -111,6 +111,7 @@ const cancelParcel = async id => {
       });
     })
     .catch(err => {
-      console.log(err);
+      alert("Sorry, something went wrong!");
+      return;
     });
 };
