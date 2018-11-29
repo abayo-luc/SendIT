@@ -44,7 +44,7 @@ const saveParcel = async () => {
             "parcel_id",
             parcel.id
           );
-          window.location = await "../pages/SingleParcel.html";
+          window.location = await "/parcel";
           return;
         }
         if (errors.destination)
