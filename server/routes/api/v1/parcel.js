@@ -13,17 +13,29 @@ parcelRouters.use(
   })
 );
 parcelRouters
-  .get(
-    "/parcels",
-    authorization.authorizeAdmin,
-    parcel.findAll
-  )
+  .get("/parcels", authorization.admin, parcel.findAll)
   .get("/parcels/:id", validation.checkId, parcel.findById)
   .post("/parcels", validation.parcel, parcel.create)
-  .put("/parcels/:id", validation.checkId, parcel.update)
+  .put(
+    "/parcels/:id/destination",
+    validation.checkId,
+    parcel.update
+  )
   .put(
     "/parcels/:id/cancel",
     validation.checkId,
     parcel.cancel
+  )
+  .put(
+    "/parcels/:id/status",
+    validation.checkId,
+    authorization.admin,
+    parcel.changeStatus
+  )
+  .put(
+    "/parcels/:id/presentLocation",
+    validation.checkId,
+    validation.checkCurrentLocation,
+    parcel.presentLocation
   );
 export default parcelRouters;

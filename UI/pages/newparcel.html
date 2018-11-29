@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Place New Order</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <link
+      rel="shortcut icon"
+      href="../assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="../assets/icons/send.svg"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="../css/main.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="../css/newOrder.css"
+    />
+    <script src="../front-end/checktoken.js"></script>
+  </head>
+
+  <body>
+    <section class="left side-nav">
+      <div class="top">
+        <div class="logo-container">
+          <img
+            src="../assets/icons/send.svg"
+            alt="lg"
+            srcset=""
+          />
+          <h3>SendIT</h3>
+        </div>
+        <div class="sidebar-links">
+          <a href="/client" class="nav-link">
+            <img
+              src="../assets/icons/home-light.svg"
+              alt=""
+              srcset=""
+              class="xlg-icon"
+            />
+            <span>Home</span>
+          </a>
+          <a href="#" class="nav-link active ">
+            <img
+              src="../assets/icons/plus-light.svg"
+              alt=""
+              srcset=""
+              class="xlg-icon"
+            />
+            <span>Add Order</span>
+          </a>
+          <a href="/parcels/in_transit" class="nav-link">
+            <img
+              src="../assets/icons/moving-truck-light.svg"
+              alt=""
+              srcset=""
+              class="xlg-icon"
+            />
+            <span>Transit</span>
+          </a>
+          <a href="#" class="nav-link logout">
+            <img
+              src="../assets/icons/logout.svg"
+              alt=""
+              srcset=""
+              class="xlg-icon"
+            />
+            <span>Logout</span>
+          </a>
+        </div>
+      </div>
+    <div class="down-link" id="lg-logout">
+      <img src="../assets/icons/logout.svg" alt="lg" srcset="" />
+      <a class="nav-link">Logout</a>
+    </div>
+    </section>
+    <section class="right top-nav">
+      <div class="logo-container">
+        <img
+          src="../assets/icons/send.svg"
+          alt="lg"
+          srcset=""
+        />
+        <h3>SendIT</h3>
+      </div>
+      <div class="right right-content">
+        <div class="topbar-content">
+          <img
+            src="../assets//images/1.jpg"
+            alt="profile"
+            srcset=""
+            class="sm-circle profile"
+          />
+            <div class="names" id="user-names">
+            </div>
+          <img
+            src="../assets/icons/notification-bell.svg"
+            alt=""
+            srcset=""
+            class="notification"
+          />
+        </div>
+        <div class="mob-dropdown">
+          <div
+            class="dropdown-icon"
+            onclick="showMenu(this)"
+          >
+            <img
+              src="../assets/icons/down-arrow.svg"
+              alt=">>"
+              srcset=""
+              class="md-icon"
+            />
+          </div>
+          <div class="dropdown-content" id="drp-conent">
+            <ul>
+              <li>
+                <a href="/client">Home</a>
+              </li>
+              <li><a href="#">New</a></li>
+              <li>
+                <a href="/parcels/in_transit">Transit</a>
+              </li>
+              <li><a href="/login">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="content" id="new-order">
+      <div class="order-form parcel-info active">
+        <div class="row padding">
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="email">Pickup City</label>
+              <div class="custom-select">
+                <select id="pickup_location">
+                  <option value="">choose location</option>
+                  <option value="Gasabo">Gasabo</option>
+                  <option value="Musanza">Musanze</option>
+                  <option value="Nyamata">Nyama</option>
+                  <option value="Nyarugenge"
+                    >Nyarugenge</option
+                  >
+                  <option value="Kicukiro">Kicukiro</option>
+                  <option value="Kamonyi">Kamonyi</option>
+                  <option value="Muhanga">Muhanga</option>
+                  <option value="Rwamagana"
+                    >Rwamagana</option
+                  >
+                </select>
+              </div>
+              <div class="errors"></div>
+            </div>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="faddres">Address</label>
+              <input
+                type="text"
+                name="address"
+                id="pickup_address"
+                class="custom-input"
+                pattern="[0-9]{5}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row padding">
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="email">Destination City</label>
+              <div class="custom-select">
+                <select id="destination">
+                  <option value="">choose location</option>
+                  <option value="Gasabo">Gasabo</option>
+                  <option value="Musanze">Musanze</option>
+                  <option value="Nyamagabe">Nyama</option>
+                  <option value="Nyarugenge"
+                    >Nyarugenge</option
+                  >
+                  <option value="Kicukiro">Kicukiro</option>
+                  <option value="Kamonyi">Kamonyi</option>
+                  <option value="Muhanga">Muhanga</option>
+                  <option value="Rwamagana"
+                    >Rwamagana</option
+                  >
+                </select>
+              </div>
+                <div class="errors"></div>
+            </div>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="delivery-addres">Address</label>
+              <input
+                type="text"
+                name="address"
+                id="destination_address"
+                class="custom-input"
+                pattern="[0-9]{5}"
+              />
+            </div>
+          </div>
+        </div>
+        <h3 class="title centered-text">
+          Parcel Size and Weight
+        </h3>
+        <div class="row padding">
+          <div class="col-1"></div>
+          <div class="col-2">
+            <div class="labeled-input">
+              <label for="faddres">Quantity</label>
+              <input
+                type="number"
+                name="quanitty"
+                id="quantity"
+                class="custom-input"
+              />
+            <div class="errors"></div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="labeled-input">
+              <label for="faddres">Weight</label>
+              <input
+                type="number"
+                name="weight"
+                id="weight"
+                class="custom-input"
+              />
+            <div class="errors"></div>
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="labeled-input">
+              <label for="faddres">Length</label>
+              <input
+                type="number"
+                name="length"
+                id="length"
+                class="custom-input"
+              />
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="labeled-input">
+              <label for="faddres">Width</label>
+              <input
+                type="number"
+                name="width"
+                id="width"
+                class="custom-input"
+              />
+            </div>
+          </div>
+          <div class="col-2">
+            <div class="labeled-input">
+              <label for="faddres">Height</label>
+              <input
+                type="number"
+                name="height"
+                id="height"
+                class="custom-input"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row inline-btn padding">
+          <div class="col-4">
+            <button class="btn btn-block btn-default">
+              Clear
+            </button>
+          </div>
+          <div class="col-3"></div>
+          <div class="col-4">
+            <button
+              class="btn btn-block btn-primary"
+              id="send-parcel"
+            >
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+    <script src="../front-end/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/newOrder.js"></script>
+    <script src="../front-end/singleparcel.js"></script>
+    <script src="../front-end/newparcel.js"></script>
+  </body>
+</html>

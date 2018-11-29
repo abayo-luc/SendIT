@@ -42,6 +42,7 @@
             id="login-email"
             class="custom-input"
           />
+          <div class="errors"></div>
         </div>
         <div class="labeled-input">
           <label for="password">Password</label>
@@ -51,27 +52,23 @@
             id="login-password"
             class="custom-input"
           />
+          <div class="errors"></div>
         </div>
-        <a
+        <div class="errors" id="auth-error"></div>
+        <button
           class="btn btn-primary"
           type="button"
-          href="./ClientDashboard.html"
-          >Login</a
+          id="login-button"
         >
+          Login
+        </button>
         <div class="links">
-          <a href="../index.html" class="link"
+          <a href="/signup" class="link"
             >Create new account</a
           >
-        </div>
-        <div style="text-align: center">
-          <p style="color:#332e73; padding: 10px 0px;">
-            Or
-          </p>
-        </div>
-        <div class="links">
-          <a href="./AdminLogin.html" class="link">Admin</a>
         </div>
       </div>
     </section>
   </body>
+  <script src="../front-end/login.js"></script>
 </html>

@@ -1,53 +1,117 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>SendIT -SingUp</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="./assets/icons/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="./css/auth.css">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <link
+      rel="shortcut icon"
+      href="./assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="./css/main.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="./css/auth.css"
+    />
     <script src="./js/main.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <section class="container auth" id="sign-up">
-        <div class="logo">
-            <img src="./assets/icons/primary-send.svg" alt="logo" srcset="">
-            <h1>SendIT</h1>
+      <div class="logo">
+        <img
+          src="./assets/icons/primary-send.svg"
+          alt="logo"
+          srcset=""
+        />
+        <h1>SendIT</h1>
+      </div>
+      <div class="col-3 form">
+        <div class="errors" id="auth-error"></div>
+        <div class="inline-input">
+          <div class="labeled-input">
+            <label for="fname">First name</label>
+            <input
+              type="text"
+              name="firstname"
+              class="custom-input"
+              id="first_name"
+              required
+            />
+            <div class="errors"></div>
+          </div>
+          <div class="labeled-input">
+            <label for="lname">Last name</label>
+            <input
+              type="text"
+              name="lastname"
+              class="custom-input"
+              id="last_name"
+              required
+            />
+            <div class="errors"></div>
+          </div>
         </div>
-        <div class="col-3 form">
-            <div class="inline-input">
-                <div class="labeled-input">
-                    <label for="fname">First name</label>
-                    <input type="text" name="firstname" id="fname" class="custom-input">
-                </div>
-                <div class="labeled-input">
-                    <label for="lname">Last name</label>
-                    <input type="text" name="lastname" id="lname" class="custom-input">
-                </div>
-            </div>
-            <div class="labeled-input">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="login-email" class="custom-input">
-            </div>
-            <div class="labeled-input">
-                <label for="pwd">Password</label>
-                <input type="password" name="password" id="pwd" class="custom-input">
-            </div>
-            <div class="labeled-input">
-                <label for="c-pwd">Confirm Passowrd</label>
-                <input type="password" name="c-password" id="c-pwd" class="custom-input">
-            </div>
-            <a class="btn btn-primary" type="button" href="./pages/ClientDashboard.html">Sign Up</a>
-            <div class="links">
-                <p class="default">Already have an account?</p>
-                <a href="./pages/Login.html" class="link">Login</a>
-            </div>
+        <div class="labeled-input">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            class="custom-input"
+            id="email"
+            required
+          />
+          <div class="errors"></div>
         </div>
+        <div class="labeled-input">
+          <label for="pwd">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="custom-input"
+            id="password"
+            required
+          />
+          <div class="errors"></div>
+        </div>
+        <div class="labeled-input">
+          <label for="c-pwd">Confirm Passowrd</label>
+          <input
+            type="password"
+            name="c-password"
+            class="custom-input"
+            id="passowrd_confirm"
+            required
+          />
+          <div class="errors"></div>
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          id="btn-signup"
+        >
+          Sign Up
+        </button>
+        <div class="links">
+          <p class="default">Already have an account?</p>
+          <a href="/login" class="link"
+            >Login</a
+          >
+        </div>
+      </form>
     </section>
-</body>
-
+    <script src="./front-end/signup.js"></script>
+  </body>
 </html>

@@ -7,7 +7,7 @@ dotenv.config();
 const env = process.env.NODE_ENV || "development";
 
 //insipired by olawalejarvis from https://github.com/olawalejarvis/reflection_app_server/blob/develop/src/usingDB/db/index.js
-const query = (text, params) => {
+const query = (text, params, isArr = false) => {
   const pool = new Pool({
     connectionString: dbConfig[env]
   });
@@ -16,7 +16,7 @@ const query = (text, params) => {
       .query(text, params)
       .then(response => {
         const { rows } = response;
-        resolve(rows);
+        isArr ? resolve(rows) : resolve(rows[0]);
         pool.end();
       })
       .catch(err => {
@@ -62,7 +62,6 @@ const createTable = migrationText => {
         pool.end();
       })
       .catch(err => {
-        //console.log(err);
         reject(err);
         pool.end();
       });

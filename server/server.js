@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
 import express from "express";
 import passport from "passport";
-
+import path from "path";
 //bring passport configuraiton
-import passportConfig from "./config/passport";
+import passportConfig from "./middlewares/passport";
 // load all routes
 import routers from "./routes/api/v1";
+//bring in the pages
+import pages from "./routes/pages";
 dotenv.config();
 const app = express();
 
@@ -14,14 +16,16 @@ app.use(passport.initialize());
 passportConfig(passport);
 
 // configuration middlewares
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(express.json());
+//load static pages html and cess
+app.use(express.static(path.join(__dirname, "../UI")));
 // root route, welcome
 app.get("/api/v1", (req, res) => {
   res.json({ message: "Welcome to sendIT API" });
 });
-
+//app pages
+app.use("/", pages);
 // use all other routes
 app.use("/api/v1/", routers);
 

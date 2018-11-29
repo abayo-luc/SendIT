@@ -4,8 +4,7 @@ import moment from "moment";
 import jwt from "jsonwebtoken";
 // bring in server for testing
 import server from "../../server";
-import { STATUS_INTRANSIT } from "../../utils/types";
-import config from "../../config/config.json";
+import { STATUS_INTRANSIT } from "../../utils/constants";
 //bring in the db
 import db from "../../database";
 chai.use(chaiHTTP);
@@ -88,8 +87,12 @@ describe("Testing User End Point", () => {
   });
   describe("/GET users/<existing id>/parcels", () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
@@ -176,6 +179,7 @@ describe("Testing User End Point", () => {
           res.body.should.have
             .property("status")
             .eql("success");
+          res.body.should.have.property("token");
           res.body.should.have.property("user");
           res.body.user.should.be.a("object");
           res.body.user.should.have.property("first_name");
@@ -286,7 +290,7 @@ describe("Testing User End Point", () => {
     it("should show the current loggedin user", done => {
       const token = jwt.sign(
         { id: 1, ...newUser },
-        config.secretOrKey
+        process.env.secretOrKey
       );
       chai
         .request(server)

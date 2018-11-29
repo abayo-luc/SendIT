@@ -1,11 +1,12 @@
-import validatorHelpers from "../validations/validators";
+import ValidatorHelpers from "../utils/validators.helpers";
 import httpResponses from "../utils/httpResponses";
+import { isEmpty } from "../utils/helper.functions";
 export default class {
   static signup(req, res, next) {
     const {
       isValid,
       errors
-    } = validatorHelpers.checkPresence(req.body, [
+    } = ValidatorHelpers.checkPresence(req.body, [
       "email",
       "password",
       "firstName",
@@ -27,7 +28,7 @@ export default class {
     const {
       isValid,
       errors
-    } = validatorHelpers.checkPresence(req.body, [
+    } = ValidatorHelpers.checkPresence(req.body, [
       "email",
       "password"
     ]);
@@ -40,7 +41,7 @@ export default class {
     const {
       isValid,
       errors
-    } = validatorHelpers.checkPresence(req.body, [
+    } = ValidatorHelpers.checkPresence(req.body, [
       "pickupLocation",
       "destination",
       "weight",
@@ -57,5 +58,16 @@ export default class {
     Number(id)
       ? next()
       : httpResponses.bad(res, 400, "failed", "Invalid id");
+  }
+
+  static checkCurrentLocation(req, res, next) {
+    const isLocationPresent =
+      !isEmpty(req.body.currentLocation) ||
+      !isEmpty(req.body.presentLocation);
+    isLocationPresent
+      ? next()
+      : httpResponses.bad(res, 400, "failed", null, {
+          presentLocation: "presentLocation is required"
+        });
   }
 }

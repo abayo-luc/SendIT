@@ -2,15 +2,15 @@ import chai from "chai";
 import chaiHTTP from "chai-http";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import config from "../../config/config.json";
 // bring in the server
 import server from "../../server";
 //bring in the db
 import db from "../../database";
 import {
   STATUS_CANCELED,
-  STATUS_INTRANSIT
-} from "../../utils/types";
+  STATUS_INTRANSIT,
+  STATUS_WAITING
+} from "../../utils/constants";
 // bring in parcel model
 
 const should = chai.should();
@@ -74,16 +74,21 @@ const userValues = [
 ];
 
 describe("Test Parcel End Point", () => {
-  // clearn data before any testing
+  // create data to be used for each test case
   beforeEach(async () => {
     await db
       .query(userCreateQuery, userValues)
       .then(response => {
-        const payload = { ...response[0] };
+        const payload = { ...response };
         payload.should.have.property("email");
         payload.should.have.property("password");
+      })
+      .catch(err => {
+        done();
+        console.log(err);
       });
   });
+  //lean database after each test case
   afterEach(async () => {
     const truncateQuery = `TRUNCATE users, parcels RESTART IDENTITY CASCADE;`;
     await db.query(truncateQuery).then(response => {
@@ -96,8 +101,12 @@ describe("Test Parcel End Point", () => {
    */
   describe("/GET all parcels", () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
@@ -114,7 +123,7 @@ describe("Test Parcel End Point", () => {
           done();
         });
     });
-    it("it should return an empty array", done => {
+    it("it should return an empty array for authorized admin", done => {
       chai
         .request(server)
         .get("/api/v1/parcels")
@@ -128,10 +137,14 @@ describe("Test Parcel End Point", () => {
         });
     });
 
-    it("Unauthorized user shouldn't access", done => {
+    it("Unauthorized user shouldn't access all parcels", done => {
       const token = jwt.sign(
-        { id: 2, ...newUser },
-        config.secretOrKey
+        {
+          id: 2,
+          email: newUser.email,
+          is_admin: newUser.isAdmin
+        },
+        process.env.secretOrKey
       );
       chai
         .request(server)
@@ -150,8 +163,12 @@ describe("Test Parcel End Point", () => {
    */
   describe("/POST Parcel", () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
@@ -205,7 +222,7 @@ describe("Test Parcel End Point", () => {
           res.body.parcel.should.have.property("id");
           res.body.parcel.should.have
             .property("status")
-            .eql(STATUS_INTRANSIT);
+            .eql(STATUS_WAITING);
           res.body.parcel.should.have.property("user_id");
           res.body.parcel.should.have.property(
             "destination"
@@ -225,8 +242,12 @@ describe("Test Parcel End Point", () => {
    */
   describe('"/GET Parcel by ID"', () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
@@ -248,7 +269,7 @@ describe("Test Parcel End Point", () => {
         response => {
           chai
             .request(server)
-            .get(`/api/v1/parcels/${response[0].id}`)
+            .get(`/api/v1/parcels/${response.id}`)
             .set("Authorization", `Bearer ${token}`)
             .end((req, res) => {
               res.should.have.status(200);
@@ -283,12 +304,12 @@ describe("Test Parcel End Point", () => {
         .then(user => {
           //console.log(user);
           const values = [...parcelValues];
-          values[5] = user[0].id;
+          values[5] = user.id;
           db.query(parcelCreateQuery, values).then(
             parcel => {
               chai
                 .request(server)
-                .get(`/api/v1/parcels/${parcel[0].id}`)
+                .get(`/api/v1/parcels/${parcel.id}`)
                 .set("Authorization", `Bearer ${token}`)
                 .end((err, res) => {
                   res.should.have.status(200);
@@ -328,13 +349,17 @@ describe("Test Parcel End Point", () => {
   */
   describe("/PUT Parcel update", () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
         .request(server)
-        .put("/api/v1/parcels/1")
+        .put("/api/v1/parcels/1/destination")
         .send({})
         .end((err, res) => {
           res.should.have.status(401);
@@ -352,7 +377,9 @@ describe("Test Parcel End Point", () => {
         response => {
           chai
             .request(server)
-            .put(`/api/v1/parcels/${response[0].id}`)
+            .put(
+              `/api/v1/parcels/${response.id}/destination`
+            )
             .send({
               destination: "New York",
               destinationAddress: "KY 19 AV"
@@ -384,8 +411,12 @@ describe("Test Parcel End Point", () => {
   // @PUT { object } one parcel
   describe("/PUT cancel parcel", () => {
     const token = jwt.sign(
-      { id: 1, ...newUser },
-      config.secretOrKey
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
     );
     it("should return unauthorized response", done => {
       chai
@@ -402,21 +433,20 @@ describe("Test Parcel End Point", () => {
           done();
         });
     });
-    it("It should cancle parcel delivery order", done => {
+    it("Authenticated user should cancle parcel delivery order", done => {
       db.query(parcelCreateQuery, parcelValues).then(
         response => {
           chai
             .request(server)
-            .put(`/api/v1/parcels/${response[0].id}/cancel`)
+            .put(`/api/v1/parcels/${response.id}/cancel`)
             .send()
             .set("Authorization", `Bearer ${token}`)
             .end((err, res) => {
-              res.should.have.status(201);
+              res.should.have.status(202);
               res.body.should.have
                 .property("status")
                 .eql("success");
               res.body.should.have.property("parcel");
-              res.body.parcel.should.be.a("object");
               res.body.parcel.should.have
                 .property("status")
                 .eql(STATUS_CANCELED);
@@ -425,7 +455,21 @@ describe("Test Parcel End Point", () => {
         }
       );
     });
-    it("It should not found a parcel order", done => {
+    it("should return not found for unexisting parcel", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/190/cancel")
+        .send()
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property("message")
+            .eql("Parcel not found");
+          done();
+        });
+    });
+    it("should return invalid id for non number id params", done => {
       chai
         .request(server)
         .put("/api/v1/parcels/1909b/cancel")
@@ -438,6 +482,168 @@ describe("Test Parcel End Point", () => {
             .eql("Invalid id");
           done();
         });
+    });
+  });
+  describe("PUT change status", () => {
+    const token = jwt.sign(
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
+    );
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1/status")
+        .send({ status: STATUS_INTRANSIT })
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1ljf/status")
+        .send({ status: STATUS_INTRANSIT })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have
+            .property("message")
+            .eql("Invalid id");
+          done();
+        });
+    });
+    it("should return not found", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/178/status")
+        .send({ status: STATUS_INTRANSIT })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property("message")
+            .eql("parcel not found");
+          done();
+        });
+    });
+    it("should return updated parcel", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/status")
+            .send({ status: STATUS_INTRANSIT })
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a("object");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.have
+                .property("status")
+                .eql(STATUS_INTRANSIT);
+              done();
+            });
+        }
+      );
+    });
+  });
+  describe("PUT change parcel presentLocation", () => {
+    const token = jwt.sign(
+      {
+        id: 1,
+        email: newUser.email,
+        is_admin: newUser.isAdmin
+      },
+      process.env.secretOrKey
+    );
+    it("should return unauthorized", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property("message")
+            .eql("Unauthorized");
+          done();
+        });
+    });
+    it("should invalid id", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/1ljf/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.should.have
+            .property("message")
+            .eql("Invalid id");
+          done();
+        });
+    });
+    it("should return not found", done => {
+      chai
+        .request(server)
+        .put("/api/v1/parcels/178/presentLocation")
+        .send({ currentLocation: "Bagidate" })
+        .set("Authorization", `Bearer ${token}`)
+        .end((err, res) => {
+          res.should.have.status(404);
+          res.body.should.have
+            .property("message")
+            .eql("parcel not found");
+          done();
+        });
+    });
+    it("should return validation error", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/presentLocation")
+            .send({})
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(400);
+              res.body.should.be.a("object");
+              res.body.should.have.property("errors");
+              res.body.errors.should.have
+                .property("presentLocation")
+                .eql("presentLocation is required");
+              done();
+            });
+        }
+      );
+    });
+    it("should return updated parcel", done => {
+      db.query(parcelCreateQuery, parcelValues).then(
+        response => {
+          chai
+            .request(server)
+            .put("/api/v1/parcels/1/presentLocation")
+            .send({ currentLocation: "Bagidade" })
+            .set("Authorization", `Bearer ${token}`)
+            .end((err, res) => {
+              res.should.have.status(201);
+              res.body.should.be.a("object");
+              res.body.should.have.property("parcel");
+              res.body.parcel.should.have
+                .property("current_location")
+                .eql("Bagidade");
+              done();
+            });
+        }
+      );
     });
   });
 });

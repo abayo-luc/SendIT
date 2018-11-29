@@ -1,0 +1,1 @@
+ALTER TABLE parcels RENAME COLUMN delivered_at TO arrived_at
