@@ -38,20 +38,15 @@
   --focus-border: 1px solid #6257a2;
   --border-radius: 0.3em;
   --secondary-white: #f4f4f4;
+  --danger-red: #ff4a55;
 }
 body {
   margin: 0%;
   padding: 0%;
   font-family: "Gotham-Light";
 }
-.loading {
-  overflow: hidden;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+#page {
+  display: none;
 }
 .row {
   display: flex;
@@ -281,6 +276,11 @@ button:hover.btn.btn-primary,
 a:hover.btn.btn-primary {
   background-color: var(--royal-dark-purple);
 }
+.btn.btn-danger {
+  background-color: var(--danger-red);
+  color: var(--main-white);
+  border: 0px solid var(--danger-red);
+}
 .btn.btn-default {
   background-color: transparent;
   color: var(--royal-primary-purple);
@@ -346,6 +346,7 @@ a.active {
   font-size: 1.2em;
   color: var(--royal-super-light-purple);
   align-items: center;
+  cursor: pointer;
 }
 .down-link img {
   width: 0.9em;
@@ -466,13 +467,15 @@ img.sm-circle {
   border-radius: 25px;
 }
 img.md-icon {
-  width: 0.8em;
+  width: 1em;
+  cursor: pointer;
 }
 img.lg-icon {
   width: 1.5em !important;
 }
 img.xlg-icon {
   width: 2.3em !important;
+  cursor: pointer;
 }
 /*card stayls*/
 .lg-card {
@@ -560,6 +563,9 @@ tr:hover td {
 tr:nth-child(even) {
   background-color: #e0deed;
 }
+tr.clickable {
+  cursor: pointer;
+}
 /*media queries*/
 /* for mobile extra small screen */
 @media only screen and (max-width: 767px) {
@@ -635,4 +641,21 @@ tr:nth-child(even) {
   .side-nav .top .logo-container {
     visibility: hidden;
   }
+}
+
+span.delivered {
+  color: #53f442;
+  text-transform: capitalize;
+}
+
+span.canceled {
+  color: #ff4a55;
+  text-transform: capitalize;
+}
+span.pending {
+  text-transform: capitalize;
+}
+span.in_transit {
+  color: var(--royal-primary-purple);
+  text-transform: capitalize;
 }

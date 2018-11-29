@@ -19,6 +19,9 @@ const parcelWidth = document.querySelector("#var-width");
 const parcelQuantity = document.querySelector(
   "#var-quantity"
 );
+const parcelStatus = document.querySelector(
+  "#parcel-status"
+);
 
 (async () => {
   const token = await localStorage.getItem("token");
@@ -50,6 +53,38 @@ const parcelQuantity = document.querySelector(
             .width || "--"} Cm`;
           parcelQuantity.textContent =
             parcel.details.quantity;
+          parcelStatus.classList.add(parcel.status);
+          parcelStatus.textContent =
+            parcel.status == STATUS_CANCELED
+              ? "Canceled"
+              : parcel.status == STATUS_INTRANSIT
+              ? "In transit"
+              : parcel.status == STATUS_DELIVERED
+              ? "Delivered"
+              : "Pending";
+          parcel.status !== STATUS_DELIVERED &&
+          parcel.status != STATUS_CANCELED
+            ? (editCancelBtns.innerHTML = `
+            <div class="col-2"></div>
+            <div class="col-3 padding">
+              <button class="btn btn-block btn-default" onClick=parcelModel(${
+                parcel.id
+              })>
+                Edit
+              </button>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3 padding" style="float:right">
+              <button
+                class="btn btn-block btn-danger"
+                id="cancel-parcel"
+                onClick=cancelParcel(${parcel.id})
+              >
+                Cancel
+              </button>
+            </div>
+          `)
+            : null;
         }
       });
     })
@@ -57,3 +92,25 @@ const parcelQuantity = document.querySelector(
       console.log(err);
     });
 })();
+
+const cancelParcel = async id => {
+  const token = await localStorage.getItem("token");
+  fetch(`/api/v1/parcels/${id}/cancel`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "Application/JSON",
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      response.json().then(results => {
+        const { parcel } = results;
+        if (parcel) {
+          location.reload();
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};

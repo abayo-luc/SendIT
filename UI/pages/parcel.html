@@ -30,6 +30,8 @@
       media="screen"
       href="../css/newOrder.css"
     />
+    <link rel="stylesheet" href="../css/model.css" />
+    <script src="../front-end/checktoken.js"></script>
   </head>
 
   <body>
@@ -108,10 +110,7 @@
             srcset=""
             class="sm-circle profile"
           />
-          <div class="names">
-            <p>FirstName</p>
-            <p>Last Name</p>
-          </div>
+          <div class="names"></div>
           <img
             src="../assets/icons/notification-bell.svg"
             alt=""
@@ -178,6 +177,13 @@
         <div class="row">
           <div class="col-2"></div>
           <div class="col-6">
+            <h3 class="title">Status:</h3>
+            <span id="parcel-status">...</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-6">
             <h3 class="title">Parcel Size and Weight</h3>
           </div>
         </div>
@@ -226,27 +232,72 @@
             </div>
           </div>
         </div>
-        <div class="row" id="action-btn">
-          <div class="col-2"></div>
-          <div class="col-3 padding">
-            <button class="btn btn-block btn-default">
-              Edit
-            </button>
+        <div class="row" id="action-btn"></div>
+      </div>
+    </section>
+    <!-- popup model -->
+    <section id="edit-model" class="modal">
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close" onclick="closeModel()"
+          >&times;</span
+        >
+        <div class="row padding">
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="email">Destination</label>
+              <div class="custom-select">
+                <select id="model-destination">
+                  <option value="">select location</option>
+                  <option value="Gasabo">Gasabo</option>
+                  <option value="Musanze">Musanze</option>
+                  <option value="Nyama">Nyama</option>
+                  <option value="Nyarugenge"
+                    >Nyarugenge</option
+                  >
+                  <option value="Kicukiro">Kicukiro</option>
+                  <option value="Kamonyi">Kamonyi</option>
+                  <option value="Muhanga">Muhanga</option>
+                  <option value="Rwamagana"
+                    >Rwamagana</option
+                  >
+                </select>
+              </div>
+            </div>
           </div>
-          <div class="col-1"></div>
-          <div class="col-3 padding" style="float:right">
+          <div class="col-3"></div>
+          <div class="col-4">
+            <div class="labeled-input">
+              <label for="faddres">Address</label>
+              <input
+                type="text"
+                name="address"
+                id="model-address"
+                class="custom-input"
+                pattern="[0-9]{5}"
+                style="width: 100%"
+                placeholder="KG 19 Av"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row inline-btn padding">
+          <div class="col-4">
             <button
               class="btn btn-block btn-primary"
-              id="send-parcel"
+              id="#next-pay"
+              onclick="updateParcel()"
             >
-              Cancel
+              Save
             </button>
           </div>
         </div>
       </div>
     </section>
+    <!-- jquery plugin -->
     <script src="../front-end/jquery.min.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/model.js"></script>
     <script src="../front-end/singleparcel.js"></script>
   </body>
 </html>

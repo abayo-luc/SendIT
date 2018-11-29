@@ -21,6 +21,7 @@
     />
     <link rel="stylesheet" href="../css/inTransit.css" />
     <link rel="stylesheet" href="../css/admin.css" />
+    <script src="../front-end/checktoken.js"></script>
   </head>
 
   <body>
@@ -119,7 +120,9 @@
                 <h4>All</h4>
               </div>
               <hr />
-              <div class="item-counter"><h5>50</h5></div>
+              <div class="item-counter">
+                <h5 id="all-parcels">..</h5>
+              </div>
             </div>
           </div>
         </div>
@@ -136,7 +139,9 @@
                 <h4>Delivered</h4>
               </div>
               <hr />
-              <div class="item-counter"><h5>43</h5></div>
+              <div class="item-counter">
+                <h5 id="delivered-parcels">..</h5>
+              </div>
             </div>
           </div>
         </div>
@@ -153,7 +158,9 @@
                 <h4>In Transit</h4>
               </div>
               <hr />
-              <div class="item-counter"><h5>7</h5></div>
+              <div class="item-counter">
+                <h5 id="intransit-parcels">..</h5>
+              </div>
             </div>
           </div>
         </div>
@@ -164,7 +171,7 @@
       <div class="lg-card">
         <div class="lg-card-content">
           <div class="data-table">
-            <table>
+            <table id="table-data">
               <tr>
                 <th>Pickup</th>
                 <th>Address</th>
@@ -183,306 +190,8 @@
                   />
                 </th>
                 <th>Status</th>
-              </tr>
-              <tr>
-                <td>Kicukiro</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span>False</span>
-                  <span
-                    class="icon-edit"
-                    onclick="openModel()"
-                  >
-                    <img
-                      src="../assets/icons/edit.svg"
-                      alt="*"
-                      srcset=""
-                      title="Update Status & Location"
-                      class="lg-icon"
-                    />
-                  </span>
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kacyiru, KG 11 Av</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
-              </tr>
-              <tr>
-                <td>Kicukiroon</td>
-                <td>KK 11 AV</td>
-                <td class="editable">
-                  <span>Gasabo</span>
-                </td>
-                <td>KK 19 Av</td>
-                <td>
-                  <span> Q:2</span> <span> W:5</span>
-                  <span> L:4</span> <span> H:3</span>
-                </td>
-                <td>2 Feb, 18</td>
-                <td>3 Fb, 18</td>
-                <td><small>Kimironko, KG 17 AV</small></td>
-                <td class="editable">
-                  <span style="color: green"
-                    >Delivered</span
-                  >
-                </td>
+                <th></th>
+                <!-- <th></th> -->
               </tr>
             </table>
           </div>
@@ -499,11 +208,11 @@
         <div class="row padding">
           <div class="col-4">
             <div class="labeled-input">
-              <label for="email">Current City</label>
+              <label for="email">Present City</label>
               <input
                 type="text"
                 name="address"
-                id="current-loc"
+                id="current-location"
                 class="custom-input"
                 pattern="[0-9]{5}"
                 style="width: 100%"
@@ -514,7 +223,7 @@
           <div class="col-4">
             <div class="labeled-input">
               <label for="faddres"
-                >Current Address
+                >Present Address
                 <img
                   src="../assets/icons/current-location-purple.svg"
                   alt=""
@@ -525,10 +234,11 @@
               <input
                 type="text"
                 name="address"
-                id="address"
+                id="current-address"
                 class="custom-input"
                 pattern="[0-9]{5}"
                 style="width: 100%"
+                placeholder="KG 15 Av 19"
               />
             </div>
           </div>
@@ -538,9 +248,13 @@
             <div class="labeled-input">
               <label for="email">Delivered</label>
               <div class="custom-select">
-                <select>
-                  <option value="0">False</option>
-                  <option value="1">True</option>
+                <select id="select-status">
+                  <option value="in_transit"
+                    >In transit</option
+                  >
+                  <option value="delivered"
+                    >Delivered</option
+                  >
                 </select>
               </div>
             </div>
@@ -560,7 +274,7 @@
             <button
               class="btn btn-block btn-primary"
               id="#next-pay"
-              onclick="closeModel()"
+              onclick="updatePresentLocation()"
             >
               Save
             </button>
@@ -571,6 +285,6 @@
     <!-- popup model javascript -->
     <script src="../front-end/jquery.min.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/model.js"></script>
+    <script src="../front-end/admin.js"></script>
   </body>
 </html>

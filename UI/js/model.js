@@ -26,6 +26,11 @@ const openModel = element => {
   modal.style.display = "block";
 };
 
+const parcelModel = id => {
+  parcelId = id;
+  modal.style.display = "block";
+};
+
 const closeModel = () => {
   modal.style.display = "none";
   modal.style.transition = "display 5s";
@@ -48,9 +53,7 @@ const updateParcel = async () => {
       response.json().then(results => {
         const { parcel } = results;
         if (parcel) {
-          window.location.replace(
-            "../pages/InTransit.html"
-          );
+          location.reload();
         }
       });
     })

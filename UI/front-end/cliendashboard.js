@@ -1,3 +1,12 @@
+const allParcelsCard = document.querySelector(
+  "#all-parcels"
+);
+const intransitParcelsCard = document.querySelector(
+  "#intransit-parcels"
+);
+const deliveredParcelsCard = document.querySelector(
+  "#delivered-parcels"
+);
 const getUserParcels = async () => {
   const token = await localStorage.getItem("token");
   const user = await JSON.parse(
@@ -15,9 +24,14 @@ const getUserParcels = async () => {
         const { parcels } = data;
         if (parcels) {
           dataReady();
-          parcels.map(parcel => {
-            $("#user-parcels").append(`
-            <tr onClick=getParcel(${parcel.id})>
+          counter(parcels);
+          parcels
+            .sort((a, b) => b.created_at - a.created_at)
+            .map(parcel => {
+              $("#user-parcels").append(`
+            <tr onClick=getParcel(${
+              parcel.id
+            }) class="clickable">
                 <td>${parcel.pickup_location || "..."}</td>
                 <td>${parcel.address.pickup_address ||
                   "..."}</td>
@@ -51,14 +65,22 @@ const getUserParcels = async () => {
                 ).toDateString()}</td>
                 <td>....</td>
                 <td>....</td>
-                <td>${
-                  parcel.status === "delivered"
-                    ? "delivered"
-                    : "false"
-                }</td>
+                <td>
+                <span class=${parcel.status}>
+                 ${
+                   parcel.status === STATUS_DELIVERED
+                     ? "Delivered"
+                     : parcel.status == STATUS_CANCELED
+                     ? "Canceled"
+                     : parcel.status == STATUS_INTRANSIT
+                     ? "In transit"
+                     : "Pending"
+                 }
+                </span>
+                </td>
             </tr>
             `);
-          });
+            });
         }
       });
     })
@@ -77,3 +99,13 @@ switch (document.readyState) {
   default:
     "";
 }
+
+const counter = items => {
+  allParcelsCard.textContent = items.length;
+  intransitParcelsCard.textContent = items.filter(
+    item => item.status == STATUS_INTRANSIT
+  ).length;
+  deliveredParcelsCard.textContent = items.filter(
+    item => item.status == STATUS_DELIVERED
+  ).length;
+};

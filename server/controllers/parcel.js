@@ -292,13 +292,18 @@ export default class Parcel {
       });
   }
   static presentLocation(req, res) {
-    const { presentLocation, currentLocation } = req.body;
+    const {
+      presentLocation,
+      currentLocation,
+      status = STATUS_INTRANSIT
+    } = req.body;
     const location = presentLocation || currentLocation;
     const psqlQuery =
-      "UPDATE parcels SET current_location=$1, arrived_at=$2 WHERE id=$3 RETURNING *";
+      "UPDATE parcels SET current_location=$1, arrived_at=$2, status=$3 WHERE id=$4 RETURNING *";
     const values = [
       location,
       moment(new Date()),
+      status,
       req.params.id
     ];
     db.query(psqlQuery, values)

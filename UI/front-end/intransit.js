@@ -1,6 +1,4 @@
-const STATUS_INTRANSIT = "in_transite";
-const STATUS_DELIVERED = "delivered";
-const STATUS_WAITING = "waiting_to_be_picked";
+//fetch data in transit
 const fetchData = async (token, user) => {
   fetch(
     `/api/v1/users/${
@@ -18,18 +16,16 @@ const fetchData = async (token, user) => {
       response.json().then(result => {
         const { parcels } = result;
         dataReady();
-        console.log(parcels);
         parcels.map(parcel => {
           $("#in-transit-parcels").append(`
-          <tr parcel-id=${parcel.id}>
+          <tr class="clickable" onClick=getParcel(${
+            parcel.id
+          })>
               <td>${parcel.pickup_location}</td>
               <td>${parcel.address.pickup_address ||
                 ""}</td>
               <td class="editable">
                   <span>${parcel.destination}</span>
-                  <span class="icon-edit" onclick="openModel(this)">
-                      <img src="../assets/icons/edit.svg" alt="*" srcset="" title="Edit" class="lg-icon">
-                  </span>
               </td>
               <td>${parcel.address.destination_address ||
                 ""}</td>
@@ -55,9 +51,12 @@ const fetchData = async (token, user) => {
                 parcel.created_at
               ).toDateString()}</td>
               <td class="status">
-                  <span>${parcel.status}</span>
-                  <span class="icon-cancel" onclick="cancelOrder(this)">
-                      <img src="../assets/icons/cancel.svg" alt="*" srcset="" title="Cancel" class="lg-icon">
+                  <span class=${
+                    parcel.status
+                  }>in transit</span>
+                  <span class="icon-cancel" onClick=onCancel(${
+                    parcel.id
+                  })>
                   </span>
               </td>
           </tr>
@@ -69,11 +68,13 @@ const fetchData = async (token, user) => {
       console.log(err);
     });
 };
+//display the table once data are ready
 const dataReady = () => {
   $("#loader").css("display", "none");
   $("#loaded-data").css("display", "block");
   return;
 };
+//initial load the fucntion to query data
 $(document).ready(async () => {
   const token = await localStorage.getItem("token");
   const user = await JSON.parse(

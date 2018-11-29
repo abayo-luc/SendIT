@@ -1,6 +1,7 @@
-const cancelOrder = element => {
-  element.parentElement.parentElement.hidden = true;
-};
+const STATUS_INTRANSIT = "in_transit";
+const STATUS_DELIVERED = "delivered";
+const STATUS_WAITING = "pending";
+const STATUS_CANCELED = "canceled";
 
 const showMenu = element => {
   let drpContent = document.getElementById("drp-conent");

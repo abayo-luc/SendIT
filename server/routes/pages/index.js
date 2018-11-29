@@ -37,5 +37,10 @@ pages
     res.sendFile(
       path.join(__dirname, "../../../UI/pages/admin.html")
     );
+  })
+  .get("/signup", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "../../../UI/index.html")
+    );
   });
 export default pages;
