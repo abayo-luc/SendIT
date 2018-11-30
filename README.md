@@ -13,11 +13,11 @@ Installing dependencies <br/>
 `npm install`
 
 Create Development DB <br/>
-`npm run db:create
-`<br/>
+`npm run db:create`
+
 Run All migration <br/>
 `npm run db:migrate`
-<br/>
+
 Starting development server <br/>
 `npm start`
 
