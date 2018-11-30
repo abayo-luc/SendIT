@@ -9,7 +9,8 @@
     "db:migrate": "node --require babel-register server/migrations/index.js --exit",
     "test:db:migrate": "NODE_ENV=test node --require babel-register server/migrations/index.js --exit",
     "fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "db:create": "sudo -u postgres psql -qAtX -v ON_ERRORS_STOP=1 -f server/database/createdb.sql"
   },
   "repository": {
     "type": "git",
