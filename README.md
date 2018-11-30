@@ -9,11 +9,20 @@ A [Social platform](https://send-it-api.herokuapp.com/api/v1/) for sending Parce
 
 ## Get Started
 
-Installing dependencies => `npm install`
+Installing dependencies <br/>
+`npm install`
 
-Starting development server => `npm start`
+Create Development DB <br/>
+`npm run db:create
+`<br/>
+Run All migration <br/>
+`npm run db:migrate`
+<br/>
+Starting development server <br/>
+`npm start`
 
-Run the tests => `npm run test`
+Run the tests <br/>
+`npm run test`
 
 ## API -Endpoints
 
