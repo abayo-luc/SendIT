@@ -4,10 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test nyc --reporter=text --reporter=lcov mocha --timeout 1500 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
+    "test": "set NODE_ENV=test&& nyc --reporter=text --reporter=lcov mocha --timeout 1500 --require babel-polyfill --require babel-register server/test/**/*.spec.js --exit",
     "start": "nodemon --exec babel-node server/server.js",
     "db:migrate": "node --require babel-register server/migrations/index.js --exit",
-    "test:db:migrate": "NODE_ENV=test node --require babel-register server/migrations/index.js --exit",
+    "test:db:migrate": "set NODE_ENV=test&& node --require babel-register server/migrations/index.js --exit",
     "fix-code": "prettier-eslint --write './*/**{js,jsx}' ",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "db:create": "sudo -u postgres psql -qAtX -v ON_ERRORS_STOP=1 -f server/database/createdb.sql"
@@ -57,6 +57,6 @@
     "prettier-eslint-cli": "^4.7.1"
   },
   "engines": {
-    "node": "10.13.0"
+    "node": "10.14.1"
   }
 }

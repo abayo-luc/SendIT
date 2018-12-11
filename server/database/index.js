@@ -5,7 +5,6 @@ import dbConfig from "../config/database";
 dotenv.config();
 //configurate the environment
 const env = process.env.NODE_ENV || "development";
-
 //insipired by olawalejarvis from https://github.com/olawalejarvis/reflection_app_server/blob/develop/src/usingDB/db/index.js
 const query = (text, params, isArr = false) => {
   const pool = new Pool({

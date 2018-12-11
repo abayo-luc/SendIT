@@ -10,12 +10,10 @@ describe("TEST server", () => {
     chai
       .request(server)
       .get("/api/v1")
-      .end(res => {
+      .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
-        res.body.should.have
-          .property("message")
-          .eql("Welcome to sendIT API");
+        res.body.should.have.property("message").eql("Welcome to sendIT API");
         done();
       });
   });
