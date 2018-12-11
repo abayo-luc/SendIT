@@ -16,18 +16,12 @@ const showMenu = element => {
 };
 
 const setUser = async () => {
-  const user = await JSON.parse(
-    localStorage.getItem("user")
-  );
-  $("#user-names").append(
-    `<p>${user.first_name || ""}</p>`
-  );
+  const user = await JSON.parse(localStorage.getItem("user"));
+  $("#user-names").append(`<p>${user.first_name || ""}</p>`);
   $("#user-names").append(`<p>${user.last_name || ""}</p>`);
 };
 
-$(document).ready(setUser());
-
-$(async () => {
+(async () => {
   const token = await localStorage.getItem("token");
   fetch("/api/v1/current", {
     method: "GET",
@@ -44,16 +38,19 @@ $(async () => {
     .catch(err => {
       window.location = "/login";
     });
-});
+})();
+
+(() => {
+  setUser();
+})();
+
 const getParcel = async id => {
   const parcel_id = parseFloat(id);
   await localStorage.setItem("parcel_id", parcel_id);
   window.location = await "/parcel";
 };
-document
-  .querySelector("#lg-logout")
-  .addEventListener("click", async () => {
-    await localStorage.setItem("token", null);
-    await localStorage.setItem("user", null);
-    window.location = "/login";
-  });
+document.querySelector("#lg-logout").addEventListener("click", async () => {
+  await localStorage.setItem("token", null);
+  await localStorage.setItem("user", null);
+  window.location = "/login";
+});
