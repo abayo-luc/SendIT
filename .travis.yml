@@ -10,6 +10,7 @@ services:
   - postgresql
 before_install:
   - psql -c 'create database send_it_test' -U postgres
+install: yarn
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -17,7 +18,7 @@ before_script:
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 script:
-  - npm run test:db:migrate
-  - npm test
+  - yarn run test:db:migrate
+  - yarn test
 after_success:
-  - npm run coveralls
+  - yarn run coveralls
