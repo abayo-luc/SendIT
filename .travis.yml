@@ -9,7 +9,7 @@ addons:
 services:
   - postgresql
 before_install:
-  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version [1.12.3]
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.12.3
   - psql -c 'create database send_it_test' -U postgres
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
