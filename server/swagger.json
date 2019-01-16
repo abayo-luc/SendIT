@@ -426,23 +426,11 @@
       }
     },
     "/current": {
-      "post": {
+      "get": {
         "tags": ["users"],
-        "summary": "Logs user into the system",
+        "summary": "Fet the current user",
         "description": "",
-        "operationId": "loginUser",
         "produces": ["application/xml", "application/json"],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Get the current user",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          }
-        ],
         "responses": {
           "200": {
             "description": "successful operation",
