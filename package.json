@@ -38,6 +38,7 @@
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
     "pg": "^7.6.1",
+    "swagger-ui-express": "^4.0.2",
     "uuid": "^3.3.2",
     "validator": "^10.9.0"
   },
@@ -57,6 +58,6 @@
     "prettier-eslint-cli": "^4.7.1"
   },
   "engines": {
-    "node": "10.13.0"
+    "node": "10.15.0"
   }
 }

@@ -2,6 +2,7 @@
 /node_modules
 #error logs
 yarn-error.log
+yarn.lock
 npm-debug.log
 #env configuration
 .env
