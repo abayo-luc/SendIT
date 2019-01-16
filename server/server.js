@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 import express from "express";
 import passport from "passport";
 import path from "path";
+
+//bring swagger api
+import swagger from "swagger-ui-express";
+import swagerDoc from "./swagger.json";
 //bring passport configuraiton
 import passportConfig from "./middlewares/passport";
 // load all routes
@@ -20,6 +24,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 //load static pages html and cess
 app.use(express.static(path.join(__dirname, "../UI")));
+//API documentation
+app.use("/api-docs", swagger.serve, swagger.setup(swagerDoc));
 // root route, welcome
 app.get("/api/v1", (req, res) => {
   res.json({ message: "Welcome to sendIT API" });
