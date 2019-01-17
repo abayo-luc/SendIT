@@ -13,19 +13,50 @@ const transporter = nodemailer.createTransport({
 
 const options = {
   from: "SendIT",
-  to: "jean.abayo@gmail.com",
-  subject: "Test",
-  html: `
-          <p>Dear
-            HTML will be here!
-          </p>
-          `
+  subject: "SendIT- Parcel Updtes"
 };
 
-export const sendEmail = params => {
+export const sendEmail = parcel => {
+  const objectKeys = Object.keys(parcel.details);
+  const message = `
+  Dear ${parcel.first_name},
+  
+  <p>This SendIT Team, there have been some update on your recent parcel with the following details: <br>
+  <b>Destination:</b> ${parcel.destination}, ${
+    parcel.address.destination_address
+      ? parcel.address.destination_address
+      : "-"
+  }<br>
+  <b>PickUp Location:</b> ${parcel.pickup_location}, ${
+    parcel.address.pickup_address ? parcel.address.pickup_address : "-"
+  }<br>
+  <u><b>Details</b></u>:<br>
+  <small>
+    <b>Weigth</b>: ${parcel.details.weight ? parcel.details.weight + "g" : "-"}
+    <b>Height</b>: ${parcel.details.height ? parcel.details.height + "cm" : "-"}
+    <b>Width</b>: ${parcel.details.width ? parcel.details.width + "cm" : "-"}
+    <b>Quantity</b>: ${parcel.details.quantity ? parcel.details.quantity : "-"}
+  </small>
+  <br>
+  <b>Current Location:</b> ${parcel.current_location}<br>
+  <b>Status</b>: ${parcel.status}<br>
+  <br>
+  Thank you for choosing us!<br>
+  Best,
+  <br>
+  <br>
+  SendIT Team,<br>
+  Email: hello@sendit.com<br>
+  Phone: 250789277275<br>
+  </p>
+  `;
   return new Promise((resolve, reject) => {
     transporter
-      .sendMail(options)
+      .sendMail({
+        ...options,
+        to: parcel.email,
+        html: message
+      })
       .then(response => {
         resolve(response);
       })
