@@ -10,28 +10,17 @@ import db from "../database";
 import httpResponses from "../utils/httpResponses";
 import validations from "../utils/validators.helpers";
 import { isEmpty } from "../utils/helper.functions";
+import { sendEmail } from "../config/mailer";
 // new parce instance from parcel model
 export default class Parcel {
   static findAll(req, res) {
     const queryText = `SELECT * FROM parcels`;
     db.query(queryText, null, true)
       .then(parcels => {
-        httpResponses.ok(
-          res,
-          200,
-          "parcels",
-          parcels,
-          "success"
-        );
+        httpResponses.ok(res, 200, "parcels", parcels, "success");
       })
       .catch(err => {
-        httpResponses.bad(
-          req,
-          500,
-          "failed",
-          "Internal error",
-          err
-        );
+        httpResponses.bad(req, 500, "failed", "Internal error", err);
       });
   }
 
@@ -39,35 +28,15 @@ export default class Parcel {
     db.findById("parcels", parseInt(req.params.id, 10))
       .then(parcel => {
         if (!parcel) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "Parcel not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "Parcel not found");
         }
-        if (
-          req.user["is_admin"] ||
-          req.user.id === parcel.user_id
-        ) {
-          return httpResponses.ok(
-            res,
-            200,
-            "parcel",
-            parcel,
-            "success"
-          );
+        if (req.user["is_admin"] || req.user.id === parcel.user_id) {
+          return httpResponses.ok(res, 200, "parcel", parcel, "success");
         }
         return httpResponses.unauthorized(res);
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal server error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal server error", err);
       });
   }
 
@@ -90,15 +59,8 @@ export default class Parcel {
     if (req.body.pickupAddress)
       address["pickup_address"] = req.body.pickupAddress;
     if (req.body.destinationAddress)
-      address["destination_address"] =
-        req.body.destinationAddress;
-    const {
-      quantity,
-      weight,
-      height,
-      width,
-      length
-    } = req.body;
+      address["destination_address"] = req.body.destinationAddress;
+    const { quantity, weight, height, width, length } = req.body;
     let details = {
       quantity,
       weight,
@@ -121,40 +83,19 @@ export default class Parcel {
     ];
     db.query(queryText, newParcel)
       .then(parcelRes => {
-        httpResponses.ok(
-          res,
-          201,
-          "parcel",
-          parcelRes,
-          "success"
-        );
+        httpResponses.ok(res, 201, "parcel", parcelRes, "success");
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal server errror",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal server errror", err);
       });
   }
   //update parcel
   static update(req, res) {
-    const parcelQuery =
-      "SELECT * FROM parcels WHERE id = $1 AND user_id = $2";
-    db.query(parcelQuery, [
-      parseInt(req.params.id),
-      parseInt(req.user.id)
-    ])
+    const parcelQuery = "SELECT * FROM parcels WHERE id = $1 AND user_id = $2";
+    db.query(parcelQuery, [parseInt(req.params.id), parseInt(req.user.id)])
       .then(parcel => {
         if (!parcel) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "Parcel not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "Parcel not found");
         }
 
         const updateQuery = `UPDATE parcels SET 
@@ -166,8 +107,7 @@ export default class Parcel {
        `;
         let address = { ...parcel.address };
         if (req.body.destinationAddress)
-          address["destination_address"] =
-            req.body.destinationAddress;
+          address["destination_address"] = req.body.destinationAddress;
 
         const values = [
           req.body.destination || parcel["destination"],
@@ -179,32 +119,14 @@ export default class Parcel {
         db.query(updateQuery, values)
           .then(response => {
             const updatedParcel = response;
-            httpResponses.ok(
-              res,
-              201,
-              "parcel",
-              updatedParcel,
-              "success"
-            );
+            httpResponses.ok(res, 201, "parcel", updatedParcel, "success");
           })
           .catch(err => {
-            httpResponses.bad(
-              res,
-              500,
-              "failed",
-              "Intern server error",
-              err
-            );
+            httpResponses.bad(res, 500, "failed", "Intern server error", err);
           });
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Intern server error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Intern server error", err);
       });
   }
 
@@ -218,31 +140,15 @@ export default class Parcel {
       parseInt(req.user.id)
     ];
     db.query(parcelQuery, values)
-      .then(response => {
+      .then(async response => {
         if (!response) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "Parcel not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "Parcel not found");
         }
-        return httpResponses.ok(
-          res,
-          202,
-          "parcel",
-          response,
-          "success"
-        );
+        sendNotification(response.id);
+        return httpResponses.ok(res, 202, "parcel", response, "success");
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Intern server error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Intern server error", err);
       });
   }
 
@@ -257,38 +163,18 @@ export default class Parcel {
     }
     const psqlQuery =
       "UPDATE parcels SET status=$1, updated_at=$2 WHERE id=$3 RETURNING *";
-    const values = [
-      req.body.status,
-      moment(new Date()),
-      req.params.id
-    ];
+    const values = [req.body.status, moment(new Date()), req.params.id];
     db.query(psqlQuery, values)
-      .then(parcel => {
+      .then(async parcel => {
         if (!parcel) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "parcel not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "parcel not found");
         }
-        httpResponses.ok(
-          res,
-          201,
-          "parcel",
-          parcel,
-          "success"
-        );
+        await sendNotification(parcel.id);
+        httpResponses.ok(res, 201, "parcel", parcel, "success");
       })
       .catch(err => {
         console.log(err);
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal server",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal server", err);
       });
   }
   static presentLocation(req, res) {
@@ -300,38 +186,48 @@ export default class Parcel {
     const location = presentLocation || currentLocation;
     const psqlQuery =
       "UPDATE parcels SET current_location=$1, arrived_at=$2, status=$3 WHERE id=$4 RETURNING *";
-    const values = [
-      location,
-      moment(new Date()),
-      status,
-      req.params.id
-    ];
+    const values = [location, moment(new Date()), status, req.params.id];
     db.query(psqlQuery, values)
-      .then(parcel => {
+      .then(async parcel => {
         if (!parcel) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "parcel not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "parcel not found");
         }
-        httpResponses.ok(
-          res,
-          201,
-          "parcel",
-          parcel,
-          "success"
-        );
+        await sendNotification(parcel.id);
+        httpResponses.ok(res, 201, "parcel", parcel, "success");
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal server",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal server", err);
       });
   }
 }
+
+const sendNotification = id => {
+  if (process.env.NODE_ENV === "test") {
+    return;
+  }
+  const sqlQuery = `SELECT 
+    parcels.id, 
+    parcels.destination, 
+    parcels.current_location, 
+    parcels.details,
+    parcels.address,
+    parcels.status, 
+    users.email, 
+    users.first_name, 
+    users.last_name
+    FROM 
+    parcels
+    INNER JOIN users ON parcels.user_id = users.id
+    WHERE
+    parcels.id = $1`;
+  const values = [id];
+  db.query(sqlQuery, values)
+    .then(parcel => {
+      sendEmail(parcel).then(resp => {
+        return { success: true };
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+};
