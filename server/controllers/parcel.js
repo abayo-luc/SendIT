@@ -202,6 +202,9 @@ export default class Parcel {
 }
 
 const sendNotification = id => {
+  if (process.env.NODE_ENV === "test") {
+    return;
+  }
   const sqlQuery = `SELECT 
     parcels.id, 
     parcels.destination, 
