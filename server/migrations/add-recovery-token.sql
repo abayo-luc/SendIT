@@ -1,0 +1,4 @@
+ALTER TABLE users
+ADD COLUMN recovery_token TEXT,
+ADD COLUMN email_verfied BOOLEAN
+NOT NULL DEFAULT FALSE
