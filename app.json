@@ -1,5 +1,8 @@
 {
-  "addons": ["heroku-postgresql"],
+
+  "addons": [
+    "heroku-postgresql"
+  ],
   "buildpacks": [
     {
       "url": "heroku/nodejs"
@@ -16,6 +19,8 @@
     }
   },
   "name": "SendIT",
-  "scripts": {},
+
+  "scripts": {
+  },
   "stack": "heroku-18"
 }
