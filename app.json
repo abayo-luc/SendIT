@@ -1,0 +1,21 @@
+{
+  "addons": ["heroku-postgresql"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "secretOrKey": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "name": "SendIT",
+  "scripts": {},
+  "stack": "heroku-18"
+}
