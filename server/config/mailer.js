@@ -21,7 +21,7 @@ export const sendEmail = parcel => {
   const message = `
   Dear ${parcel.first_name},
   
-  <p>This SendIT Team, there have been some update on your recent parcel with the following details: <br>
+  <p>This is SendIT Team, there have been some update on your recent parcel with the following details: <br>
   <b>Destination:</b> ${parcel.destination}, ${
     parcel.address.destination_address
       ? parcel.address.destination_address
@@ -55,6 +55,44 @@ export const sendEmail = parcel => {
       .sendMail({
         ...options,
         to: parcel.email,
+        html: message
+      })
+      .then(response => {
+        resolve(response);
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+};
+
+export const resetPwdEmail = (user, link) => {
+  const message = `
+  Dear ${user.first_name},
+  
+  <p>This is SendIT Team, it seems you are recently requested for changing your SendIT account password.<br>
+  If it was you, please follow this <a href=${link}>link</a> or copy past the the following link:
+  <br>
+  <br>
+   ${link} 
+  <br>
+  <br>
+  Please, ignore this email if you did not request for password change. <br>
+  Thank you for choosing us!<br>
+  Best,
+  <br>
+  <br>
+  SendIT Team,<br>
+  Email: hello@sendit.com<br>
+  Phone: 250789277275<br>
+  </p>
+  `;
+  return new Promise((resolve, reject) => {
+    transporter
+      .sendMail({
+        ...options,
+        subject: "Password Reset",
+        to: user.email,
         html: message
       })
       .then(response => {

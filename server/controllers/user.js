@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import momemt from "moment";
 import jwt from "jsonwebtoken";
 // bring in user model
+import { resetPwdEmail } from "../config/mailer";
 import db from "../database";
 import httpResponses from "../utils/httpResponses";
 export default class User {
@@ -17,27 +18,14 @@ export default class User {
     db.findById("users", req.params.id)
       .then(user => {
         if (!user) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "user not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "user not found");
         }
-        db.query(queryString, values, true).then(
-          response => {
-            httpResponses.ok(res, 200, "parcels", response);
-          }
-        );
+        db.query(queryString, values, true).then(response => {
+          httpResponses.ok(res, 200, "parcels", response);
+        });
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal error", err);
       });
   }
 
@@ -49,63 +37,48 @@ export default class User {
     `;
     // refered to https://www.npmjs.com/package/bcryptjs hashing the password++++++
     bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(
-        req.body.password,
-        salt,
-        (error, hash) => {
-          if (error) {
-            //console.log(error);
-            return httpResponses.bad(
-              res,
-              500,
-              "failed",
-              "bcrypt hash error"
-            );
-          }
-          const newUser = [
-            req.body.firstName,
-            req.body.lastName,
-            req.body.email,
-            hash,
-            momemt(new Date())
-          ];
-          db.query(queryText, newUser)
-            .then(userRes => {
-              const payload = {
-                id: userRes.id,
-                email: userRes.email,
-                is_admin: userRes.is_admin
-              };
-              const user = { ...userRes };
-              delete user.password;
-              jwt.sign(
-                payload,
-                process.env.secretOrKey,
-                { expiresIn: "7d" },
-                (err, token) => {
-                  const resPayload = {
-                    status: "success",
-                    user,
-                    token
-                  };
-                  res.status(201).json({ ...resPayload });
-                }
-              );
-            })
-            .catch(err => {
-              let message = "Internal server error";
-              if (err.routine === "_bt_check_unique")
-                message = "User already exist";
-              httpResponses.bad(
-                res,
-                400,
-                "failed",
-                message,
-                err
-              );
-            });
+      bcrypt.hash(req.body.password, salt, (error, hash) => {
+        if (error) {
+          //console.log(error);
+          return httpResponses.bad(res, 500, "failed", "bcrypt hash error");
         }
-      );
+        const newUser = [
+          req.body.firstName,
+          req.body.lastName,
+          req.body.email,
+          hash,
+          momemt(new Date())
+        ];
+        db.query(queryText, newUser)
+          .then(userRes => {
+            const payload = {
+              id: userRes.id,
+              email: userRes.email,
+              is_admin: userRes.is_admin
+            };
+            const user = { ...userRes };
+            delete user.password;
+            jwt.sign(
+              payload,
+              process.env.secretOrKey,
+              { expiresIn: "7d" },
+              (err, token) => {
+                const resPayload = {
+                  status: "success",
+                  user,
+                  token
+                };
+                res.status(201).json({ ...resPayload });
+              }
+            );
+          })
+          .catch(err => {
+            let message = "Internal server error";
+            if (err.routine === "_bt_check_unique")
+              message = "User already exist";
+            httpResponses.bad(res, 400, "failed", message, err);
+          });
+      });
     });
   }
 
@@ -119,54 +92,41 @@ export default class User {
     db.query(queryText, value)
       .then(response => {
         if (!response) {
-          return httpResponses.bad(
-            res,
-            404,
-            "failed",
-            "User not found"
-          );
+          return httpResponses.bad(res, 404, "failed", "User not found");
         }
-        bcrypt
-          .compare(password, response.password)
-          .then(isMatch => {
-            if (isMatch) {
-              // User Matched
-              let payload = {
-                id: response.id,
-                email: response.email,
-                is_admin: response.is_admin
-              };
-              delete payload.password;
-              jwt.sign(
-                payload,
-                process.env.secretOrKey,
-                { expiresIn: "7d" },
-                (err, token) => {
-                  res.status(200).json({
-                    status: "success",
-                    user: payload,
-                    token
-                  });
-                }
-              );
-            } else {
-              return httpResponses.bad(
-                res,
-                400,
-                "failed",
-                "Invalid email or password"
-              );
-            }
-          });
+        bcrypt.compare(password, response.password).then(isMatch => {
+          if (isMatch) {
+            // User Matched
+            let payload = {
+              id: response.id,
+              email: response.email,
+              is_admin: response.is_admin
+            };
+            delete payload.password;
+            jwt.sign(
+              payload,
+              process.env.secretOrKey,
+              { expiresIn: "7d" },
+              (err, token) => {
+                res.status(200).json({
+                  status: "success",
+                  user: payload,
+                  token
+                });
+              }
+            );
+          } else {
+            return httpResponses.bad(
+              res,
+              400,
+              "failed",
+              "Invalid email or password"
+            );
+          }
+        });
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "internal server error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "internal server error", err);
       });
   }
   //get current user
@@ -178,13 +138,79 @@ export default class User {
         httpResponses.ok(res, 200, "user", user, "success");
       })
       .catch(err => {
-        httpResponses.bad(
-          res,
-          500,
-          "failed",
-          "Internal server error",
-          err
-        );
+        httpResponses.bad(res, 500, "failed", "Internal server error", err);
       });
+  }
+
+  static pwdRecoveryLink(req, res) {
+    const sqlQuery = `UPDATE users SET recovery_token=$1 WHERE email=$2 returning *`;
+    const payload = { email: req.body.email };
+    jwt.sign(
+      payload,
+      process.env.secretOrKey,
+      { expiresIn: "1d" },
+      (err, token) => {
+        const link = `http://${req.headers.host}/auth/${token}`;
+        const values = [token, payload.email];
+        db.query(sqlQuery, values)
+          .then(response => {
+            if (!response) {
+              httpResponses.bad(res, 404, "Failed", "User not found");
+            }
+            resetPwdEmail(response, link).then(response => {
+              res.json({ message: "Email successfuly sent!" });
+            });
+          })
+          .catch(err => {
+            httpResponses.bad(res, 500, "failed", "Internal error");
+          });
+      }
+    );
+  }
+  static updatePassword(req, res) {
+    const sqlQuery = `UPDATE users SET password=$1, recovery_token=$2 WHERE email=$3 AND recovery_token=$4 returning *`;
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+    if (password != confirmPassword) {
+      return httpResponses.bad(
+        res,
+        401,
+        "failed",
+        "Invalid password confirmation"
+      );
+    }
+    jwt.verify(token, process.env.secretOrKey, (err, payload) => {
+      if (err) {
+        return httpResponses.bad(res, 500, "failed", "Token failed", err);
+      }
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(password, salt, (error, hash) => {
+          if (error) {
+            //console.log(error);
+            return httpResponses.bad(res, 500, "failed", "bcrypt hash error");
+          }
+          const { email } = payload;
+          const values = [hash, null, email, token];
+          db.query(sqlQuery, values)
+            .then(response => {
+              if (!response) {
+                return httpResponses.bad(
+                  res,
+                  404,
+                  "failed",
+                  "User not found or Link expired"
+                );
+              }
+              res.json({
+                user: { id: response.id, email: response.email },
+                message: "Success"
+              });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        });
+      });
+    });
   }
 }

@@ -23,5 +23,7 @@ userRouters
     "/current",
     passport.authenticate("jwt", { session: false }),
     User.currentUser
-  );
+  )
+  .put("/forget_password", User.pwdRecoveryLink)
+  .put("/auth/:token", User.updatePassword);
 export default userRouters;

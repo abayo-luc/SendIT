@@ -1,4 +1,5 @@
 {
+
   "addons": [
     "heroku-postgresql"
   ],
@@ -18,6 +19,7 @@
     }
   },
   "name": "SendIT",
+
   "scripts": {
   },
   "stack": "heroku-18"
